@@ -1,0 +1,47 @@
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'idea'
+apply plugin: 'com.bmuschko.tomcat'
+
+version = '1.0-SNAPSHOT'
+war.baseName = 'www.maxwe.org'
+war.archiveName = "maxwe.war"
+
+tomcat {
+    httpPort = 8080
+    httpsPort = 8443
+    enableSSL = true
+    contextPath = "/tao"
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.4'
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    compile 'com.jfinal:jfinal:2.2'
+    compile 'com.jfinal:cos:26Dec2008'
+    compile 'com.alibaba:druid:1.0.23'
+    compile 'com.alibaba:fastjson:1.2.14'
+    compile 'com.mchange:c3p0:0.9.5.2'
+    compile 'com.mchange:mchange-commons-java:0.2.12'
+    compile 'mysql:mysql-connector-java:6.0.3'
+    compile 'org.freemarker:freemarker:2.3.25-incubating'
+    def tomcatVersion = '7.0.59'
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+    providedCompile 'javax.servlet:javax.servlet-api:3.0.1'
+}
