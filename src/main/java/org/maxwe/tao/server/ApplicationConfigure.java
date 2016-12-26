@@ -1,20 +1,5 @@
 package org.maxwe.tao.server;
 
-import org.maxwe.tao.server.controller.cart.CartController;
-import org.maxwe.tao.server.controller.file.FileController;
-import org.maxwe.tao.server.controller.link.LinkController;
-import org.maxwe.tao.server.controller.manager.ManagerController;
-import org.maxwe.tao.server.controller.menu.MenuController;
-import org.maxwe.tao.server.controller.meta.MetaController;
-import org.maxwe.tao.server.controller.order.OrderController;
-import org.maxwe.tao.server.controller.page.PageController;
-import org.maxwe.tao.server.controller.poster.PosterController;
-import org.maxwe.tao.server.controller.product.FormatController;
-import org.maxwe.tao.server.controller.product.SeriesController;
-import org.maxwe.tao.server.controller.product.TypeController;
-import org.maxwe.tao.server.controller.receiver.ReceiverController;
-import org.maxwe.tao.server.controller.system.SystemController;
-import org.maxwe.tao.server.controller.user.AccountController;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import com.jfinal.config.*;
@@ -22,6 +7,9 @@ import com.jfinal.ext.handler.ContextPathHandler;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.c3p0.C3p0Plugin;
 import com.jfinal.render.ViewType;
+import org.maxwe.tao.server.controller.page.PageController;
+import org.maxwe.tao.server.controller.user.proxy.ProxyController;
+import org.maxwe.tao.server.controller.user.seller.SellerController;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -85,20 +73,24 @@ public class ApplicationConfigure extends JFinalConfig {
     @Override
     public void configRoute(Routes me) {
         me.add("/", PageController.class);
-        me.add("/meta", MetaController.class);
-        me.add("/menu", MenuController.class);
-        me.add("/manager", ManagerController.class);
-        me.add("/series", SeriesController.class);
-        me.add("/type", TypeController.class);
-        me.add("/format", FormatController.class);
-        me.add("/link", LinkController.class);
-        me.add("/poster", PosterController.class);
-        me.add("/account", AccountController.class);
-        me.add("/cart", CartController.class);
-        me.add("/order", OrderController.class);
-        me.add("/receiver", ReceiverController.class);
-        me.add("/file", FileController.class);
-        me.add("/system", SystemController.class);
+        me.add("/seller", SellerController.class);
+        me.add("/proxy", ProxyController.class);
+
+
+//        me.add("/meta", MetaController.class);
+//        me.add("/menu", MenuController.class);
+//        me.add("/manager", ManagerController.class);
+//        me.add("/series", SeriesController.class);
+//        me.add("/type", TypeController.class);
+//        me.add("/format", FormatController.class);
+//        me.add("/link", LinkController.class);
+//        me.add("/poster", PosterController.class);
+//        me.add("/account", AccountController.class);
+//        me.add("/cart", CartController.class);
+//        me.add("/order", OrderController.class);
+//        me.add("/receiver", ReceiverController.class);
+//        me.add("/file", FileController.class);
+//        me.add("/system", SystemController.class);
     }
 
     @Override
