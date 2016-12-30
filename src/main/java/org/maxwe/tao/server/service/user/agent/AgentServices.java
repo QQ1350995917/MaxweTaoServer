@@ -1,4 +1,4 @@
-package org.maxwe.tao.server.service.user.proxy;
+package org.maxwe.tao.server.service.user.agent;
 
 import com.alibaba.fastjson.JSON;
 import com.jfinal.plugin.activerecord.Db;
@@ -13,10 +13,10 @@ import java.util.Map;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class ProxyServices implements IProxyServices {
+public class AgentServices implements IAgentServices {
     @Override
     public boolean existProxy(String cellphone) {
-        List<Record> records = Db.find("SELECT * FROM proxy WHERE cellphone = ? ", cellphone);
+        List<Record> records = Db.find("SELECT * FROM agent WHERE cellphone = ? ", cellphone);
         if (records.size() > 0) {
             return true;
         } else {
@@ -25,12 +25,12 @@ public class ProxyServices implements IProxyServices {
     }
 
     @Override
-    public ProxyEntity createProxy(ProxyEntity proxyEntity) {
+    public AgentEntity createProxy(AgentEntity proxyEntity) {
         Record proxyRecord = new Record()
                 .set("proxyId", proxyEntity.getProxyId())
                 .set("cellphone", proxyEntity.getCellphone())
                 .set("password", proxyEntity.getPassword());
-        boolean account = Db.save("proxy", proxyRecord);
+        boolean account = Db.save("agent", proxyRecord);
         if (account) {
             return proxyEntity;
         } else {
@@ -39,8 +39,8 @@ public class ProxyServices implements IProxyServices {
     }
 
     @Override
-    public ProxyEntity updateProxyPassword(ProxyEntity proxyEntity) {
-        int count = Db.update("UPDATE proxy SET password = ? WHERE proxyId = ? ", proxyEntity.getPassword(), proxyEntity.getProxyId());
+    public AgentEntity updateProxyPassword(AgentEntity proxyEntity) {
+        int count = Db.update("UPDATE agent SET password = ? WHERE proxyId = ? ", proxyEntity.getPassword(), proxyEntity.getProxyId());
         if (count == 1) {
             return proxyEntity;
         } else {
@@ -49,35 +49,35 @@ public class ProxyServices implements IProxyServices {
     }
 
     @Override
-    public ProxyEntity retrieveProxy(ProxyEntity proxyEntity) {
+    public AgentEntity retrieveProxy(AgentEntity proxyEntity) {
         return null;
     }
 
     @Override
-    public ProxyEntity retrieveProxy(String proxyId) {
-        List<Record> proxyRecords = Db.find("SELECT * FROM proxy WHERE proxyId = ? ", proxyId);
+    public AgentEntity retrieveProxy(String proxyId) {
+        List<Record> proxyRecords = Db.find("SELECT * FROM agent WHERE proxyId = ? ", proxyId);
         Map<String, Object> accountMap = proxyRecords.get(0).getColumns();
-        ProxyEntity proxyEntity = JSON.parseObject(JSON.toJSONString(accountMap), ProxyEntity.class);
+        AgentEntity proxyEntity = JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
         return proxyEntity;
     }
 
     @Override
-    public LinkedList<ProxyEntity> retrieveProxyByPId(String proxyPId) {
-        List<Record> proxyRecords = Db.find("SELECT * FROM proxy WHERE proxyPId = ? ", proxyPId);
-        LinkedList<ProxyEntity> proxyEntities = new LinkedList<>();
+    public LinkedList<AgentEntity> retrieveProxyByPId(String proxyPId) {
+        List<Record> proxyRecords = Db.find("SELECT * FROM agent WHERE proxyPId = ? ", proxyPId);
+        LinkedList<AgentEntity> proxyEntities = new LinkedList<>();
         for (Record proxyRecord:proxyRecords){
             Map<String, Object> accountMap = proxyRecord.getColumns();
-            ProxyEntity proxyEntity = JSON.parseObject(JSON.toJSONString(accountMap), ProxyEntity.class);
+            AgentEntity proxyEntity = JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
             proxyEntities.add(proxyEntity);
         }
         return proxyEntities;
     }
 
     @Override
-    public ProxyEntity retrieveProxyByCellphone(String cellphone) {
-        List<Record> proxyRecords = Db.find("SELECT * FROM proxy WHERE cellphone = ? ", cellphone);
+    public AgentEntity retrieveProxyByCellphone(String cellphone) {
+        List<Record> proxyRecords = Db.find("SELECT * FROM agent WHERE cellphone = ? ", cellphone);
         Map<String, Object> accountMap = proxyRecords.get(0).getColumns();
-        ProxyEntity proxyEntity = JSON.parseObject(JSON.toJSONString(accountMap), ProxyEntity.class);
+        AgentEntity proxyEntity = JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
         return proxyEntity;
     }
 }

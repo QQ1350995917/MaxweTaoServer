@@ -74,7 +74,7 @@ public class ApplicationConfigure extends JFinalConfig {
     public void configRoute(Routes me) {
         me.add("/", PageController.class);
         me.add("/seller", SellerController.class);
-        me.add("/proxy", ProxyController.class);
+        me.add("/agent", ProxyController.class);
 
 
 //        me.add("/meta", MetaController.class);

@@ -7,6 +7,7 @@ package org.maxwe.tao.server.service.user.seller;
  */
 public class SellerEntity {
     private String sellerId;//
+    private String proxyId; //可为空 只有经过授权的用户才有proxyId
     private String name;// 账户名称
     private String cellphone;// 手机号码
     private String password;//
@@ -25,6 +26,14 @@ public class SellerEntity {
 
     public void setSellerId(String sellerId) {
         this.sellerId = sellerId;
+    }
+
+    public String getProxyId() {
+        return proxyId;
+    }
+
+    public void setProxyId(String proxyId) {
+        this.proxyId = proxyId;
     }
 
     public String getName() {

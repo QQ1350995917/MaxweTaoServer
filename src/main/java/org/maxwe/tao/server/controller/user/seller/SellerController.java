@@ -55,7 +55,7 @@ public class SellerController extends Controller implements ISellerController {
         VSellerEntity requestVSellerEntity = JSON.parseObject(params, VSellerEntity.class);
         IResultSet iResultSet = new ResultSet();
         //参数检测
-        if (!requestVSellerEntity.checkCreateParams()) {
+        if (requestVSellerEntity == null || !requestVSellerEntity.checkCreateParams()) {
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestVSellerEntity);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);

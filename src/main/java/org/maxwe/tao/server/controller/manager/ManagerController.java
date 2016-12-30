@@ -1,28 +1,6 @@
 package org.maxwe.tao.server.controller.manager;
 
-import org.maxwe.tao.server.common.cache.SessionContext;
-import org.maxwe.tao.server.common.response.IResultSet;
-import org.maxwe.tao.server.common.response.ResultSet;
-import org.maxwe.tao.server.controller.menu.VMenuEntity;
-import org.maxwe.tao.server.interceptor.ManagerInterceptor;
-import org.maxwe.tao.server.interceptor.MenuInterceptor;
-import org.maxwe.tao.server.interceptor.SessionInterceptor;
-import org.maxwe.tao.server.service.manager.IManagerServices;
-import org.maxwe.tao.server.service.manager.ManagerEntity;
-import org.maxwe.tao.server.service.manager.ManagerServices;
-import org.maxwe.tao.server.service.menu.IMenuServices;
-import org.maxwe.tao.server.service.menu.MenuEntity;
-import org.maxwe.tao.server.service.menu.MenuServices;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializeFilter;
-import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
-import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
-
-import javax.servlet.http.HttpSession;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.UUID;
 
 /**
  * Created by Pengwei Ding on 2016-07-30 10:00.

@@ -9,9 +9,9 @@ import org.maxwe.tao.server.common.utils.Code;
 import org.maxwe.tao.server.service.user.CSEntity;
 import org.maxwe.tao.server.service.user.CSServices;
 import org.maxwe.tao.server.service.user.ICSServices;
-import org.maxwe.tao.server.service.user.proxy.IProxyServices;
-import org.maxwe.tao.server.service.user.proxy.ProxyEntity;
-import org.maxwe.tao.server.service.user.proxy.ProxyServices;
+import org.maxwe.tao.server.service.user.agent.IAgentServices;
+import org.maxwe.tao.server.service.user.agent.AgentEntity;
+import org.maxwe.tao.server.service.user.agent.AgentServices;
 
 import java.util.LinkedList;
 import java.util.UUID;
@@ -22,7 +22,7 @@ import java.util.UUID;
  * Description: @TODO
  */
 public class ProxyController extends Controller implements IProxyController {
-    private IProxyServices iProxyServices = new ProxyServices();
+    private IAgentServices iProxyServices = new AgentServices();
     private ICSServices icsServices = new CSServices();
 
     @Override
@@ -69,24 +69,24 @@ public class ProxyController extends Controller implements IProxyController {
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_REPEAT.getCode());
             iResultSet.setData(requestVProxyEntity);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_CANNOT_REPEAT);
-            renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(ProxyEntity.class, "cellphone", "password")));
+            renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(AgentEntity.class, "cellphone", "password")));
             return;
         }
         //创建
         requestVProxyEntity.setProxyId(UUID.randomUUID().toString());
-        ProxyEntity proxy = iProxyServices.createProxy(requestVProxyEntity);
+        AgentEntity proxy = iProxyServices.createProxy(requestVProxyEntity);
         if (proxy == null) {
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestVProxyEntity);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
-            renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(ProxyEntity.class, "cellphone", "password")));
+            renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(AgentEntity.class, "cellphone", "password")));
             return;
         }
         //创建
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(new VProxyEntity(proxy));
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(ProxyEntity.class, "t")));
+        renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(AgentEntity.class, "t")));
     }
 
     @Override
@@ -103,7 +103,7 @@ public class ProxyController extends Controller implements IProxyController {
         }
 
         //查找
-        ProxyEntity proxyEntity = iProxyServices.retrieveProxy(requestVProxyEntity);
+        AgentEntity proxyEntity = iProxyServices.retrieveProxy(requestVProxyEntity);
         if (proxyEntity == null) {
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
             iResultSet.setData(requestVProxyEntity);
@@ -112,7 +112,7 @@ public class ProxyController extends Controller implements IProxyController {
             return;
         }
 
-        CSEntity proxyCS = new CSEntity(proxyEntity.getProxyId(), "proxy");
+        CSEntity proxyCS = new CSEntity(proxyEntity.getProxyId(), "agent");
         proxyCS.setCsId(UUID.randomUUID().toString());
         proxyCS.setToken(Code.getToken(proxyEntity.getCellphone()));
         CSEntity cs = icsServices.create(proxyCS);
@@ -153,7 +153,7 @@ public class ProxyController extends Controller implements IProxyController {
         VProxyEntity requestVProxyEntity = JSON.parseObject(params, VProxyEntity.class);
         IResultSet iResultSet = new ResultSet();
         requestVProxyEntity.setPassword(requestVProxyEntity.getOrdPassword());
-        ProxyEntity proxyEntity = iProxyServices.retrieveProxy(requestVProxyEntity);
+        AgentEntity proxyEntity = iProxyServices.retrieveProxy(requestVProxyEntity);
         if (proxyEntity == null) {
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
             iResultSet.setData(requestVProxyEntity);
@@ -162,7 +162,7 @@ public class ProxyController extends Controller implements IProxyController {
             return;
         }
         requestVProxyEntity.setProxyId(proxyEntity.getProxyId());
-        ProxyEntity updateProxyEntity = iProxyServices.updateProxyPassword(requestVProxyEntity);
+        AgentEntity updateProxyEntity = iProxyServices.updateProxyPassword(requestVProxyEntity);
         if (updateProxyEntity == null) {
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestVProxyEntity);
@@ -188,7 +188,7 @@ public class ProxyController extends Controller implements IProxyController {
             renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VProxyEntity.class, "t")));
             return;
         }
-        LinkedList<ProxyEntity> proxyEntities = iProxyServices.retrieveProxyByPId(csEntity.getMappingId());
+        LinkedList<AgentEntity> proxyEntities = iProxyServices.retrieveProxyByPId(csEntity.getMappingId());
         if (proxyEntities == null){
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestVProxyEntity);
@@ -197,7 +197,7 @@ public class ProxyController extends Controller implements IProxyController {
             return;
         }
         LinkedList<VProxyEntity> responseVProxyEntities = new LinkedList<>();
-        for (ProxyEntity proxyEntity : proxyEntities) {
+        for (AgentEntity proxyEntity : proxyEntities) {
             responseVProxyEntities.add(new VProxyEntity(proxyEntity));
         }
         if (responseVProxyEntities.size() == 0) {
