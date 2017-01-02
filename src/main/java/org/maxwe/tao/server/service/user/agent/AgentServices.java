@@ -30,8 +30,12 @@ public class AgentServices implements IAgentServices {
         Record agentRecord = new Record()
                 .set("agentId", agentEntity.getAgentId())
                 .set("cellphone", agentEntity.getCellphone())
-                .set("password", agentEntity.getPassword())
                 .set("type", agentEntity.getType());
+        if (agentEntity.getType() == 1) {
+            agentRecord.set("password1", agentEntity.getPassword1());
+        } else if (agentEntity.getType() == 2) {
+            agentRecord.set("password2", agentEntity.getPassword2());
+        }
         boolean account = Db.save("agent", agentRecord);
         if (account) {
             return agentEntity;
@@ -42,7 +46,12 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public AgentEntity updateAgentPassword(AgentEntity agentEntity) {
-        int count = Db.update("UPDATE agent SET password = ? WHERE agentId = ? ", agentEntity.getPassword(), agentEntity.getAgentId());
+        int count = 0;
+        if (agentEntity.getType() == 1) {
+            count = Db.update("UPDATE agent SET password1 = ? WHERE agentId = ? ", agentEntity.getPassword1(), agentEntity.getAgentId());
+        } else if (agentEntity.getType() == 2) {
+            count = Db.update("UPDATE agent SET password2 = ? WHERE agentId = ? ", agentEntity.getPassword2(), agentEntity.getAgentId());
+        }
         if (count == 1) {
             return agentEntity;
         } else {
@@ -52,7 +61,7 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public AgentEntity updateAgentType(AgentEntity agentEntity) {
-        int count = Db.update("UPDATE agent SET type = ? WHERE agentId = ? ", agentEntity.getType(), agentEntity.getAgentId());
+        int count = Db.update("UPDATE agent SET password1 = ? , password2 = ?, type = ? WHERE agentId = ? ", agentEntity.getPassword1(),agentEntity.getPassword2(),agentEntity.getType(), agentEntity.getAgentId());
         if (count == 1) {
             return agentEntity;
         } else {
@@ -63,6 +72,9 @@ public class AgentServices implements IAgentServices {
     @Override
     public AgentEntity retrieveAgentById(String agentId) {
         List<Record> agentRecords = Db.find("SELECT * FROM agent WHERE agentId = ? ", agentId);
+        if (agentRecords.size() < 1) {
+            return null;
+        }
         Map<String, Object> accountMap = agentRecords.get(0).getColumns();
         AgentEntity agentEntity = JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
         return agentEntity;
@@ -71,6 +83,9 @@ public class AgentServices implements IAgentServices {
     @Override
     public AgentEntity retrieveAgentByCellphone(String cellphone) {
         List<Record> agentRecords = Db.find("SELECT * FROM agent WHERE cellphone = ? ", cellphone);
+        if (agentRecords.size() < 1) {
+            return null;
+        }
         Map<String, Object> accountMap = agentRecords.get(0).getColumns();
         AgentEntity agentEntity = JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
         return agentEntity;
@@ -78,8 +93,13 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public AgentEntity retrieveAgent(AgentEntity agentEntity) {
-        List<Record> agentRecords = Db.find("SELECT * FROM agent WHERE password = ? AND cellphone = ? ", agentEntity.getPassword(), agentEntity.getCellphone());
-        if (agentRecords.get(0) == null) {
+        List<Record> agentRecords = null;
+        if (agentEntity.getType() == 1) {
+            agentRecords = Db.find("SELECT * FROM agent WHERE password1 = ? AND cellphone = ? ", agentEntity.getPassword1(), agentEntity.getCellphone());
+        } else if (agentEntity.getType() == 2) {
+            agentRecords = Db.find("SELECT * FROM agent WHERE password2 = ? AND cellphone = ? ", agentEntity.getPassword1(), agentEntity.getCellphone());
+        }
+        if (agentRecords == null || agentRecords.size() < 1) {
             return null;
         }
         Map<String, Object> accountMap = agentRecords.get(0).getColumns();

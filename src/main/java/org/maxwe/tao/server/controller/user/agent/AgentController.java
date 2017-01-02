@@ -51,6 +51,7 @@ public class AgentController extends Controller implements IAgentController {
             renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "cellphone")));
             return;
         }
+
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(requestVAgentEntity);
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
@@ -123,11 +124,18 @@ public class AgentController extends Controller implements IAgentController {
         if (existAgent == null) {
             //直接创建
             requestVAgentEntity.setAgentId(UUID.randomUUID().toString());
+            requestVAgentEntity.setPassword1(requestVAgentEntity.getPassword());
+            requestVAgentEntity.setPassword2(requestVAgentEntity.getPassword());
             agent = iAgentServices.createAgent(requestVAgentEntity);
         } else {
             //修改类型值
             int type = existAgent.getType() + requestVAgentEntity.getType();
             existAgent.setType(type);
+            if (requestVAgentEntity.getType() == 1) {
+                existAgent.setPassword1(requestVAgentEntity.getPassword());
+            } else if (requestVAgentEntity.getType() == 2) {
+                existAgent.setPassword2(requestVAgentEntity.getPassword());
+            }
             agent = iAgentServices.updateAgentType(existAgent);
         }
 
@@ -173,7 +181,7 @@ public class AgentController extends Controller implements IAgentController {
         }
         // 注册检测
         AgentEntity existAgent = iAgentServices.existAgent(requestVAgentEntity);
-        if (existAgent == null || existAgent.getType() != requestVAgentEntity.getType()) {
+        if (existAgent == null || (existAgent.getType() < 3 && existAgent.getType() != requestVAgentEntity.getType())) {
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD_2.getCode());
             iResultSet.setData(requestVAgentEntity);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
@@ -189,8 +197,12 @@ public class AgentController extends Controller implements IAgentController {
             renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "cellphone", "password")));
             return;
         }
-
-        existAgent.setPassword(requestVAgentEntity.getPassword());
+        if (requestVAgentEntity.getType() == 1) {
+            existAgent.setPassword1(requestVAgentEntity.getPassword());
+        } else if (requestVAgentEntity.getType() == 2) {
+            existAgent.setPassword2(requestVAgentEntity.getPassword());
+        }
+        existAgent.setType(requestVAgentEntity.getType());
         AgentEntity agent = iAgentServices.updateAgentPassword(existAgent);
         if (agent == null) {
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
@@ -233,6 +245,8 @@ public class AgentController extends Controller implements IAgentController {
         }
 
         //查找
+        requestVAgentEntity.setPassword1(requestVAgentEntity.getPassword());
+        requestVAgentEntity.setPassword2(requestVAgentEntity.getPassword());
         AgentEntity agentEntity = iAgentServices.retrieveAgent(requestVAgentEntity);
         if (agentEntity == null) {
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
@@ -307,15 +321,27 @@ public class AgentController extends Controller implements IAgentController {
             return;
         }
 
-        if (!existAgentEntity.getPassword().equals(requestVAgentEntity.getOrdPassword())) {
-            iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
-            iResultSet.setData(requestVAgentEntity);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_BAD);
-            renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "t", "orderPassword", "newPassword")));
-            return;
-        }
 
-        existAgentEntity.setPassword(requestVAgentEntity.getNewPassword());
+        if (requestVAgentEntity.getType() == 1) {
+            if (!existAgentEntity.getPassword1().equals(requestVAgentEntity.getOrdPassword())) {
+                iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
+                iResultSet.setData(requestVAgentEntity);
+                iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_BAD);
+                renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "t", "orderPassword", "newPassword")));
+                return;
+            }
+            existAgentEntity.setPassword1(requestVAgentEntity.getNewPassword());
+        } else if (requestVAgentEntity.getType() == 2) {
+            if (!existAgentEntity.getPassword2().equals(requestVAgentEntity.getOrdPassword())) {
+                iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
+                iResultSet.setData(requestVAgentEntity);
+                iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_BAD);
+                renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "t", "orderPassword", "newPassword")));
+                return;
+            }
+            existAgentEntity.setPassword2(requestVAgentEntity.getNewPassword());
+        }
+        existAgentEntity.setType(requestVAgentEntity.getType());
         AgentEntity updateAgentEntity = iAgentServices.updateAgentPassword(existAgentEntity);
         if (updateAgentEntity == null) {
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());

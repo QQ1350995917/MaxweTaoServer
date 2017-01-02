@@ -9,7 +9,8 @@ public class AgentEntity {
     private String agentId;
     private String agentPId; // 可为空，只有经过了转让授权码的账户才不为空
     private String cellphone; // 不为空
-    private String password; // 不为空
+    private String password1; // 业务类型1的密码，可为空
+    private String password2; // 业务类型2的密码，可为空
     private String name; // 自己命名的名字
     private String named; // 被上级备注的名字
     private String code; //自己的授权码
@@ -50,12 +51,20 @@ public class AgentEntity {
         this.cellphone = cellphone;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPassword1() {
+        return password1;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPassword1(String password1) {
+        this.password1 = password1;
+    }
+
+    public String getPassword2() {
+        return password2;
+    }
+
+    public void setPassword2(String password2) {
+        this.password2 = password2;
     }
 
     public String getName() {

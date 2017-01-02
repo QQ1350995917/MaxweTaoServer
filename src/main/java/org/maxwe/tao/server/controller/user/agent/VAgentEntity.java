@@ -11,6 +11,7 @@ import org.maxwe.tao.server.service.user.agent.AgentEntity;
  */
 public class VAgentEntity extends AgentEntity {
     private String t;
+    private String password;
     private String ordPassword;
     private String newPassword;
     private String cellPhoneCode;
@@ -28,7 +29,11 @@ public class VAgentEntity extends AgentEntity {
         this.setAgentId(agentEntity.getAgentId());
         this.setAgentPId(agentEntity.getAgentPId());
         this.setCellphone(agentEntity.getCellphone());
-        this.setPassword(agentEntity.getPassword());
+        if (this.getType() == 1) {
+            this.setPassword1(agentEntity.getPassword1());
+        } else if (this.getType() == 2) {
+            this.setPassword2(agentEntity.getPassword2());
+        }
         this.setName(agentEntity.getName());
         this.setNamed(agentEntity.getNamed());
         this.setCode(agentEntity.getCode());
@@ -48,6 +53,14 @@ public class VAgentEntity extends AgentEntity {
 
     public void setT(String t) {
         this.t = t;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getOrdPassword() {
@@ -75,30 +88,51 @@ public class VAgentEntity extends AgentEntity {
     }
 
     public boolean checkCreateParams() {
-        if (!CellPhoneUtils.isCellphone(this.getCellphone())
-                || StringUtils.isEmpty(this.getPassword()) || this.getPassword().length() < 6
-                || this.getType() == 0) {
-            return false;
+        if (this.getType() == 1) {
+            if (!CellPhoneUtils.isCellphone(this.getCellphone())
+                    || StringUtils.isEmpty(this.getPassword()) || this.getPassword().length() < 6) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (this.getType() == 2) {
+            if (!CellPhoneUtils.isCellphone(this.getCellphone())
+                    || StringUtils.isEmpty(this.getPassword()) || this.getPassword().length() < 6) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
-            return true;
+            return false;
         }
     }
 
     public boolean checkLoginParams() {
-        if (!CellPhoneUtils.isCellphone(this.getCellphone())
-                || StringUtils.isEmpty(this.getPassword()) || this.getPassword().length() < 6
-                || this.getType() == 0) {
-            return false;
+        if (this.getType() == 1) {
+            if (!CellPhoneUtils.isCellphone(this.getCellphone())
+                    || StringUtils.isEmpty(this.getPassword()) || this.getPassword().length() < 6) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (this.getType() == 2) {
+            if (!CellPhoneUtils.isCellphone(this.getCellphone())
+                    || StringUtils.isEmpty(this.getPassword()) || this.getPassword().length() < 6) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
-            return true;
+            return false;
         }
+
     }
 
     public boolean checkModifyPasswordParams() {
         if (StringUtils.isEmpty(this.getT())
                 || StringUtils.isEmpty(this.getOrdPassword()) || this.getOrdPassword().length() < 6
                 || StringUtils.isEmpty(this.getNewPassword()) || this.getNewPassword().length() < 6
-                || this.getType() == 0) {
+                || (this.getType() != 1 && this.getType() != 2)) {
             return false;
         } else {
             return true;
