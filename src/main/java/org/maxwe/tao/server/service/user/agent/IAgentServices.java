@@ -8,11 +8,13 @@ import java.util.LinkedList;
  * Description: @TODO
  */
 public interface IAgentServices {
-    boolean existProxy(String cellphone);
-    AgentEntity createProxy(AgentEntity proxyEntity);
-    AgentEntity updateProxyPassword(AgentEntity proxyEntity);
-    AgentEntity retrieveProxy(AgentEntity proxyEntity);
-    AgentEntity retrieveProxy(String proxyId);
-    LinkedList<AgentEntity> retrieveProxyByPId(String proxyPId);
-    AgentEntity retrieveProxyByCellphone(String cellphone);
+    AgentEntity existAgent(AgentEntity agentEntity);
+    AgentEntity createAgent(AgentEntity agentEntity);
+    AgentEntity updateAgentPassword(AgentEntity agentEntity);
+    AgentEntity updateAgentType(AgentEntity agentEntity);
+    AgentEntity retrieveAgentById(String agentId);
+    AgentEntity retrieveAgentByCellphone(String cellphone);
+    AgentEntity retrieveAgent(AgentEntity agentEntity);
+    LinkedList<AgentEntity> retrieveAgentByPId(String agentPId);
+
 }

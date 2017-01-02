@@ -8,6 +8,7 @@ package org.maxwe.tao.server.service.user;
 public interface ICSServices {
     boolean existByToken(String token);
     CSEntity create(CSEntity csEntity);
+    CSEntity updateToken(CSEntity csEntity);
     CSEntity retrieveByToken(String token);
     boolean deleteByToken(String token);
 }

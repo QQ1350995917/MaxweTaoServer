@@ -9,7 +9,7 @@ public class CSEntity {
     private String csId;
     private String token;
     private String mappingId;
-    private String tableName;
+    private int type;
     private String createTime;
     private String updateTime;
 
@@ -23,9 +23,9 @@ public class CSEntity {
     }
 
 
-    public CSEntity(String mappingId,String tableName) {
+    public CSEntity(String mappingId,int type) {
         this.mappingId = mappingId;
-        this.tableName = tableName;
+        this.type = type;
     }
 
     public String getCsId() {
@@ -52,12 +52,13 @@ public class CSEntity {
         this.mappingId = mappingId;
     }
 
-    public String getTableName() {
-        return tableName;
+
+    public int getType() {
+        return type;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getCreateTime() {

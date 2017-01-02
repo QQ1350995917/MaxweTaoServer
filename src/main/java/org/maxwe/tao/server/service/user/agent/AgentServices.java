@@ -15,69 +15,87 @@ import java.util.Map;
  */
 public class AgentServices implements IAgentServices {
     @Override
-    public boolean existProxy(String cellphone) {
-        List<Record> records = Db.find("SELECT * FROM agent WHERE cellphone = ? ", cellphone);
+    public AgentEntity existAgent(AgentEntity agentEntity) {
+        List<Record> records = Db.find("SELECT * FROM agent WHERE cellphone = ? ", agentEntity.getCellphone());
         if (records.size() > 0) {
-            return true;
+            Map<String, Object> accountMap = records.get(0).getColumns();
+            return JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
         } else {
-            return false;
+            return null;
         }
     }
 
     @Override
-    public AgentEntity createProxy(AgentEntity proxyEntity) {
-        Record proxyRecord = new Record()
-                .set("proxyId", proxyEntity.getProxyId())
-                .set("cellphone", proxyEntity.getCellphone())
-                .set("password", proxyEntity.getPassword());
-        boolean account = Db.save("agent", proxyRecord);
+    public AgentEntity createAgent(AgentEntity agentEntity) {
+        Record agentRecord = new Record()
+                .set("agentId", agentEntity.getAgentId())
+                .set("cellphone", agentEntity.getCellphone())
+                .set("password", agentEntity.getPassword())
+                .set("type", agentEntity.getType());
+        boolean account = Db.save("agent", agentRecord);
         if (account) {
-            return proxyEntity;
+            return agentEntity;
         } else {
             return null;
         }
     }
 
     @Override
-    public AgentEntity updateProxyPassword(AgentEntity proxyEntity) {
-        int count = Db.update("UPDATE agent SET password = ? WHERE proxyId = ? ", proxyEntity.getPassword(), proxyEntity.getProxyId());
+    public AgentEntity updateAgentPassword(AgentEntity agentEntity) {
+        int count = Db.update("UPDATE agent SET password = ? WHERE agentId = ? ", agentEntity.getPassword(), agentEntity.getAgentId());
         if (count == 1) {
-            return proxyEntity;
+            return agentEntity;
         } else {
             return null;
         }
     }
 
     @Override
-    public AgentEntity retrieveProxy(AgentEntity proxyEntity) {
-        return null;
-    }
-
-    @Override
-    public AgentEntity retrieveProxy(String proxyId) {
-        List<Record> proxyRecords = Db.find("SELECT * FROM agent WHERE proxyId = ? ", proxyId);
-        Map<String, Object> accountMap = proxyRecords.get(0).getColumns();
-        AgentEntity proxyEntity = JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
-        return proxyEntity;
-    }
-
-    @Override
-    public LinkedList<AgentEntity> retrieveProxyByPId(String proxyPId) {
-        List<Record> proxyRecords = Db.find("SELECT * FROM agent WHERE proxyPId = ? ", proxyPId);
-        LinkedList<AgentEntity> proxyEntities = new LinkedList<>();
-        for (Record proxyRecord:proxyRecords){
-            Map<String, Object> accountMap = proxyRecord.getColumns();
-            AgentEntity proxyEntity = JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
-            proxyEntities.add(proxyEntity);
+    public AgentEntity updateAgentType(AgentEntity agentEntity) {
+        int count = Db.update("UPDATE agent SET type = ? WHERE agentId = ? ", agentEntity.getType(), agentEntity.getAgentId());
+        if (count == 1) {
+            return agentEntity;
+        } else {
+            return null;
         }
-        return proxyEntities;
     }
 
     @Override
-    public AgentEntity retrieveProxyByCellphone(String cellphone) {
-        List<Record> proxyRecords = Db.find("SELECT * FROM agent WHERE cellphone = ? ", cellphone);
-        Map<String, Object> accountMap = proxyRecords.get(0).getColumns();
-        AgentEntity proxyEntity = JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
-        return proxyEntity;
+    public AgentEntity retrieveAgentById(String agentId) {
+        List<Record> agentRecords = Db.find("SELECT * FROM agent WHERE agentId = ? ", agentId);
+        Map<String, Object> accountMap = agentRecords.get(0).getColumns();
+        AgentEntity agentEntity = JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
+        return agentEntity;
+    }
+
+    @Override
+    public AgentEntity retrieveAgentByCellphone(String cellphone) {
+        List<Record> agentRecords = Db.find("SELECT * FROM agent WHERE cellphone = ? ", cellphone);
+        Map<String, Object> accountMap = agentRecords.get(0).getColumns();
+        AgentEntity agentEntity = JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
+        return agentEntity;
+    }
+
+    @Override
+    public AgentEntity retrieveAgent(AgentEntity agentEntity) {
+        List<Record> agentRecords = Db.find("SELECT * FROM agent WHERE password = ? AND cellphone = ? ", agentEntity.getPassword(), agentEntity.getCellphone());
+        if (agentRecords.get(0) == null) {
+            return null;
+        }
+        Map<String, Object> accountMap = agentRecords.get(0).getColumns();
+        AgentEntity resultAgentEntity = JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
+        return resultAgentEntity;
+    }
+
+    @Override
+    public LinkedList<AgentEntity> retrieveAgentByPId(String agentPId) {
+        List<Record> agentRecords = Db.find("SELECT * FROM agent WHERE agentPId = ? ", agentPId);
+        LinkedList<AgentEntity> agentEntities = new LinkedList<>();
+        for (Record agentRecord : agentRecords) {
+            Map<String, Object> accountMap = agentRecord.getColumns();
+            AgentEntity agentEntity = JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
+            agentEntities.add(agentEntity);
+        }
+        return agentEntities;
     }
 }

@@ -15,6 +15,7 @@ public interface IResultSet {
         RC_SUCCESS_EMPTY(204),//执行成功,符合请求条件的参数是空
         RC_PARAMS_BAD(400),//提交参数不符合要求
         RC_ACCESS_BAD(401),//权限限制的无法访问
+        RC_ACCESS_BAD_2(402),//没有符合相关的内容而造成的权限限制
         RC_PARAMS_REPEAT(406),//内容重复无法进行正确响应-登录名重复等
         RC_ACCESS_TIMEOUT(408),//权限超时造成的无法访问
         RC_TO_MANY(429),//访问频率造成的拒绝服务

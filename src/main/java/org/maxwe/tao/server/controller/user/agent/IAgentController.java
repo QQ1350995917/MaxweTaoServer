@@ -1,4 +1,4 @@
-package org.maxwe.tao.server.controller.user.proxy;
+package org.maxwe.tao.server.controller.user.agent;
 
 import org.maxwe.tao.server.controller.user.IAccountController;
 
@@ -7,6 +7,6 @@ import org.maxwe.tao.server.controller.user.IAccountController;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public interface IProxyController extends IAccountController {
-    void retrieveProxyByPId(String pid);
+public interface IAgentController extends IAccountController {
+    void retrieveAgentsByPId(String pid);
 }

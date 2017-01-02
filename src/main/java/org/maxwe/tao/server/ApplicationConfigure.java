@@ -8,8 +8,7 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.c3p0.C3p0Plugin;
 import com.jfinal.render.ViewType;
 import org.maxwe.tao.server.controller.page.PageController;
-import org.maxwe.tao.server.controller.user.proxy.ProxyController;
-import org.maxwe.tao.server.controller.user.seller.SellerController;
+import org.maxwe.tao.server.controller.user.agent.AgentController;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -59,7 +58,7 @@ public class ApplicationConfigure extends JFinalConfig {
             @Override
             public void intercept(Invocation inv) {
 //                inv.getController().getResponse().setHeader("Access-Control-Allow-Origin", "http://localhost:63343");
-                inv.getController().getResponse().setHeader("Access-Control-Allow-Origin", "*");
+//                inv.getController().getResponse().setHeader("Access-Control-Allow-Origin", "*");
                 inv.invoke();
             }
         });
@@ -73,8 +72,7 @@ public class ApplicationConfigure extends JFinalConfig {
     @Override
     public void configRoute(Routes me) {
         me.add("/", PageController.class);
-        me.add("/seller", SellerController.class);
-        me.add("/agent", ProxyController.class);
+        me.add("/agent", AgentController.class);
 
 
 //        me.add("/meta", MetaController.class);

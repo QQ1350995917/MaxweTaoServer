@@ -6,15 +6,16 @@ package org.maxwe.tao.server.service.user.agent;
  * Description: @TODO
  */
 public class AgentEntity {
-    private String proxyId;
-    private String proxyPId; // 可为空，只有经过了转让授权码的账户才不为空
-    private String name; //
-    private String named; //被上级备注的名字
-    private String cellphone;
-    private String password;
-    private String code; //自己的code
+    private String agentId;
+    private String agentPId; // 可为空，只有经过了转让授权码的账户才不为空
+    private String cellphone; // 不为空
+    private String password; // 不为空
+    private String name; // 自己命名的名字
+    private String named; // 被上级备注的名字
+    private String code; //自己的授权码
+    private int type;// 业务类型，1普通的代理，2高级代理，3综合业务代理
     private int level; // 0 标示创始人，超级管理者
-    private int status;
+    private int status; // 状态
     private int haveCodes; // 累计购买
     private int spendCodes; // 已经消费
     private int leftCodes; // 当前剩余
@@ -25,36 +26,20 @@ public class AgentEntity {
         super();
     }
 
-    public String getProxyId() {
-        return proxyId;
+    public String getAgentId() {
+        return agentId;
     }
 
-    public void setProxyId(String proxyId) {
-        this.proxyId = proxyId;
+    public void setAgentId(String agentId) {
+        this.agentId = agentId;
     }
 
-    public String getProxyPId() {
-        return proxyPId;
+    public String getAgentPId() {
+        return agentPId;
     }
 
-    public void setProxyPId(String proxyPId) {
-        this.proxyPId = proxyPId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getNamed() {
-        return named;
-    }
-
-    public void setNamed(String named) {
-        this.named = named;
+    public void setAgentPId(String agentPId) {
+        this.agentPId = agentPId;
     }
 
     public String getCellphone() {
@@ -73,12 +58,36 @@ public class AgentEntity {
         this.password = password;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNamed() {
+        return named;
+    }
+
+    public void setNamed(String named) {
+        this.named = named;
+    }
+
     public String getCode() {
         return code;
     }
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public int getLevel() {

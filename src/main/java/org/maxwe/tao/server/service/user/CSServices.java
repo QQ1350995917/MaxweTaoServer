@@ -26,11 +26,12 @@ public class CSServices implements ICSServices {
 
     @Override
     public CSEntity create(CSEntity csEntity) {
+        Db.update("DELETE FROM cs WHERE mappingId = ? AND type = ?", csEntity.getMappingId(), csEntity.getType());
         Record accountRecord = new Record()
                 .set("csId", csEntity.getCsId())
                 .set("token", csEntity.getToken())
                 .set("mappingId", csEntity.getMappingId())
-                .set("tableName", csEntity.getTableName());
+                .set("type", csEntity.getType());
         boolean account = Db.save("cs", accountRecord);
         if (account) {
             return csEntity;
@@ -40,8 +41,21 @@ public class CSServices implements ICSServices {
     }
 
     @Override
+    public CSEntity updateToken(CSEntity csEntity) {
+        int count = Db.update("UPDATE cs SET token = ? WHERE csId = ? ", csEntity.getToken(), csEntity.getCsId());
+        if (count == 1) {
+            return csEntity;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public CSEntity retrieveByToken(String token) {
         List<Record> accountRecords = Db.find("SELECT * FROM cs WHERE token = ? ", token);
+        if (accountRecords.get(0) == null) {
+            return null;
+        }
         Map<String, Object> accountMap = accountRecords.get(0).getColumns();
         CSEntity csEntity = JSON.parseObject(JSON.toJSONString(accountMap), CSEntity.class);
         return csEntity;
@@ -49,7 +63,7 @@ public class CSServices implements ICSServices {
 
     @Override
     public boolean deleteByToken(String token) {
-        int update = Db.update("DELETE FROM WHERE TOKEN = ", token);
+        int update = Db.update("DELETE FROM cs WHERE token = ? ", token);
         return update >= 0;
     }
 }

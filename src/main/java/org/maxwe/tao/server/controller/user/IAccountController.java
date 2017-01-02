@@ -1,9 +1,7 @@
 package org.maxwe.tao.server.controller.user;
 
-import org.maxwe.tao.server.interceptor.ManagerInterceptor;
-import org.maxwe.tao.server.interceptor.MenuInterceptor;
-import org.maxwe.tao.server.interceptor.SessionInterceptor;
 import com.jfinal.aop.Before;
+import org.maxwe.tao.server.interceptor.SessionInterceptor;
 
 /**
  * Created by Pengwei Ding on 2016-08-16 08:58.
@@ -30,6 +28,12 @@ public interface IAccountController {
      * 用户创建账户接口
      */
     void create();
+
+    /**
+     * 用户接口
+     * 找回密码
+     */
+    void lost();
 
     /**
      * 用户接口

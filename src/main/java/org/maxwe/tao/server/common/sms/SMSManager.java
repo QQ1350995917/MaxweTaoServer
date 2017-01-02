@@ -1,11 +1,6 @@
 package org.maxwe.tao.server.common.sms;
 
-import com.alibaba.fastjson.JSON;
 import com.taobao.api.ApiException;
-import com.taobao.api.DefaultTaobaoClient;
-import com.taobao.api.TaobaoClient;
-import com.taobao.api.request.AlibabaAliqinFcSmsNumSendRequest;
-import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
 
 import java.util.Map;
 import java.util.Random;
@@ -23,8 +18,8 @@ public class SMSManager {
     private static final String secret = "46a8e1ce68ea3d55a40374b4daf9313e";
     private static final String SMS_MODEL = "SMS_36305101";
     private static final String product = "测试";
-    private static final int DELAYED_ADDRESS = 1000 * 60;
-    private static final int DELAYED_CELLPHONE = 1000 * 60 * 10;
+    private static final int DELAYED_ADDRESS = 1000 * 60; // 同一个地址注册的时间间隔
+    private static final int DELAYED_CELLPHONE = 1000 * 60 * 10;// 同一个手机号验证码的有效期
 
     private static final boolean threadRunnable = true;
     private static final ConcurrentHashMap<String, Long> SMS_CACHE_ADDRESS = new ConcurrentHashMap<>();
@@ -97,7 +92,7 @@ public class SMSManager {
         return smsEntityCache;
     }
 
-    private static void sendSMS(String cellphone) throws ApiException {
+    public static void sendSMS(String cellphone) throws ApiException {
         String code;
         SMSEntity cacheCellphone = isCacheCellphone(cellphone);
         if (cacheCellphone == null) {
@@ -111,22 +106,27 @@ public class SMSManager {
         } else {
             code = cacheCellphone.getCode();
         }
-        TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
-        AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
-        req.setSmsType("normal");
-        req.setSmsFreeSignName("测试");
-        req.setSmsParamString("{\"code\":\"" + code + "\",\"product\":\"" + product + "\"}");
-        req.setRecNum(cellphone);
-        req.setSmsTemplateCode(SMS_MODEL);
-        AlibabaAliqinFcSmsNumSendResponse rsp = client.execute(req);
-        Map map = JSON.parseObject(rsp.getBody(), Map.class);
-        if (Boolean.parseBoolean(((Map) ((Map) map.get("alibaba_aliqin_fc_sms_num_send_response")).get("result")).get("success").toString())) {
-
-        } else {
-
-        }
-        System.out.println(rsp.getBody());
+        System.out.println("收到电话号码：" + cellphone + "的电话验证码: " + code);
+//        TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
+//        AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
+//        req.setSmsType("normal");
+//        req.setSmsFreeSignName("测试");
+//        req.setSmsParamString("{\"code\":\"" + code + "\",\"product\":\"" + product + "\"}");
+//        req.setRecNum(cellphone);
+//        req.setSmsTemplateCode(SMS_MODEL);
+//        AlibabaAliqinFcSmsNumSendResponse rsp = client.execute(req);
+//        Map map = JSON.parseObject(rsp.getBody(), Map.class);
+//        if (Boolean.parseBoolean(((Map) ((Map) map.get("alibaba_aliqin_fc_sms_num_send_response")).get("result")).get("success").toString())) {
+//
+//        } else {
+//
+//        }
+//        System.out.println(rsp.getBody());
         //{"alibaba_aliqin_fc_sms_num_send_response":{"result":{"err_code":"0","model":"105243374211^1107192054051","success":true},"request_id":"s75ccxbqypop"}}
+    }
+
+    public static String getCellphoneCode(String cellphone){
+        return SMS_CACHE_CELLPHONE.get(cellphone) == null ? null :SMS_CACHE_CELLPHONE.get(cellphone).getCode();
     }
 
     public static void main(String[] args) {
