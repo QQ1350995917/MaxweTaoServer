@@ -2,7 +2,7 @@ package org.maxwe.tao.server.controller.product;
 
 import org.maxwe.tao.server.interceptor.ManagerInterceptor;
 import org.maxwe.tao.server.interceptor.MenuInterceptor;
-import org.maxwe.tao.server.interceptor.SessionInterceptor;
+import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import com.jfinal.aop.Before;
 
 /**
@@ -46,14 +46,14 @@ public interface ISeriesController {
      * 管理员接口
      * 创建新系列
      */
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     void mCreate();
 
     /**
      * 管理员接口接口
      * 更新系列名称
      */
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     void mUpdate();
 
     /**
@@ -62,13 +62,13 @@ public interface ISeriesController {
      * 有启用状态向禁用状态修改时候要修改旗下的全部类型为禁用，反向不做修改
      * 有启用/禁用状态向删除状态做修改时候要删除旗下的全部的类型为删除状态
      */
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     void mMark();
 
     /**
      * 管理员接口
      * 读取系列集合
      */
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     void mRetrieves();
 }

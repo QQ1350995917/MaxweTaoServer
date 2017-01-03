@@ -4,7 +4,7 @@ import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.interceptor.ManagerInterceptor;
 import org.maxwe.tao.server.interceptor.MenuInterceptor;
-import org.maxwe.tao.server.interceptor.SessionInterceptor;
+import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.file.FFile;
 import org.maxwe.tao.server.service.file.FileServices;
 import org.maxwe.tao.server.service.file.IFileServices;
@@ -30,7 +30,7 @@ public class FileController extends Controller implements IFileController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mTypeCover() {
         UploadFile file = this.getFile();
         String params = this.getPara("p");
@@ -77,7 +77,7 @@ public class FileController extends Controller implements IFileController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mTypeDirectionImage() {
         UploadFile file = this.getFile();
         String filePath = "/upload/direction_" + file.getFileName();

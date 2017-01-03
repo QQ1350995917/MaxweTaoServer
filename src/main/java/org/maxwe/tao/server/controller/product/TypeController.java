@@ -5,7 +5,7 @@ import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.controller.file.VFFile;
 import org.maxwe.tao.server.interceptor.ManagerInterceptor;
 import org.maxwe.tao.server.interceptor.MenuInterceptor;
-import org.maxwe.tao.server.interceptor.SessionInterceptor;
+import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.file.FFile;
 import org.maxwe.tao.server.service.file.FileServices;
 import org.maxwe.tao.server.service.file.IFileServices;
@@ -83,7 +83,7 @@ public class TypeController extends Controller implements ITypeController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mCreate() {
         String params = this.getPara("p");
         VTypeEntity requestVTypeEntity = JSON.parseObject(params, VTypeEntity.class);
@@ -129,7 +129,7 @@ public class TypeController extends Controller implements ITypeController {
      * 在同一个系列下不能出现相同的类型名称
      */
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mUpdate() {
         String params = this.getPara("p");
         VTypeEntity requestVTypeEntity = JSON.parseObject(params, VTypeEntity.class);
@@ -168,7 +168,7 @@ public class TypeController extends Controller implements ITypeController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mMark() {
         String params = this.getPara("p");
         VTypeEntity requestVTypeEntity = JSON.parseObject(params, VTypeEntity.class);
@@ -205,19 +205,19 @@ public class TypeController extends Controller implements ITypeController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mImage() {
 
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mImageDelete() {
 
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mSummary() {
         String params = this.getPara("p");
         VTypeEntity requestVTypeEntity = JSON.parseObject(params, VTypeEntity.class);
@@ -247,7 +247,7 @@ public class TypeController extends Controller implements ITypeController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mDirections() {
         String params = this.getPara("p");
         VTypeEntity requestVTypeEntity = JSON.parseObject(params, VTypeEntity.class);
@@ -277,7 +277,7 @@ public class TypeController extends Controller implements ITypeController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mRetrieves() {
         String params = this.getPara("p");
         VSeriesEntity requestVSeriesEntity = JSON.parseObject(params, VSeriesEntity.class);
@@ -314,7 +314,7 @@ public class TypeController extends Controller implements ITypeController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mRetrieve() {
         String params = this.getPara("p");
         VTypeEntity requestVTypeEntity = JSON.parseObject(params, VTypeEntity.class);

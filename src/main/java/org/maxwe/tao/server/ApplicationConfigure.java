@@ -88,7 +88,7 @@ public class ApplicationConfigure extends JFinalConfig {
 //        me.add("/order", OrderController.class);
 //        me.add("/receiver", ReceiverController.class);
 //        me.add("/file", FileController.class);
-//        me.add("/system", SystemController.class);
+//        me.add("/trade", SystemController.class);
     }
 
     @Override

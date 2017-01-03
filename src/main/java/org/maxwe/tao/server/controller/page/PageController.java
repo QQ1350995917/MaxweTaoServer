@@ -3,7 +3,7 @@ package org.maxwe.tao.server.controller.page;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import org.maxwe.tao.server.interceptor.ManagerInterceptor;
-import org.maxwe.tao.server.interceptor.SessionInterceptor;
+import org.maxwe.tao.server.interceptor.TokenInterceptor;
 
 /**
  * Created by Pengwei Ding on 2016-08-19 16:32.
@@ -141,7 +141,7 @@ public class PageController extends Controller implements IPageController {
         this.render("/webapp/widgets/index.html");
     }
 
-    @Before(SessionInterceptor.class)
+    @Before(TokenInterceptor.class)
     @Override
     public void pm() {
 //        String params = this.getPara("p");
@@ -198,7 +198,7 @@ public class PageController extends Controller implements IPageController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class})
     public void frame() {
 //        String params = getPara("p");
 //        Map<String, Object> paramsMap = JSON.parseObject(params, Map.class);

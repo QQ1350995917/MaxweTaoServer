@@ -6,7 +6,7 @@ import org.maxwe.tao.server.common.response.VPageData;
 import org.maxwe.tao.server.controller.file.VFFile;
 import org.maxwe.tao.server.interceptor.ManagerInterceptor;
 import org.maxwe.tao.server.interceptor.MenuInterceptor;
-import org.maxwe.tao.server.interceptor.SessionInterceptor;
+import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.file.FFile;
 import org.maxwe.tao.server.service.file.FileServices;
 import org.maxwe.tao.server.service.file.IFileServices;
@@ -228,7 +228,7 @@ public class FormatController extends Controller implements IFormatController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mCreate() {
         String params = this.getPara("p");
         VFormatEntity requestVFormatEntity = JSON.parseObject(params, VFormatEntity.class);
@@ -281,7 +281,7 @@ public class FormatController extends Controller implements IFormatController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mUpdate() {
         String params = this.getPara("p");
         VFormatEntity requestVFormatEntity = JSON.parseObject(params, VFormatEntity.class);
@@ -332,7 +332,7 @@ public class FormatController extends Controller implements IFormatController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mMark() {
         String params = this.getPara("p");
         VFormatEntity requestVFormatEntity = JSON.parseObject(params, VFormatEntity.class);
@@ -369,7 +369,7 @@ public class FormatController extends Controller implements IFormatController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mKingWeight() {
         String params = this.getPara("p");
         VFormatEntity requestVFormatEntity = JSON.parseObject(params, VFormatEntity.class);
@@ -399,7 +399,7 @@ public class FormatController extends Controller implements IFormatController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mSwapWeight() {
         String params = this.getPara("p");
         VFormatEntity requestVFormatEntity = JSON.parseObject(params, VFormatEntity.class);
@@ -434,7 +434,7 @@ public class FormatController extends Controller implements IFormatController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mWeights() {
         String params = this.getPara("p");
         VFormatEntity requestVFormatEntity = JSON.parseObject(params, VFormatEntity.class);
@@ -488,7 +488,7 @@ public class FormatController extends Controller implements IFormatController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mRetrieves() {
         String params = this.getPara("p");
         VTypeEntity requestVTypeEntity = JSON.parseObject(params, VTypeEntity.class);
@@ -529,7 +529,7 @@ public class FormatController extends Controller implements IFormatController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mRetrieve() {
 
     }

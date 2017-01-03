@@ -5,7 +5,7 @@ import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.controller.file.VFFile;
 import org.maxwe.tao.server.interceptor.ManagerInterceptor;
 import org.maxwe.tao.server.interceptor.MenuInterceptor;
-import org.maxwe.tao.server.interceptor.SessionInterceptor;
+import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.file.FFile;
 import org.maxwe.tao.server.service.file.FileServices;
 import org.maxwe.tao.server.service.file.IFileServices;
@@ -149,7 +149,7 @@ public class SeriesController extends Controller implements ISeriesController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mCreate() {
         String params = this.getPara("p");
         VSeriesEntity requestVSeriesEntity = JSON.parseObject(params, VSeriesEntity.class);
@@ -192,7 +192,7 @@ public class SeriesController extends Controller implements ISeriesController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mUpdate() {
         String params = this.getPara("p");
         VSeriesEntity requestVSeriesEntity = JSON.parseObject(params, VSeriesEntity.class);
@@ -230,7 +230,7 @@ public class SeriesController extends Controller implements ISeriesController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mMark() {
         String params = this.getPara("p");
         VSeriesEntity requestVSeriesEntity = JSON.parseObject(params, VSeriesEntity.class);
@@ -266,7 +266,7 @@ public class SeriesController extends Controller implements ISeriesController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mRetrieves() {
         LinkedList<SeriesEntity> seriesEntities = iSeriesServices.mRetrieves();
         IResultSet iResultSet = new ResultSet();

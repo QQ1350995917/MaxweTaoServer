@@ -116,9 +116,9 @@ public class Code {
     }
 
 
-    public static synchronized String getToken(String cellphone) {
+    public static synchronized String getToken(String cellphone,String password) {
         try {
-            cellphone += DateTime.getCurrentTimestamp() + genRandom();
+            cellphone += password + DateTime.getCurrentTimestamp() + genRandom();
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(cellphone.getBytes());
             String result = new BigInteger(1, md.digest()).toString(16);

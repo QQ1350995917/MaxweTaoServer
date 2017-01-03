@@ -4,7 +4,7 @@ import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.interceptor.ManagerInterceptor;
 import org.maxwe.tao.server.interceptor.MenuInterceptor;
-import org.maxwe.tao.server.interceptor.SessionInterceptor;
+import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.poster.IPosterServices;
 import org.maxwe.tao.server.service.poster.PosterEntity;
 import org.maxwe.tao.server.service.poster.PosterServices;
@@ -57,7 +57,7 @@ public class PosterController extends Controller implements IPosterController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mCreate() {
         String params = this.getPara("p");
         VPosterEntity requestVPosterEntity = JSON.parseObject(params, VPosterEntity.class);
@@ -89,7 +89,7 @@ public class PosterController extends Controller implements IPosterController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mUpdate() {
         String params = this.getPara("p");
         VPosterEntity requestVPosterEntity = JSON.parseObject(params, VPosterEntity.class);
@@ -118,7 +118,7 @@ public class PosterController extends Controller implements IPosterController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mMark() {
         String params = this.getPara("p");
         VPosterEntity requestVPosterEntity = JSON.parseObject(params, VPosterEntity.class);
@@ -154,7 +154,7 @@ public class PosterController extends Controller implements IPosterController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mSwap() {
         String params = this.getPara("p");
         VPosterEntity requestVPosterEntity = JSON.parseObject(params, VPosterEntity.class);
@@ -185,7 +185,7 @@ public class PosterController extends Controller implements IPosterController {
     }
 
     @Override
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     public void mRetrieves() {
         IResultSet iResultSet = new ResultSet();
         LinkedList<VPosterEntity> responseVPosterEntities = new LinkedList<>();

@@ -2,7 +2,7 @@ package org.maxwe.tao.server.controller.link;
 
 import org.maxwe.tao.server.interceptor.ManagerInterceptor;
 import org.maxwe.tao.server.interceptor.MenuInterceptor;
-import org.maxwe.tao.server.interceptor.SessionInterceptor;
+import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import com.jfinal.aop.Before;
 
 /**
@@ -27,35 +27,35 @@ public interface ILinkController {
      * 管理员接口
      * 创建链接分类
      */
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     void mCreate();
 
     /**
      * 管理员接口
      * 更新链接分类
      */
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     void mUpdate();
 
     /**
      * 管理员接口
      * 更新链接分类状态
      */
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     void mMark();
 
     /**
      * 管理员接口
      * 交换链接分类的顺序
      */
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     void mSwap();
 
     /**
      * 管理员接口
      * 读取链接集合
      */
-    @Before({SessionInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
+    @Before({TokenInterceptor.class, ManagerInterceptor.class, MenuInterceptor.class})
     void mRetrieves();
 
 }

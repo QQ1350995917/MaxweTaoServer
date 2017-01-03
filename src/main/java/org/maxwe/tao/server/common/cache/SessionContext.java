@@ -1,9 +1,10 @@
 package org.maxwe.tao.server.common.cache;
 
-import org.maxwe.tao.server.controller.manager.VManagerEntity;
+import org.maxwe.tao.server.service.user.CSEntity;
 
-import javax.servlet.http.HttpSession;
-import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Pengwei Ding on 2016-10-17 14:55.
@@ -11,52 +12,50 @@ import java.util.HashMap;
  * Description: @TODO
  */
 public class SessionContext {
-    public static final String KEY_USER = "user";
+    /**
+     * tokenConcurrentHashMap
+     * 可以使用cellphone + type 和 Token作为key
+     * cellphone + type 弊端：容易别猜到；利益：数据短，效率高
+     * Token 弊端：数据长，效率低，生成新的Token会有旧数据遗留，造成内存浪费；利益：安全
+     * 采用：Token作为key
+     * 内存解决方式：定期（每周）清理不活跃的Token
+     */
+    private static ConcurrentHashMap<String, CSEntity> tokenConcurrentHashMap = new ConcurrentHashMap();
+    private static final int DURATION = 1000 * 60 * 60 * 24;
 
-    private static HashMap<String, HttpSession> sessionMap = new HashMap();
-
-    public static synchronized void addSession(HttpSession session) {
-        if (session != null) {
-            sessionMap.put(session.getId(), session);
-            System.out.println("==================================================ADD SESSION====================================================" + sessionMap.size());
-        }
-    }
-
-    public static synchronized void delSession(HttpSession session) {
-        if (session != null) {
-            sessionMap.remove(session.getId());
-            System.out.println("--------------------------------------------------DEL SESSION----------------------------------------------------" + sessionMap.size());
-        }
-    }
-
-    public static synchronized void delSession(String sessionId) {
-        if (sessionId != null) {
-            sessionMap.remove(sessionId);
-            System.out.println("--------------------------------------------------DEL SESSION----------------------------------------------------" + sessionMap.size());
-        }
-    }
-
-    public static synchronized HttpSession getSession(String sessionId) {
-        if (sessionId == null) {
-            return null;
-        }
-        return sessionMap.get(sessionId);
-    }
-
-    public static synchronized VManagerEntity getSessionManager(String sessionId) {
-        HttpSession session = SessionContext.getSession(sessionId);
-        if (session != null){
-            Object attribute = session.getAttribute(SessionContext.KEY_USER);
-            if (attribute != null){
-                return (VManagerEntity)attribute;
+    static {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Iterator<Map.Entry<String, CSEntity>> iterator = tokenConcurrentHashMap.entrySet().iterator();
+                        while (iterator.hasNext()) {
+                            Map.Entry<String, CSEntity> next = iterator.next();
+                            if (System.currentTimeMillis() - next.getValue().getTimestamp() >= DURATION) {
+                                CSEntity remove = tokenConcurrentHashMap.remove(next.getKey());
+                            }
+                        }
+                        Thread.sleep(DURATION);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-        }
-
-        HttpSession httpSession = sessionMap.get("");
-
-
-
-        return null;
+        }).start();
     }
 
+
+    public static void addCSEntity(CSEntity csEntity) {
+        tokenConcurrentHashMap.put(csEntity.getToken(), csEntity);
+    }
+
+    public static CSEntity getCSEntity(CSEntity csEntity) {
+        CSEntity existCSEntity = tokenConcurrentHashMap.get(csEntity.getToken());
+        return existCSEntity;
+    }
+
+    public static void delCSEntity(CSEntity csEntity) {
+        CSEntity remove = tokenConcurrentHashMap.remove(csEntity.getToken());
+    }
 }

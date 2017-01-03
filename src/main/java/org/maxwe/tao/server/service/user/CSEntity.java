@@ -1,39 +1,46 @@
 package org.maxwe.tao.server.service.user;
 
+import org.maxwe.tao.server.common.utils.DateTime;
+
 /**
  * Created by Pengwei Ding on 2016-12-25 16:16.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
 public class CSEntity {
-    private String csId;
+    private String agentId;
+    private String cellphone;
     private String token;
-    private String mappingId;
     private int type;
-    private String createTime;
-    private String updateTime;
+    private long timestamp;
 
     public CSEntity() {
         super();
     }
 
-    public CSEntity(String token) {
+    public CSEntity(String agentId,String cellphone,String token,int type) {
         super();
+        this.agentId = agentId;
+        this.cellphone = cellphone;
         this.token = token;
-    }
-
-
-    public CSEntity(String mappingId,int type) {
-        this.mappingId = mappingId;
         this.type = type;
+        this.timestamp = DateTime.getCurrentTimestamp();
     }
 
-    public String getCsId() {
-        return csId;
+    public String getAgentId() {
+        return agentId;
     }
 
-    public void setCsId(String csId) {
-        this.csId = csId;
+    public void setAgentId(String agentId) {
+        this.agentId = agentId;
+    }
+
+    public String getCellphone() {
+        return cellphone;
+    }
+
+    public void setCellphone(String cellphone) {
+        this.cellphone = cellphone;
     }
 
     public String getToken() {
@@ -44,15 +51,6 @@ public class CSEntity {
         this.token = token;
     }
 
-    public String getMappingId() {
-        return mappingId;
-    }
-
-    public void setMappingId(String mappingId) {
-        this.mappingId = mappingId;
-    }
-
-
     public int getType() {
         return type;
     }
@@ -61,19 +59,20 @@ public class CSEntity {
         this.type = type;
     }
 
-    public String getCreateTime() {
-        return createTime;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
-    public String getUpdateTime() {
-        return updateTime;
+    public void resetTimestamp(){
+        this.setTimestamp(System.currentTimeMillis());
     }
 
-    public void setUpdateTime(String updateTime) {
-        this.updateTime = updateTime;
+    @Override
+    public String toString() {
+        return "agentId = " + agentId + "; cellphone = " + cellphone + "; type = " + type + "; token = " + token + "; timestamp = " + DateTime.parseLongToFullTime(timestamp);
     }
 }

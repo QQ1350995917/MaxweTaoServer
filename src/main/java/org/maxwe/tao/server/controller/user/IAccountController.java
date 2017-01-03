@@ -1,7 +1,7 @@
 package org.maxwe.tao.server.controller.user;
 
 import com.jfinal.aop.Before;
-import org.maxwe.tao.server.interceptor.SessionInterceptor;
+import org.maxwe.tao.server.interceptor.TokenInterceptor;
 
 /**
  * Created by Pengwei Ding on 2016-08-16 08:58.
@@ -45,7 +45,7 @@ public interface IAccountController {
      * 用户接口
      * 用户退出登录接口
      */
-    @Before(SessionInterceptor.class)
+    @Before(TokenInterceptor.class)
     void logout();
 
     /**

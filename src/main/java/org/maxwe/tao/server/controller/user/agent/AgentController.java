@@ -3,20 +3,23 @@ package org.maxwe.tao.server.controller.user.agent;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.taobao.api.ApiException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.maxwe.tao.server.common.cache.SessionContext;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.common.sms.SMSManager;
 import org.maxwe.tao.server.common.utils.CellPhoneUtils;
 import org.maxwe.tao.server.common.utils.Code;
 import org.maxwe.tao.server.common.utils.IPUtils;
+import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.user.CSEntity;
-import org.maxwe.tao.server.service.user.CSServices;
-import org.maxwe.tao.server.service.user.ICSServices;
-import org.maxwe.tao.server.service.user.agent.IAgentServices;
 import org.maxwe.tao.server.service.user.agent.AgentEntity;
 import org.maxwe.tao.server.service.user.agent.AgentServices;
+import org.maxwe.tao.server.service.user.agent.IAgentServices;
 
 import java.util.LinkedList;
 import java.util.UUID;
@@ -27,8 +30,8 @@ import java.util.UUID;
  * Description: @TODO
  */
 public class AgentController extends Controller implements IAgentController {
+    private Log logger = LogFactory.getLog(AgentController.class);
     private IAgentServices iAgentServices = new AgentServices();
-    private ICSServices icsServices = new CSServices();
 
     @Override
     public void exist() {
@@ -44,7 +47,13 @@ public class AgentController extends Controller implements IAgentController {
         }
         //重复检测
         AgentEntity existAgent = iAgentServices.existAgent(requestVAgentEntity);
-        if (existAgent != null && existAgent.getType() == requestVAgentEntity.getType()) {
+        String password = null;
+        if (requestVAgentEntity.getType() == 1) {
+            password = existAgent.getPassword1();
+        } else if (requestVAgentEntity.getType() == 2) {
+            password = existAgent.getPassword2();
+        }
+        if (existAgent != null && password != null) {
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_REPEAT.getCode());
             iResultSet.setData(requestVAgentEntity);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_CANNOT_REPEAT);
@@ -61,6 +70,7 @@ public class AgentController extends Controller implements IAgentController {
     @Override
     public void smsCode() {
         String params = this.getPara("p");
+        this.logger.info("smsCode = " + params);
         VAgentEntity requestVAgentEntity = JSON.parseObject(params, VAgentEntity.class);
         IResultSet iResultSet = new ResultSet();
         if (requestVAgentEntity == null || !CellPhoneUtils.isCellphone(requestVAgentEntity.getCellphone())) {
@@ -112,12 +122,22 @@ public class AgentController extends Controller implements IAgentController {
         }
         //重复检测 同一种类型下的同一个电话号码算是重复
         AgentEntity existAgent = iAgentServices.existAgent(requestVAgentEntity);
-        if (existAgent != null && existAgent.getType() == requestVAgentEntity.getType()) {
-            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_REPEAT.getCode());
-            iResultSet.setData(requestVAgentEntity);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_CANNOT_REPEAT);
-            renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(AgentEntity.class, "cellphone", "password")));
-            return;
+        if (existAgent != null) {
+            // 电话号码重复
+            String password = null;
+            if (requestVAgentEntity.getType() == 1) {
+                password = existAgent.getPassword1();
+            } else if (requestVAgentEntity.getType() == 2) {
+                password = existAgent.getPassword2();
+            }
+            if (password != null) {
+                // 电话号码注册类型重复
+                iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_REPEAT.getCode());
+                iResultSet.setData(requestVAgentEntity);
+                iResultSet.setMessage(IResultSet.ResultMessage.RM_CANNOT_REPEAT);
+                renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(AgentEntity.class, "cellphone", "password")));
+                return;
+            }
         }
 
         AgentEntity agent;
@@ -128,9 +148,6 @@ public class AgentController extends Controller implements IAgentController {
             requestVAgentEntity.setPassword2(requestVAgentEntity.getPassword());
             agent = iAgentServices.createAgent(requestVAgentEntity);
         } else {
-            //修改类型值
-            int type = existAgent.getType() + requestVAgentEntity.getType();
-            existAgent.setType(type);
             if (requestVAgentEntity.getType() == 1) {
                 existAgent.setPassword1(requestVAgentEntity.getPassword());
             } else if (requestVAgentEntity.getType() == 2) {
@@ -147,17 +164,8 @@ public class AgentController extends Controller implements IAgentController {
             return;
         }
 
-        CSEntity agentCS = new CSEntity(agent.getAgentId(), requestVAgentEntity.getType());
-        agentCS.setCsId(UUID.randomUUID().toString());
-        agentCS.setToken(Code.getToken(agent.getCellphone()));
-        CSEntity cs = icsServices.create(agentCS);
-        if (cs == null) {
-            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
-            iResultSet.setData(requestVAgentEntity);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_FAIL);
-            renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "cellphone", "password")));
-            return;
-        }
+        CSEntity agentCS = new CSEntity(agent.getAgentId(), agent.getCellphone(), Code.getToken(agent.getCellphone(), requestVAgentEntity.getPassword()), requestVAgentEntity.getType());
+        SessionContext.addCSEntity(agentCS);
 
         //创建
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
@@ -169,6 +177,7 @@ public class AgentController extends Controller implements IAgentController {
     @Override
     public void lost() {
         String params = this.getPara("p");
+        this.logger.info("lostPassword = " + params);
         VAgentEntity requestVAgentEntity = JSON.parseObject(params, VAgentEntity.class);
         IResultSet iResultSet = new ResultSet();
         //参数检测
@@ -181,12 +190,28 @@ public class AgentController extends Controller implements IAgentController {
         }
         // 注册检测
         AgentEntity existAgent = iAgentServices.existAgent(requestVAgentEntity);
-        if (existAgent == null || (existAgent.getType() < 3 && existAgent.getType() != requestVAgentEntity.getType())) {
+        if (existAgent == null) {
+            // 电话号码没有注册
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD_2.getCode());
             iResultSet.setData(requestVAgentEntity);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
             renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "cellphone", "password")));
             return;
+        } else {
+            // 电话号码注册，但是该类型下的没注册
+            String password = null;
+            if (requestVAgentEntity.getType() == 1) {
+                password = existAgent.getPassword1();
+            } else if (requestVAgentEntity.getType() == 2) {
+                password = existAgent.getPassword2();
+            }
+            if (password == null) {
+                iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD_2.getCode());
+                iResultSet.setData(requestVAgentEntity);
+                iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+                renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "cellphone", "password")));
+                return;
+            }
         }
 
         // 验证码检测
@@ -212,18 +237,8 @@ public class AgentController extends Controller implements IAgentController {
             return;
         }
 
-        CSEntity agentCS = new CSEntity(agent.getAgentId(), requestVAgentEntity.getType());
-        agentCS.setCsId(UUID.randomUUID().toString());
-        agentCS.setToken(Code.getToken(agent.getCellphone()));
-        CSEntity cs = icsServices.create(agentCS);
-        if (cs == null) {
-            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
-            iResultSet.setData(requestVAgentEntity);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_FAIL);
-            renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "cellphone", "password")));
-            return;
-        }
-
+        CSEntity agentCS = new CSEntity(agent.getAgentId(), agent.getCellphone(), Code.getToken(agent.getCellphone(), requestVAgentEntity.getPassword()), requestVAgentEntity.getType());
+        SessionContext.addCSEntity(agentCS);
         //创建
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(agentCS.getToken());
@@ -234,6 +249,7 @@ public class AgentController extends Controller implements IAgentController {
     @Override
     public void login() {
         String params = this.getPara("p");
+        this.logger.info("login = " + params);
         VAgentEntity requestVAgentEntity = JSON.parseObject(params, VAgentEntity.class);
         IResultSet iResultSet = new ResultSet();
         if (requestVAgentEntity == null || !requestVAgentEntity.checkLoginParams()) {
@@ -256,17 +272,8 @@ public class AgentController extends Controller implements IAgentController {
             return;
         }
 
-        CSEntity agentCS = new CSEntity(agentEntity.getAgentId(), requestVAgentEntity.getType());
-        agentCS.setCsId(UUID.randomUUID().toString());
-        agentCS.setToken(Code.getToken(agentEntity.getCellphone()));
-        CSEntity cs = icsServices.create(agentCS);
-        if (cs == null) {
-            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
-            iResultSet.setData(requestVAgentEntity);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_FAIL);
-            renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "cellphone", "password")));
-            return;
-        }
+        CSEntity agentCS = new CSEntity(agentEntity.getAgentId(), agentEntity.getCellphone(), Code.getToken(agentEntity.getCellphone(), requestVAgentEntity.getPassword()), requestVAgentEntity.getType());
+        SessionContext.addCSEntity(agentCS);
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(agentCS.getToken());
         iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_SUCCESS);
@@ -274,8 +281,10 @@ public class AgentController extends Controller implements IAgentController {
     }
 
     @Override
+    @Before(TokenInterceptor.class)
     public void logout() {
         String params = this.getPara("p");
+        this.logger.info("login = " + params);
         VAgentEntity requestVAgentEntity = JSON.parseObject(params, VAgentEntity.class);
         IResultSet iResultSet = new ResultSet();
         if (requestVAgentEntity == null || StringUtils.isEmpty(requestVAgentEntity.getT())) {
@@ -285,20 +294,15 @@ public class AgentController extends Controller implements IAgentController {
             renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "t")));
             return;
         }
-        boolean b = icsServices.deleteByToken(requestVAgentEntity.getT());
-        if (b) {
-            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
-            iResultSet.setData(requestVAgentEntity);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
-            renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "t")));
-            return;
-        }
+        CSEntity csEntity = new CSEntity(null, requestVAgentEntity.getCellphone(), requestVAgentEntity.getT(), requestVAgentEntity.getType());
+        SessionContext.delCSEntity(csEntity);
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
         renderJson(JSON.toJSONString(iResultSet));
     }
 
     @Override
+    @Before(TokenInterceptor.class)
     public void password() {
         String params = this.getPara("p");
         VAgentEntity requestVAgentEntity = JSON.parseObject(params, VAgentEntity.class);
@@ -311,8 +315,9 @@ public class AgentController extends Controller implements IAgentController {
             return;
         }
 
-        CSEntity existCSEntity = icsServices.retrieveByToken(requestVAgentEntity.getT());
-        AgentEntity existAgentEntity = existCSEntity == null ? null : iAgentServices.retrieveAgentById(existCSEntity.getMappingId());
+        CSEntity csEntity = new CSEntity(null, requestVAgentEntity.getCellphone(), requestVAgentEntity.getT(), requestVAgentEntity.getType());
+        CSEntity existCSEntity = SessionContext.getCSEntity(csEntity);
+        AgentEntity existAgentEntity = iAgentServices.retrieveAgentById(existCSEntity.getAgentId());
         if (existAgentEntity == null) {
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestVAgentEntity);
@@ -320,7 +325,6 @@ public class AgentController extends Controller implements IAgentController {
             renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "t", "orderPassword", "newPassword")));
             return;
         }
-
 
         if (requestVAgentEntity.getType() == 1) {
             if (!existAgentEntity.getPassword1().equals(requestVAgentEntity.getOrdPassword())) {
@@ -351,35 +355,38 @@ public class AgentController extends Controller implements IAgentController {
             return;
         }
 
-        existCSEntity.setToken(Code.getToken(updateAgentEntity.getCellphone()));
-        CSEntity csEntity = icsServices.updateToken(existCSEntity);
-        if (csEntity == null) {
-            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
-            iResultSet.setData(requestVAgentEntity);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_FAIL);
-            renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "cellphone", "password")));
-            return;
-        }
+        CSEntity agentCS = new CSEntity(updateAgentEntity.getAgentId(), updateAgentEntity.getCellphone(), Code.getToken(updateAgentEntity.getCellphone(), requestVAgentEntity.getNewPassword()), requestVAgentEntity.getType());
+        SessionContext.addCSEntity(agentCS);
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(csEntity.getToken());
+        iResultSet.setData(agentCS.getToken());
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
         renderJson(JSON.toJSONString(iResultSet));
     }
 
     @Override
-    public void retrieveAgentsByPId(String pid) {
+    @Before(TokenInterceptor.class)
+    public void retrieveAgent() {
         String params = this.getPara("p");
         VAgentEntity requestVAgentEntity = JSON.parseObject(params, VAgentEntity.class);
         IResultSet iResultSet = new ResultSet();
-        CSEntity csEntity = icsServices.retrieveByToken(requestVAgentEntity.getT());
-        if (csEntity == null) {
-            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
-            iResultSet.setData(requestVAgentEntity);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
-            renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "t")));
-            return;
-        }
-        LinkedList<AgentEntity> agentEntities = iAgentServices.retrieveAgentByPId(csEntity.getMappingId());
+        CSEntity agentCS = new CSEntity(null, requestVAgentEntity.getCellphone(), requestVAgentEntity.getT(), requestVAgentEntity.getType());
+        AgentEntity agentEntity = iAgentServices.retrieveAgentById(SessionContext.getCSEntity(agentCS).getAgentId());
+        VAgentEntity result = new VAgentEntity(agentEntity);
+        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+        iResultSet.setData(result);
+        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+        renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "name","code","level","haveCodes","spendCodes","leftCodes")));
+    }
+
+    @Override
+    @Before(TokenInterceptor.class)
+    public void retrieveSubAgents() {
+        String params = this.getPara("p");
+        VAgentEntity requestVAgentEntity = JSON.parseObject(params, VAgentEntity.class);
+        IResultSet iResultSet = new ResultSet();
+        CSEntity agentCS = new CSEntity(null, requestVAgentEntity.getCellphone(), requestVAgentEntity.getT(), requestVAgentEntity.getType());
+        CSEntity csEntity = SessionContext.getCSEntity(agentCS);
+        LinkedList<AgentEntity> agentEntities = iAgentServices.retrieveAgentByPId(csEntity.getAgentId());
         if (agentEntities == null) {
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestVAgentEntity);
@@ -399,5 +406,23 @@ public class AgentController extends Controller implements IAgentController {
         iResultSet.setData(responseVAgentEntities);
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
         renderJson(JSON.toJSONString(iResultSet));
+    }
+
+    @Override
+    @Before(TokenInterceptor.class)
+    public void retrieveAgentByCellphone() {
+
+    }
+
+    @Override
+    @Before(TokenInterceptor.class)
+    public void grantToCellphone() {
+
+    }
+
+    @Override
+    @Before(TokenInterceptor.class)
+    public void tradeCodesToCellphone() {
+
     }
 }

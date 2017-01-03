@@ -47,7 +47,7 @@ public class DateTime {
         return time;
     }
 
-    public static String parseLongToFullTime(long timestamp) throws Exception {
+    public static String parseLongToFullTime(long timestamp) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date(timestamp);
         String format = simpleDateFormat.format(date);

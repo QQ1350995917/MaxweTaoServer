@@ -29,8 +29,7 @@ public class AgentServices implements IAgentServices {
     public AgentEntity createAgent(AgentEntity agentEntity) {
         Record agentRecord = new Record()
                 .set("agentId", agentEntity.getAgentId())
-                .set("cellphone", agentEntity.getCellphone())
-                .set("type", agentEntity.getType());
+                .set("cellphone", agentEntity.getCellphone());
         if (agentEntity.getType() == 1) {
             agentRecord.set("password1", agentEntity.getPassword1());
         } else if (agentEntity.getType() == 2) {
@@ -61,7 +60,7 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public AgentEntity updateAgentType(AgentEntity agentEntity) {
-        int count = Db.update("UPDATE agent SET password1 = ? , password2 = ?, type = ? WHERE agentId = ? ", agentEntity.getPassword1(),agentEntity.getPassword2(),agentEntity.getType(), agentEntity.getAgentId());
+        int count = Db.update("UPDATE agent SET password1 = ? , password2 = ? WHERE agentId = ? ", agentEntity.getPassword1(),agentEntity.getPassword2(), agentEntity.getAgentId());
         if (count == 1) {
             return agentEntity;
         } else {
