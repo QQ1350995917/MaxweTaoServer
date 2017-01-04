@@ -5,7 +5,7 @@ apply plugin: 'com.bmuschko.tomcat'
 
 version = '1.0-SNAPSHOT'
 war.baseName = 'www.maxwe.org'
-war.archiveName = "maxwe.war"
+war.archiveName = "tao.war"
 
 tomcat {
     httpPort = 8080
@@ -40,10 +40,11 @@ dependencies {
     compile 'com.mchange:mchange-commons-java:0.2.12'
     compile 'mysql:mysql-connector-java:6.0.3'
     compile 'org.freemarker:freemarker:2.3.25-incubating'
-    compile 'commons-logging:commons-logging:1.2'
     compile 'org.ehcache:ehcache:3.2.0'
+    compile 'commons-logging:commons-logging:1.2'
     compile 'org.apache.logging.log4j:log4j:2.7'
-    compile 'org.slf4j:slf4j-nop:1.7.22'
+    compile 'org.slf4j:slf4j-site:1.7.22'
+    compile 'log4j:log4j:1.2.17'
     def tomcatVersion = '7.0.59'
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
             "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",

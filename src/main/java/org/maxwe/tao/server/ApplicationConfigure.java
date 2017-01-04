@@ -7,6 +7,8 @@ import com.jfinal.ext.handler.ContextPathHandler;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.c3p0.C3p0Plugin;
 import com.jfinal.render.ViewType;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.PropertyConfigurator;
 import org.maxwe.tao.server.controller.page.PageController;
 import org.maxwe.tao.server.controller.user.agent.AgentController;
 
@@ -26,6 +28,8 @@ public class ApplicationConfigure extends JFinalConfig {
 
     static {
         try {
+            LogManager.resetConfiguration();
+            PropertyConfigurator.configure("log4j.properties");
             Properties prop = new Properties();
             prop.load(ApplicationConfigure.class.getClassLoader().getResourceAsStream("db.properties"));
             url = prop.getProperty("url");
