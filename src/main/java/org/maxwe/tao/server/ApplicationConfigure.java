@@ -29,13 +29,15 @@ public class ApplicationConfigure extends JFinalConfig {
     static {
         try {
             LogManager.resetConfiguration();
-            PropertyConfigurator.configure("log4j.properties");
-            Properties prop = new Properties();
-            prop.load(ApplicationConfigure.class.getClassLoader().getResourceAsStream("db.properties"));
-            url = prop.getProperty("url");
-            username = prop.getProperty("username");
-            password = prop.getProperty("password");
-            driver = prop.getProperty("driver");
+            Properties log4jProperties = new Properties();
+            log4jProperties.load(ApplicationConfigure.class.getClassLoader().getResourceAsStream("log4j.properties"));
+            PropertyConfigurator.configure(log4jProperties);
+            Properties dbProperties = new Properties();
+            dbProperties.load(ApplicationConfigure.class.getClassLoader().getResourceAsStream("db.properties"));
+            url = dbProperties.getProperty("url");
+            username = dbProperties.getProperty("username");
+            password = dbProperties.getProperty("password");
+            driver = dbProperties.getProperty("driver");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {

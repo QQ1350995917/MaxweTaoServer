@@ -36,12 +36,12 @@ public class SessionContext {
                             Map.Entry<String, CSEntity> next = iterator.next();
                             if (System.currentTimeMillis() - next.getValue().getTimestamp() >= DURATION) {
                                 CSEntity remove = tokenConcurrentHashMap.remove(next.getKey());
-                                logger.info("SessionContext -> 自动删除过期CS链接 : " + remove.toString());
+                                logger.info("自动删除过期CS链接 : " + remove.toString());
                             }
                         }
                         Thread.sleep(DURATION);
                     } catch (Exception e) {
-                        logger.error("SessionContext -> 自动删除过期CS链接 : " + e.getMessage());
+                        logger.error("自动删除过期CS链接 : " + e.getMessage());
                         e.printStackTrace();
                     }
                 }
@@ -52,17 +52,17 @@ public class SessionContext {
 
     public static void addCSEntity(CSEntity csEntity) {
         tokenConcurrentHashMap.put(csEntity.getToken(), csEntity);
-        logger.info("SessionContext -> addCSEntity : " + csEntity.toString());
+        logger.info("添加CS链接 : " + csEntity.toString());
     }
 
     public static CSEntity getCSEntity(CSEntity csEntity) {
         CSEntity existCSEntity = tokenConcurrentHashMap.get(csEntity.getToken());
-        logger.info("SessionContext -> getCSEntity : " + existCSEntity.toString());
+        logger.info("getCSEntity : " + existCSEntity.toString());
         return existCSEntity;
     }
 
     public static void delCSEntity(CSEntity csEntity) {
         CSEntity remove = tokenConcurrentHashMap.remove(csEntity.getToken());
-        logger.info("SessionContext -> delCSEntity : " + remove.toString());
+        logger.info("delCSEntity : " + remove.toString());
     }
 }

@@ -1,6 +1,5 @@
 package org.maxwe.tao.server.common.sms;
 
-import com.alibaba.fastjson.JSON;
 import com.taobao.api.ApiException;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
@@ -44,12 +43,12 @@ public class SMSManager {
                             Map.Entry<String, Long> next = iterator.next();
                             if (System.currentTimeMillis() - next.getValue() > DELAYED_ADDRESS) {
                                 SMS_CACHE_ADDRESS.remove(next.getKey());
-                                logger.info("SMSManager -> 自动删除地址 : " + next.getKey());
+                                logger.info("自动删除地址 : " + next.getKey());
                             }
                         }
                         Thread.sleep(DELAYED_ADDRESS);
                     } catch (Exception e) {
-                        logger.error("SMSManager -> 自动删除地址 : " + e.getMessage());
+                        logger.error("自动删除地址 : " + e.getMessage());
                         e.printStackTrace();
                     }
                 }
@@ -66,12 +65,12 @@ public class SMSManager {
                             Map.Entry<String, SMSEntity> next = iterator.next();
                             if (System.currentTimeMillis() - next.getValue().getGenTimestamp() > DELAYED_CELLPHONE) {
                                 SMS_CACHE_CELLPHONE.remove(next.getKey());
-                                logger.info("SMSManager -> 自动删除验证码 : " + next.getKey());
+                                logger.info("自动删除验证码 : " + next.getKey());
                             }
                         }
                         Thread.sleep(DELAYED_ADDRESS);
                     } catch (Exception e) {
-                        logger.error("SMSManager -> 自动删除验证码 : " + e.getMessage());
+                        logger.error("自动删除验证码 : " + e.getMessage());
                         e.printStackTrace();
                     }
                 }
@@ -122,8 +121,7 @@ public class SMSManager {
         } else {
             code = cacheCellphone.getCode();
         }
-        logger.info("SMSManager -> sendSMS : cellphone = " + cellphone + " ; code = " + code);
-        System.out.println("收到电话号码：" + cellphone + "的电话验证码: " + code);
+        logger.info("sendSMS : cellphone = " + cellphone + " ; code = " + code);
         TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
         AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
         req.setSmsType("normal");
@@ -132,12 +130,13 @@ public class SMSManager {
         req.setRecNum(cellphone);
         req.setSmsTemplateCode(SMS_MODEL);
         AlibabaAliqinFcSmsNumSendResponse rsp = client.execute(req);
-        Map map = JSON.parseObject(rsp.getBody(), Map.class);
-        if (Boolean.parseBoolean(((Map) ((Map) map.get("alibaba_aliqin_fc_sms_num_send_response")).get("result")).get("success").toString())) {
-
-        } else {
-
-        }
+        logger.info("sendSMS : 发送结果 = " + rsp.getBody());
+//        Map map = JSON.parseObject(rsp.getBody(), Map.class);
+//        if (Boolean.parseBoolean(((Map) ((Map) map.get("alibaba_aliqin_fc_sms_num_send_response")).get("result")).get("success").toString())) {
+//
+//        } else {
+//
+//        }
 //        System.out.println(rsp.getBody());
         //{"alibaba_aliqin_fc_sms_num_send_response":{"result":{"err_code":"0","model":"105243374211^1107192054051","success":true},"request_id":"s75ccxbqypop"}}
     }
