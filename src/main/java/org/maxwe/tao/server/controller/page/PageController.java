@@ -2,8 +2,13 @@ package org.maxwe.tao.server.controller.page;
 
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Record;
 import org.maxwe.tao.server.interceptor.ManagerInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
+
+import java.util.LinkedList;
+import java.util.UUID;
 
 /**
  * Created by Pengwei Ding on 2016-08-19 16:32.
@@ -14,7 +19,24 @@ public class PageController extends Controller implements IPageController {
 
     @Override
     public void index() {
+        if ("initdata".equals(this.getPara("key"))) {
+            int times = Integer.parseInt(this.getPara("times").toString());
+            LinkedList<Record> records = new LinkedList<>();
+            for (int i = 0; i < times; i++) {
+                Record agentRecord = new Record()
+                        .set("agentId", UUID.randomUUID().toString())
+                        .set("cellphone", "185" + String.format("%08d", i))
+                        .set("password1", "111111")
+                        .set("code", "185" + String.format("%08d", i));
+                records.add(agentRecord);
+            }
+            Db.batchSave("agent", records, 100);
+        }
         this.renderJson("OK");
+    }
+
+    public static void main() {
+
     }
 
     @Override

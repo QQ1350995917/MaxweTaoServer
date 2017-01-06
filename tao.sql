@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `agent` (
   `password2` varchar(36) DEFAULT NULL COMMENT '业务类型2的密码',
   `name` varchar(36) DEFAULT NULL COMMENT '姓名',
   `named` varchar(36) DEFAULT NULL COMMENT '被命名',
-  `code` varchar(11) DEFAULT NULL COMMENT '自己的授权码',
+  `grantCode` varchar(11) DEFAULT NULL COMMENT '自己的授权码',
   `level` int(1) NOT NULL DEFAULT '9' COMMENT '高级代理的级别',
   `status` int(1) NOT NULL DEFAULT '1' COMMENT '代理的状态，-1删除，0禁用，1正常',
   `haveCodes` int(11) NOT NULL DEFAULT '0' COMMENT '累计的购买授权码数量',

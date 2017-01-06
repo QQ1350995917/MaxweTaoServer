@@ -16,7 +16,7 @@ public class ManagerInterceptor implements Interceptor {
 //        String cs = paramsMap.get("cs").toString();
 //        IResultSet iResultSet = new ResultSet();
 //        if (SessionContext.getSession(cs) instanceof VManagerEntity) {
-//            iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
+//            iResultSet.setGrantCode(IResultSet.ResultCode.RC_ACCESS_BAD.getGrantCode());
 //            iResultSet.setData(paramsMap);
 //            iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_BAD);
 //            inv.getController().renderJson(JSON.toJSONString(iResultSet));

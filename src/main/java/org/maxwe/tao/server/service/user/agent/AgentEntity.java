@@ -13,7 +13,7 @@ public class AgentEntity {
     private String password2; // 业务类型2的密码，可为空
     private String name; // 自己命名的名字
     private String named; // 被上级备注的名字
-    private String code; //自己的授权码
+    private String grantCode; //自己的授权码
     private int type;// 业务类型，1普通的代理，2高级代理，3综合业务代理
     private int level; // 0 标示创始人，超级管理者
     private int status; // 状态
@@ -83,12 +83,12 @@ public class AgentEntity {
         this.named = named;
     }
 
-    public String getCode() {
-        return code;
+    public String getGrantCode() {
+        return grantCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setGrantCode(String grantCode) {
+        this.grantCode = grantCode;
     }
 
     public int getType() {
@@ -153,5 +153,14 @@ public class AgentEntity {
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "agentId = " + agentId + ", agentPId = " + agentPId + ", cellphone = " + cellphone
+                + ", password1 = " + password1 + ", password2 = " + password2 + ", name" + name
+                + ", named = " + named + ", grantCode = " + grantCode + ", type = " + type + ", level = "
+                + ", status = " + status + ", haveCodes = " + haveCodes + ", spendCodes = " + spendCodes
+                + ", leftCodes = " + leftCodes + ", createTime = " + createTime;
     }
 }

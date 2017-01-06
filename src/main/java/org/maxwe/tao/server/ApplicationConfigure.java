@@ -9,8 +9,9 @@ import com.jfinal.plugin.c3p0.C3p0Plugin;
 import com.jfinal.render.ViewType;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PropertyConfigurator;
+import org.maxwe.tao.server.controller.business.BusinessController;
 import org.maxwe.tao.server.controller.page.PageController;
-import org.maxwe.tao.server.controller.user.agent.AgentController;
+import org.maxwe.tao.server.controller.user.AgentController;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -79,6 +80,7 @@ public class ApplicationConfigure extends JFinalConfig {
     public void configRoute(Routes me) {
         me.add("/", PageController.class);
         me.add("/agent", AgentController.class);
+        me.add("/bus", BusinessController.class);
 
 
 //        me.add("/meta", MetaController.class);

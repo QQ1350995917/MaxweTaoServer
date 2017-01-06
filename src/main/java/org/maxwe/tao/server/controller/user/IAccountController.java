@@ -49,6 +49,11 @@ public interface IAccountController {
     void logout();
 
     /**
+     * 获取自己的信息
+     */
+    void agent();
+
+    /**
      * 用户接口
      * 忘记密码接口
      */

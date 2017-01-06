@@ -1,7 +1,8 @@
-package org.maxwe.tao.server.controller.user.agent;
+package org.maxwe.tao.server.controller.user;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.PropertyFilter;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
@@ -20,7 +21,6 @@ import org.maxwe.tao.server.service.user.agent.AgentEntity;
 import org.maxwe.tao.server.service.user.agent.AgentServices;
 import org.maxwe.tao.server.service.user.agent.IAgentServices;
 
-import java.util.LinkedList;
 import java.util.UUID;
 
 /**
@@ -32,7 +32,17 @@ public class AgentController extends Controller implements IAgentController {
     private final Logger logger = Logger.getLogger(AgentController.class.getName());
     private IAgentServices iAgentServices = new AgentServices();
 
-    public void index(){
+    private PropertyFilter commonPropertyFilter = new PropertyFilter() {
+        @Override
+        public boolean apply(Object object, String name, Object value) {
+            if ("agentId".equals(name) || "agentPId".equals(name) || "level".equals(name)){
+                return false;
+            }
+            return true;
+        }
+    };
+
+    public void index() {
         String info = "==========OK agent index==========";
         this.logger.info(info);
         renderJson(info);
@@ -61,7 +71,7 @@ public class AgentController extends Controller implements IAgentController {
             } else if (requestVAgentEntity.getType() == 2) {
                 password = existAgent.getPassword2();
             }
-            if (password != null){
+            if (password != null) {
                 this.logger.info("exist : 检测到重复账户 " + params);
                 iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_REPEAT.getCode());
                 iResultSet.setData(requestVAgentEntity);
@@ -230,7 +240,7 @@ public class AgentController extends Controller implements IAgentController {
                 password = existAgent.getPassword2();
             }
             if (password == null) {
-                this.logger.info("request params errorlost : 电话号码没有注册该类型业务，无法使用找回密码 " + params);
+                this.logger.info("lost : 电话号码没有注册该类型业务，无法使用找回密码 " + params);
                 iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD_2.getCode());
                 iResultSet.setData(requestVAgentEntity);
                 iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
@@ -241,7 +251,7 @@ public class AgentController extends Controller implements IAgentController {
 
         // 验证码检测
         if (!StringUtils.equals(requestVAgentEntity.getCellPhoneCode(), SMSManager.getCellphoneCode(requestVAgentEntity.getCellphone()))) {
-            this.logger.info("request params errorlost : 验证码错误 " + params);
+            this.logger.info("lost : 验证码错误 " + params);
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestVAgentEntity);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
@@ -256,7 +266,7 @@ public class AgentController extends Controller implements IAgentController {
         existAgent.setType(requestVAgentEntity.getType());
         AgentEntity agent = iAgentServices.updateAgentPassword(existAgent);
         if (agent == null) {
-            this.logger.info("request params errorlost : 找回密码失败-服务器内部错误 " + params);
+            this.logger.info("lost : 找回密码失败-服务器内部错误 " + params);
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestVAgentEntity);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_FAIL);
@@ -266,7 +276,7 @@ public class AgentController extends Controller implements IAgentController {
 
         CSEntity agentCS = new CSEntity(agent.getAgentId(), agent.getCellphone(), Code.getToken(agent.getCellphone(), requestVAgentEntity.getPassword()), requestVAgentEntity.getType());
         SessionContext.addCSEntity(agentCS);
-        this.logger.info("request params errorlost : 找回密码成功 " + params);
+        this.logger.info("lost : 找回密码成功 " + params);
         //创建
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(agentCS.getToken());
@@ -281,7 +291,7 @@ public class AgentController extends Controller implements IAgentController {
         VAgentEntity requestVAgentEntity = JSON.parseObject(params, VAgentEntity.class);
         IResultSet iResultSet = new ResultSet();
         if (requestVAgentEntity == null || !requestVAgentEntity.checkLoginParams()) {
-            this.logger.info("request params errorlogin : 登录参数错误 " + params);
+            this.logger.info("login : 登录参数错误 " + params);
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestVAgentEntity);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
@@ -294,7 +304,7 @@ public class AgentController extends Controller implements IAgentController {
         requestVAgentEntity.setPassword2(requestVAgentEntity.getPassword());
         AgentEntity agentEntity = iAgentServices.retrieveAgent(requestVAgentEntity);
         if (agentEntity == null) {
-            this.logger.info("request params errorlogin : 用户没有注册，无法登陆 " + params);
+            this.logger.info("login : 用户没有注册，无法登陆 " + params);
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
             iResultSet.setData(requestVAgentEntity);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_FAIL);
@@ -304,7 +314,7 @@ public class AgentController extends Controller implements IAgentController {
 
         CSEntity agentCS = new CSEntity(agentEntity.getAgentId(), agentEntity.getCellphone(), Code.getToken(agentEntity.getCellphone(), requestVAgentEntity.getPassword()), requestVAgentEntity.getType());
         SessionContext.addCSEntity(agentCS);
-        this.logger.info("request params errorlogin : 登录成功 " + params);
+        this.logger.info("login : 登录成功 " + params);
 
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(agentCS.getToken());
@@ -320,7 +330,7 @@ public class AgentController extends Controller implements IAgentController {
         VAgentEntity requestVAgentEntity = JSON.parseObject(params, VAgentEntity.class);
         IResultSet iResultSet = new ResultSet();
         if (requestVAgentEntity == null || StringUtils.isEmpty(requestVAgentEntity.getT())) {
-            this.logger.info("request params errorlogout : 退出参数错误 " + params);
+            this.logger.info("logout : 退出参数错误 " + params);
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestVAgentEntity);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
@@ -329,7 +339,7 @@ public class AgentController extends Controller implements IAgentController {
         }
         CSEntity csEntity = new CSEntity(null, requestVAgentEntity.getCellphone(), requestVAgentEntity.getT(), requestVAgentEntity.getType());
         SessionContext.delCSEntity(csEntity);
-        this.logger.info("request params errorlogout : 退出成功 " + params);
+        this.logger.info("logout : 退出成功 " + params);
 
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
@@ -343,7 +353,7 @@ public class AgentController extends Controller implements IAgentController {
         VAgentEntity requestVAgentEntity = JSON.parseObject(params, VAgentEntity.class);
         IResultSet iResultSet = new ResultSet();
         if (requestVAgentEntity == null || !requestVAgentEntity.checkModifyPasswordParams()) {
-            this.logger.info("request params errorpassword : 修改密码参数错误 " + params);
+            this.logger.info("password : 修改密码参数错误 " + params);
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestVAgentEntity);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
@@ -355,7 +365,7 @@ public class AgentController extends Controller implements IAgentController {
         CSEntity existCSEntity = SessionContext.getCSEntity(csEntity);
         AgentEntity existAgentEntity = iAgentServices.retrieveAgentById(existCSEntity.getAgentId());
         if (existAgentEntity == null) {
-            this.logger.info("request params errorpassword : 修改密码没有查询到该记录-服务器内部错误 " + params);
+            this.logger.info("password : 修改密码没有查询到该记录-服务器内部错误 " + params);
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestVAgentEntity);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
@@ -365,7 +375,7 @@ public class AgentController extends Controller implements IAgentController {
 
         if (requestVAgentEntity.getType() == 1) {
             if (!existAgentEntity.getPassword1().equals(requestVAgentEntity.getOrdPassword())) {
-                this.logger.info("request params errorpassword : 修改密码旧密码不一致 " + params);
+                this.logger.info("password : 修改密码旧密码不一致 " + params);
                 iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
                 iResultSet.setData(requestVAgentEntity);
                 iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_BAD);
@@ -375,7 +385,7 @@ public class AgentController extends Controller implements IAgentController {
             existAgentEntity.setPassword1(requestVAgentEntity.getNewPassword());
         } else if (requestVAgentEntity.getType() == 2) {
             if (!existAgentEntity.getPassword2().equals(requestVAgentEntity.getOrdPassword())) {
-                this.logger.info("request params errorpassword : 修改密码旧密码不一致 " + params);
+                this.logger.info("password : 修改密码旧密码不一致 " + params);
                 iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
                 iResultSet.setData(requestVAgentEntity);
                 iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_BAD);
@@ -387,7 +397,7 @@ public class AgentController extends Controller implements IAgentController {
         existAgentEntity.setType(requestVAgentEntity.getType());
         AgentEntity updateAgentEntity = iAgentServices.updateAgentPassword(existAgentEntity);
         if (updateAgentEntity == null) {
-            this.logger.info("request params errorpassword : 修改密码-服务器内部更新错误 " + params);
+            this.logger.info("password : 修改密码-服务器内部更新错误 " + params);
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestVAgentEntity);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
@@ -397,7 +407,7 @@ public class AgentController extends Controller implements IAgentController {
 
         CSEntity agentCS = new CSEntity(updateAgentEntity.getAgentId(), updateAgentEntity.getCellphone(), Code.getToken(updateAgentEntity.getCellphone(), requestVAgentEntity.getNewPassword()), requestVAgentEntity.getType());
         SessionContext.addCSEntity(agentCS);
-        this.logger.info("request params errorpassword : 修改密码成功 " + params);
+        this.logger.info("password : 修改密码成功 " + params);
 
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(agentCS.getToken());
@@ -405,9 +415,12 @@ public class AgentController extends Controller implements IAgentController {
         renderJson(JSON.toJSONString(iResultSet));
     }
 
+    /**
+     * 获取自己的信息
+     */
     @Override
     @Before(TokenInterceptor.class)
-    public void retrieveAgent() {
+    public void agent() {
         String params = this.getPara("p");
         VAgentEntity requestVAgentEntity = JSON.parseObject(params, VAgentEntity.class);
         IResultSet iResultSet = new ResultSet();
@@ -417,54 +430,6 @@ public class AgentController extends Controller implements IAgentController {
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(result);
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "name","code","level","haveCodes","spendCodes","leftCodes")));
-    }
-
-    @Override
-    @Before(TokenInterceptor.class)
-    public void retrieveSubAgents() {
-        String params = this.getPara("p");
-        VAgentEntity requestVAgentEntity = JSON.parseObject(params, VAgentEntity.class);
-        IResultSet iResultSet = new ResultSet();
-        CSEntity agentCS = new CSEntity(null, requestVAgentEntity.getCellphone(), requestVAgentEntity.getT(), requestVAgentEntity.getType());
-        CSEntity csEntity = SessionContext.getCSEntity(agentCS);
-        LinkedList<AgentEntity> agentEntities = iAgentServices.retrieveAgentByPId(csEntity.getAgentId());
-        if (agentEntities == null) {
-            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
-            iResultSet.setData(requestVAgentEntity);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
-            renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "t")));
-            return;
-        }
-        LinkedList<VAgentEntity> responseVAgentEntities = new LinkedList<>();
-        for (AgentEntity agentEntity : agentEntities) {
-            responseVAgentEntities.add(new VAgentEntity(agentEntity));
-        }
-        if (responseVAgentEntities.size() == 0) {
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
-        } else {
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        }
-        iResultSet.setData(responseVAgentEntities);
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        renderJson(JSON.toJSONString(iResultSet));
-    }
-
-    @Override
-    @Before(TokenInterceptor.class)
-    public void retrieveAgentByCellphone() {
-
-    }
-
-    @Override
-    @Before(TokenInterceptor.class)
-    public void grantToCellphone() {
-
-    }
-
-    @Override
-    @Before(TokenInterceptor.class)
-    public void tradeCodesToCellphone() {
-
+        renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "t", "cellphone", "cellphone", "code", "type", "level", "status", "haveCodes", "spendCodes", "leftCodes", "createTime")));
     }
 }

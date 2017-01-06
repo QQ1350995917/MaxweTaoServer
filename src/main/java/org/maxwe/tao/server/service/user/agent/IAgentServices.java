@@ -15,6 +15,8 @@ public interface IAgentServices {
     AgentEntity retrieveAgentById(String agentId);
     AgentEntity retrieveAgentByCellphone(String cellphone);
     AgentEntity retrieveAgent(AgentEntity agentEntity);
-    LinkedList<AgentEntity> retrieveAgentByPId(String agentPId);
+    LinkedList<AgentEntity> retrieveAgentByPId(String agentPId,int pageIndex,int counter);
+    boolean grantToCellphone(AgentEntity grandAgentEntity,AgentEntity authorizedAgentEntity);
+    boolean tradeAccessCode(AgentEntity grandAgentEntity,AgentEntity authorizedAgentEntity,int codes);
 
 }

@@ -1,4 +1,4 @@
-package org.maxwe.tao.server.controller.user.agent;
+package org.maxwe.tao.server.controller.user;
 
 import com.alibaba.druid.util.StringUtils;
 import org.maxwe.tao.server.common.utils.CellPhoneUtils;
@@ -36,7 +36,7 @@ public class VAgentEntity extends AgentEntity {
         }
         this.setName(agentEntity.getName());
         this.setNamed(agentEntity.getNamed());
-        this.setCode(agentEntity.getCode());
+        this.setGrantCode(agentEntity.getGrantCode());
         this.setType(agentEntity.getType());
         this.setLevel(agentEntity.getLevel());
         this.setStatus(agentEntity.getStatus());
@@ -75,10 +75,6 @@ public class VAgentEntity extends AgentEntity {
         return newPassword;
     }
 
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-    }
-
     public String getCellPhoneCode() {
         return cellPhoneCode;
     }
@@ -86,6 +82,11 @@ public class VAgentEntity extends AgentEntity {
     public void setCellPhoneCode(String cellPhoneCode) {
         this.cellPhoneCode = cellPhoneCode;
     }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
 
     public boolean checkCreateParams() {
         if (this.getType() == 1) {
@@ -138,4 +139,5 @@ public class VAgentEntity extends AgentEntity {
             return true;
         }
     }
+
 }
