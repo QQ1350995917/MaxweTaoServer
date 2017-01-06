@@ -29,7 +29,7 @@ public class BusinessController extends Controller implements IBusinessControlle
     private final Logger logger = Logger.getLogger(BusinessController.class.getName());
     private IAgentServices iAgentServices = new AgentServices();
 
-    private PropertyFilter commonPropertyFilter = new PropertyFilter() {
+    private final static PropertyFilter commonPropertyFilter = new PropertyFilter() {
         @Override
         public boolean apply(Object object, String name, Object value) {
             if ("agentId".equals(name) || "agentPId".equals(name) || "grantCode".equals(name) || "level".equals(name)) {

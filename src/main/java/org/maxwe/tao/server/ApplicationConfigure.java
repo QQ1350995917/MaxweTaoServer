@@ -12,6 +12,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.maxwe.tao.server.controller.business.BusinessController;
 import org.maxwe.tao.server.controller.page.PageController;
 import org.maxwe.tao.server.controller.user.AgentController;
+import org.maxwe.tao.server.controller.version.VersionController;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -81,7 +82,7 @@ public class ApplicationConfigure extends JFinalConfig {
         me.add("/", PageController.class);
         me.add("/agent", AgentController.class);
         me.add("/bus", BusinessController.class);
-
+        me.add("/version", VersionController.class);
 
 //        me.add("/meta", MetaController.class);
 //        me.add("/menu", MenuController.class);
