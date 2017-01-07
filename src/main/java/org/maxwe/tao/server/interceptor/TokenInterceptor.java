@@ -30,7 +30,7 @@ public class TokenInterceptor implements Interceptor {
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(params);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
-            inv.getController().renderJson(JSON.toJSONString(params));
+            inv.getController().renderJson(iResultSet);
             return;
         }
 
@@ -52,7 +52,7 @@ public class TokenInterceptor implements Interceptor {
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_TIMEOUT.getCode());
             iResultSet.setData(requestVAgentEntity);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_TIMEOUT);
-            inv.getController().renderJson(JSON.toJSONString(requestVAgentEntity));
+            inv.getController().renderJson(iResultSet);
             return;
         }
 

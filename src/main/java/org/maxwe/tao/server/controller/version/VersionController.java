@@ -50,20 +50,34 @@ public class VersionController extends Controller implements IVersionController 
         }
 
         VersionEntity versionEntity = this.versionEntityConcurrentHashMap.get(requestVersionEntity.getPlatform() + requestVersionEntity.getType());
-        this.logger.info("version : 新版本信息如下: " + versionEntity.toString());
-        iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
-        iResultSet.setData(requestVersionEntity);
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+        this.logger.info("version : 新版本信息如下: " + versionEntity);
+        if (versionEntity == null) {
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
+        } else {
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+        }
+        iResultSet.setData(versionEntity);
+        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
         String resultJson = JSON.toJSONString(iResultSet, commonPropertyFilter);
         renderJson(resultJson);
     }
 
     @Override
     public void reversion() {
+        IResultSet iResultSet = new ResultSet();
         List<VersionEntity> reversion = iVersionServices.reversion();
         this.versionEntityConcurrentHashMap.clear();
         for (VersionEntity versionEntity : reversion) {
             this.versionEntityConcurrentHashMap.put(versionEntity.getPlatform() + versionEntity.getType(), versionEntity);
         }
+        if (this.versionEntityConcurrentHashMap.isEmpty()) {
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
+        } else {
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+        }
+        iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
+        iResultSet.setData(reversion);
+        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+        renderJson(iResultSet);
     }
 }

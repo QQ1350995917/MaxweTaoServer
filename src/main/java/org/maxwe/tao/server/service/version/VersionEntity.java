@@ -14,6 +14,7 @@ public class VersionEntity {
     private int type;
     private int versionCode;
     private String versionName;
+    private String appName;
     private String information;
     private String url;
     private int upgrade; // 1强制升级 其他不强制
@@ -58,6 +59,14 @@ public class VersionEntity {
 
     public String getVersionName() {
         return versionName;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
     }
 
     public void setVersionName(String versionName) {

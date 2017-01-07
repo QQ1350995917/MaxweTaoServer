@@ -36,7 +36,7 @@ public class SessionContext {
                             Map.Entry<String, CSEntity> next = iterator.next();
                             if (System.currentTimeMillis() - next.getValue().getTimestamp() >= DURATION) {
                                 CSEntity remove = tokenConcurrentHashMap.remove(next.getKey());
-                                logger.info("自动删除过期CS链接 : " + remove.toString());
+                                logger.info("自动删除过期CS链接 : " + remove);
                             }
                         }
                         Thread.sleep(DURATION);
@@ -52,17 +52,17 @@ public class SessionContext {
 
     public static void addCSEntity(CSEntity csEntity) {
         tokenConcurrentHashMap.put(csEntity.getToken(), csEntity);
-        logger.info("添加CS链接 : " + csEntity.toString());
     }
 
     public static CSEntity getCSEntity(CSEntity csEntity) {
+        if (csEntity == null){
+            return null;
+        }
         CSEntity existCSEntity = tokenConcurrentHashMap.get(csEntity.getToken());
-        logger.info("getCSEntity : " + existCSEntity.toString());
         return existCSEntity;
     }
 
     public static void delCSEntity(CSEntity csEntity) {
         CSEntity remove = tokenConcurrentHashMap.remove(csEntity.getToken());
-        logger.info("delCSEntity : " + remove.toString());
     }
 }
