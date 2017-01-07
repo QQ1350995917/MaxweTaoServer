@@ -430,6 +430,7 @@ public class AgentController extends Controller implements IAgentController {
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(result);
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "t", "cellphone", "cellphone", "code", "type", "level", "status", "haveCodes", "spendCodes", "leftCodes", "createTime")));
+        String resultJson = JSON.toJSONString(iResultSet, this.commonPropertyFilter);
+        renderJson(resultJson);
     }
 }
