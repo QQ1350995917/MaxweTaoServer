@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2017-01-04 07:25:54
+-- Generation Time: 2017-01-08 07:16:31
 -- 服务器版本： 5.6.22
 -- PHP Version: 5.5.20
 
@@ -44,22 +44,28 @@ CREATE TABLE IF NOT EXISTS `agent` (
   `spendCodes` int(11) NOT NULL DEFAULT '0' COMMENT '累计的授权码数量',
   `leftCodes` int(11) NOT NULL DEFAULT '0' COMMENT '当前可用的授权码数量',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `grantTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '被授权的时间',
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `cs`
+-- 表的结构 `version`
 --
 
-DROP TABLE IF EXISTS `cs`;
-CREATE TABLE IF NOT EXISTS `cs` (
-  `csId` varchar(36) NOT NULL COMMENT '主键',
-  `token` varchar(256) NOT NULL COMMENT '令牌',
-  `mappingId` varchar(36) NOT NULL COMMENT '对应的ID',
-  `type` int(1) NOT NULL COMMENT '对应的业务类型',
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+DROP TABLE IF EXISTS `version`;
+CREATE TABLE IF NOT EXISTS `version` (
+  `versionId` varchar(36) NOT NULL COMMENT 'ID',
+  `platform` varchar(12) NOT NULL COMMENT '应用平台',
+  `type` int(11) NOT NULL COMMENT '应用类型',
+  `versionCode` int(11) NOT NULL COMMENT '应用版本',
+  `versionName` varchar(36) DEFAULT NULL COMMENT '应用名称',
+  `appName` varchar(36) DEFAULT NULL COMMENT '应用名称',
+  `information` text COMMENT '备注信息',
+  `url` varchar(256) DEFAULT NULL COMMENT '下载地址',
+  `upgrade` int(11) DEFAULT NULL COMMENT '是否强制升级',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -75,10 +81,10 @@ ALTER TABLE `agent`
   ADD UNIQUE KEY `cellphone` (`cellphone`);
 
 --
--- Indexes for table `cs`
+-- Indexes for table `version`
 --
-ALTER TABLE `cs`
-  ADD PRIMARY KEY (`csId`);
+ALTER TABLE `version`
+  ADD PRIMARY KEY (`versionId`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
