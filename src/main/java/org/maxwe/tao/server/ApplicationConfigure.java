@@ -10,8 +10,8 @@ import com.jfinal.render.ViewType;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PropertyConfigurator;
 import org.maxwe.tao.server.controller.business.BusinessController;
+import org.maxwe.tao.server.controller.mate.MateController;
 import org.maxwe.tao.server.controller.page.PageController;
-import org.maxwe.tao.server.controller.user.AgentController;
 import org.maxwe.tao.server.controller.version.VersionController;
 
 import java.io.IOException;
@@ -80,8 +80,7 @@ public class ApplicationConfigure extends JFinalConfig {
     @Override
     public void configRoute(Routes me) {
         me.add("/", PageController.class);
-        me.add("/mate", AgentController.class);
-        me.add("/bus", BusinessController.class);
+        me.add("/mate", MateController.class);
         me.add("/version", VersionController.class);
 
 //        me.add("/meta", MetaController.class);

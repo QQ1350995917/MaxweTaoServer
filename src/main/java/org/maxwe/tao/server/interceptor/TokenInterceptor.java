@@ -6,9 +6,9 @@ import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.cache.SessionContext;
+import org.maxwe.tao.server.common.model.SessionModel;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
-import org.maxwe.tao.server.controller.user.VAgentEntity;
 import org.maxwe.tao.server.service.account.CSEntity;
 
 
@@ -34,23 +34,23 @@ public class TokenInterceptor implements Interceptor {
             return;
         }
 
-        VAgentEntity requestVAgentEntity = JSON.parseObject(params, VAgentEntity.class);
-        if (StringUtils.isEmpty(requestVAgentEntity.getT())
-                || StringUtils.isEmpty(requestVAgentEntity.getCellphone())
-                || (requestVAgentEntity.getType() != 1 && requestVAgentEntity.getType() != 2)) {
+        SessionModel requestModel = JSON.parseObject(params, SessionModel.class);
+        if (StringUtils.isEmpty(requestModel.getT())
+                || StringUtils.isEmpty(requestModel.getCellphone())) {
             this.logger.error("TokenInterceptor -> intercept -> " + inv.getActionKey() + ": 请求参数不符合要求 " + params);
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
-            iResultSet.setData(requestVAgentEntity);
+            iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
             inv.getController().renderJson(iResultSet);
             return;
         }
 
-        CSEntity agentCS = new CSEntity(null, requestVAgentEntity.getCellphone(), requestVAgentEntity.getT(), requestVAgentEntity.getType());
+        // TODO 这里的 mark 为空
+        CSEntity agentCS = new CSEntity(null,requestModel.getMark(), requestModel.getCellphone(), requestModel.getT());
         if (SessionContext.getCSEntity(agentCS) == null) {
             this.logger.error("TokenInterceptor -> intercept -> " + inv.getActionKey() + " : 客户端CS连接过期 " + params);
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_TIMEOUT.getCode());
-            iResultSet.setData(requestVAgentEntity);
+            iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_TIMEOUT);
             inv.getController().renderJson(iResultSet);
             return;

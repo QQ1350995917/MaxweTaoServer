@@ -67,6 +67,10 @@ public class CSEntity {
         this.timestamp = timestamp;
     }
 
+    public void resetTimestamp(){
+        this.setTimestamp(System.currentTimeMillis());
+    }
+
     @Override
     public String toString() {
         return "CSEntity{" +

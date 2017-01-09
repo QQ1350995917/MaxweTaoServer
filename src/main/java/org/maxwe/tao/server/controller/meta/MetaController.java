@@ -30,7 +30,7 @@ public class MetaController extends Controller implements IMetaController {
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
-            renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "cellphone")));
+            renderJson(JSON.toJSONString(iResultSet));
             return;
         }
 
@@ -54,7 +54,7 @@ public class MetaController extends Controller implements IMetaController {
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(requestModel);
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(VAgentEntity.class, "cellphone")));
+        renderJson(JSON.toJSONString(iResultSet));
 
     }
 }
