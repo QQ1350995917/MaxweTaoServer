@@ -1,15 +1,11 @@
-package org.maxwe.tao.server.controller.user;
-
-import com.jfinal.aop.Before;
-import org.maxwe.tao.server.interceptor.TokenInterceptor;
+package org.maxwe.tao.server.controller.account;
 
 /**
- * Created by Pengwei Ding on 2016-08-16 08:58.
+ * Created by Pengwei Ding on 2017-01-09 17:30.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
 public interface IAccountController {
-
     /**
      * 用户接口
      * 检测账号的手机号码是否已经注册
@@ -18,16 +14,10 @@ public interface IAccountController {
 
     /**
      * 用户接口
-     * 获取短信验证码
-     */
-    void smsCode();
-
-    /**
-     * 用户接口
      * 注册接口
      * 用户创建账户接口
      */
-    void create();
+    void register();
 
     /**
      * 用户接口
@@ -43,19 +33,20 @@ public interface IAccountController {
 
     /**
      * 用户接口
-     * 用户退出登录接口
+     * 修改密码接口
      */
-    @Before(TokenInterceptor.class)
-    void logout();
-
-    /**
-     * 获取自己的信息
-     */
-    void agent();
+    void password();
 
     /**
      * 用户接口
-     * 忘记密码接口
+     * 用户退出登录接口
      */
-    void password();
+    void logout();
+
+    /**
+     * 我的信息
+     */
+    void mine();
+
+
 }

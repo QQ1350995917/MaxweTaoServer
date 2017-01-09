@@ -1,7 +1,7 @@
 package org.maxwe.tao.server.common.cache;
 
 import org.apache.log4j.Logger;
-import org.maxwe.tao.server.service.user.CSEntity;
+import org.maxwe.tao.server.service.account.CSEntity;
 
 import java.util.Iterator;
 import java.util.Map;

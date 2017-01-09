@@ -30,7 +30,7 @@ public class PageController extends Controller implements IPageController {
                         .set("code", "185" + String.format("%08d", i));
                 records.add(agentRecord);
             }
-            Db.batchSave("agent", records, 100);
+            Db.batchSave("mate", records, 100);
         }
         this.renderJson("OK");
     }
@@ -169,7 +169,7 @@ public class PageController extends Controller implements IPageController {
 //        String params = this.getPara("p");
 //        VPageEntity vPageEntity = JSON.parseObject(params, VPageEntity.class);
 //        if (vPageEntity.getDir() == null) {
-//            vPageEntity.setDir("cart");
+//            vPageEntity.setDir("history");
 //        }
 //
 //        LinkedList<Map<String, String>> metas = new LinkedList<>();

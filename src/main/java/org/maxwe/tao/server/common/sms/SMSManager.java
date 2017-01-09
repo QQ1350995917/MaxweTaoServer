@@ -141,7 +141,7 @@ public class SMSManager {
         //{"alibaba_aliqin_fc_sms_num_send_response":{"result":{"err_code":"0","model":"105243374211^1107192054051","success":true},"request_id":"s75ccxbqypop"}}
     }
 
-    public static String getCellphoneCode(String cellphone){
+    public static String getSMSCode(String cellphone){
         return SMS_CACHE_CELLPHONE.get(cellphone) == null ? null :SMS_CACHE_CELLPHONE.get(cellphone).getCode();
     }
 

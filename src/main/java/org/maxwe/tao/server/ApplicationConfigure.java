@@ -80,7 +80,7 @@ public class ApplicationConfigure extends JFinalConfig {
     @Override
     public void configRoute(Routes me) {
         me.add("/", PageController.class);
-        me.add("/agent", AgentController.class);
+        me.add("/mate", AgentController.class);
         me.add("/bus", BusinessController.class);
         me.add("/version", VersionController.class);
 
@@ -93,7 +93,7 @@ public class ApplicationConfigure extends JFinalConfig {
 //        me.add("/link", LinkController.class);
 //        me.add("/poster", PosterController.class);
 //        me.add("/account", AccountController.class);
-//        me.add("/cart", CartController.class);
+//        me.add("/history", CartController.class);
 //        me.add("/order", OrderController.class);
 //        me.add("/receiver", ReceiverController.class);
 //        me.add("/file", FileController.class);

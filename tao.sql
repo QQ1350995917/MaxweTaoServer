@@ -25,7 +25,7 @@ USE `tao`;
 -- --------------------------------------------------------
 
 --
--- 表的结构 `agent`
+-- 表的结构 `mate`
 --
 
 DROP TABLE IF EXISTS `agent`;
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `version` (
 --
 
 --
--- Indexes for table `agent`
+-- Indexes for table `mate`
 --
 ALTER TABLE `agent`
   ADD PRIMARY KEY (`agentId`),

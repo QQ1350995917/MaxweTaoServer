@@ -9,7 +9,7 @@ import org.maxwe.tao.server.common.cache.SessionContext;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.controller.user.VAgentEntity;
-import org.maxwe.tao.server.service.user.CSEntity;
+import org.maxwe.tao.server.service.account.CSEntity;
 
 
 /**

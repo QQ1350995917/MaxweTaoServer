@@ -1,4 +1,4 @@
-package org.maxwe.tao.server.service.user;
+package org.maxwe.tao.server.service.account;
 
 import org.maxwe.tao.server.common.utils.DateTime;
 
@@ -8,31 +8,39 @@ import org.maxwe.tao.server.common.utils.DateTime;
  * Description: @TODO
  */
 public class CSEntity {
-    private String agentId;
+    private String id;
+    private String mark;
     private String cellphone;
     private String token;
-    private int type;
     private long timestamp;
 
     public CSEntity() {
         super();
     }
 
-    public CSEntity(String agentId,String cellphone,String token,int type) {
+    public CSEntity(String id,String mark,String cellphone,String token) {
         super();
-        this.agentId = agentId;
+        this.id = id;
+        this.mark = mark;
         this.cellphone = cellphone;
         this.token = token;
-        this.type = type;
         this.timestamp = DateTime.getCurrentTimestamp();
     }
 
-    public String getAgentId() {
-        return agentId;
+    public String getId() {
+        return id;
     }
 
-    public void setAgentId(String agentId) {
-        this.agentId = agentId;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getMark() {
+        return mark;
+    }
+
+    public void setMark(String mark) {
+        this.mark = mark;
     }
 
     public String getCellphone() {
@@ -51,14 +59,6 @@ public class CSEntity {
         this.token = token;
     }
 
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
     public long getTimestamp() {
         return timestamp;
     }
@@ -67,12 +67,14 @@ public class CSEntity {
         this.timestamp = timestamp;
     }
 
-    public void resetTimestamp(){
-        this.setTimestamp(System.currentTimeMillis());
-    }
-
     @Override
     public String toString() {
-        return "agentId = " + agentId + "; cellphone = " + cellphone + "; type = " + type + "; token = " + token + "; timestamp = " + DateTime.parseLongToFullTime(timestamp);
+        return "CSEntity{" +
+                "timestamp=" + timestamp +
+                ", token='" + token + '\'' +
+                ", cellphone='" + cellphone + '\'' +
+                ", mark='" + mark + '\'' +
+                ", id='" + id + '\'' +
+                '}';
     }
 }

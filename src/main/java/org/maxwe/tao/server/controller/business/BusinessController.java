@@ -11,12 +11,11 @@ import org.maxwe.tao.server.common.cache.SessionContext;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.common.utils.Code;
-import org.maxwe.tao.server.controller.user.VAgentEntity;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
-import org.maxwe.tao.server.service.user.CSEntity;
-import org.maxwe.tao.server.service.user.agent.AgentEntity;
-import org.maxwe.tao.server.service.user.agent.AgentServices;
-import org.maxwe.tao.server.service.user.agent.IAgentServices;
+import org.maxwe.tao.server.service.account.CSEntity;
+import org.maxwe.tao.server.service.account.agent.AgentEntity;
+import org.maxwe.tao.server.service.account.agent.AgentServices;
+import org.maxwe.tao.server.service.account.agent.IAgentServices;
 
 import java.util.LinkedList;
 

@@ -2,7 +2,7 @@ package org.maxwe.tao.server.controller.business;
 
 import org.maxwe.tao.server.common.utils.CellPhoneUtils;
 import org.maxwe.tao.server.controller.user.VAgentEntity;
-import org.maxwe.tao.server.service.user.agent.AgentEntity;
+import org.maxwe.tao.server.service.account.agent.AgentEntity;
 
 /**
  * Created by Pengwei Ding on 2017-01-05 17:14.
