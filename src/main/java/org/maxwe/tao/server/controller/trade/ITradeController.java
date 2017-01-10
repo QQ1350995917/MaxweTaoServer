@@ -9,7 +9,7 @@ public interface ITradeController {
     /**
      * 生成一个授权码
      */
-    void generate();
+    void grant();
 
     /**
      * 交易授权码

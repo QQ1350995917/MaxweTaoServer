@@ -25,7 +25,7 @@ public class AgentServices implements IAgentServices {
                 .set("mark", agentEntity.getMark())
                 .set("cellphone", agentEntity.getCellphone())
                 .set("password", agentEntity.getPassword());
-        boolean isSave = Db.save("mate", agentRecord);
+        boolean isSave = Db.save("agent", agentRecord);
         if (isSave) {
             return agentEntity;
         } else {
@@ -35,7 +35,7 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public AgentEntity[] createReach(AgentEntity agentMasterEntity, AgentEntity agentSubEntity) {
-        int count = Db.update("UPDATE mate SET pId = ? , pIdTime = ? , weight = 1 , WHERE id = ? ",
+        int count = Db.update("UPDATE agent SET pId = ? , pIdTime = ? , weight = 1 , WHERE id = ? ",
                 agentMasterEntity.getId(), new Timestamp(agentSubEntity.getpIdTime()), agentSubEntity.getId());
         if (count == 1) {
             return new AgentEntity[]{agentMasterEntity, agentSubEntity};
@@ -46,7 +46,7 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public AgentEntity updatePassword(AgentEntity agentEntity) {
-        int count = Db.update("UPDATE mate SET password = ? WHERE id = ? ",
+        int count = Db.update("UPDATE agent SET password = ? WHERE id = ? ",
                 agentEntity.getPassword(), agentEntity.getId());
         if (count == 1) {
             return agentEntity;
@@ -57,7 +57,7 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public AgentEntity updateName(AgentEntity agentEntity) {
-        int count = Db.update("UPDATE mate SET name = ? WHERE id = ? ",
+        int count = Db.update("UPDATE agent SET name = ? WHERE id = ? ",
                 agentEntity.getName(), agentEntity.getId());
         if (count == 1) {
             return agentEntity;
@@ -68,7 +68,7 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public AgentEntity updateNamed(AgentEntity agentEntity) {
-        int count = Db.update("UPDATE mate SET named = ? WHERE id = ? ",
+        int count = Db.update("UPDATE agent SET named = ? WHERE id = ? ",
                 agentEntity.getNamed(), agentEntity.getId());
         if (count == 1) {
             return agentEntity;
@@ -81,7 +81,7 @@ public class AgentServices implements IAgentServices {
     public AgentEntity updateGrant(AgentEntity agentEntity, HistoryEntity historyEntity) {
         boolean succeed = Db.tx(new IAtom() {
             public boolean run() throws SQLException {
-                int grandAgent = Db.update("UPDATE mate SET spendCodes = spendCodes + 1, leftCodes = leftCodes - 1 " +
+                int grandAgent = Db.update("UPDATE agent SET spendCodes = spendCodes + 1, leftCodes = leftCodes - 1 " +
                         "where agentId = ? ", agentEntity.getId());
                 int history = Db.update("INSERT INTO history (id,fromId,type,actCode,numCode) VALUES(?,?,?,?,?)",
                         historyEntity.getId(), historyEntity.getFromId(), 1, historyEntity.getActCode(), 1);
@@ -93,7 +93,7 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public AgentEntity[] updateReach(AgentEntity agentMasterEntity, AgentEntity agentSubEntity) {
-        int count = Db.update("UPDATE mate SET reach = 1 , weight = 0, reachTime = ? , WHERE id = ? ",
+        int count = Db.update("UPDATE agent SET reach = 1 , weight = 0, reachTime = ? , WHERE id = ? ",
                 agentMasterEntity.getReachTime(), agentSubEntity.getId());
         if (count == 1) {
             return new AgentEntity[]{agentMasterEntity, agentSubEntity};
@@ -106,9 +106,9 @@ public class AgentServices implements IAgentServices {
     public AgentEntity[] updateTrade(AgentEntity agentMasterEntity, AgentEntity agentSubEntity, int codes, HistoryEntity historyEntity) {
         boolean succeed = Db.tx(new IAtom() {
             public boolean run() throws SQLException {
-                int agentMaster = Db.update("UPDATE mate SET spendCodes = spendCodes + ?, leftCodes = leftCodes - ? " +
+                int agentMaster = Db.update("UPDATE agent SET spendCodes = spendCodes + ?, leftCodes = leftCodes - ? " +
                         "where agentId = ? ", codes, codes, agentMasterEntity.getId());
-                int agentSub = Db.update("UPDATE mate SET haveCodes = haveCodes + ?, leftCodes = leftCodes + ? " +
+                int agentSub = Db.update("UPDATE agent SET haveCodes = haveCodes + ?, leftCodes = leftCodes + ? " +
                         "where agentId = ? ", codes, codes, agentSubEntity.getId());
                 int history = Db.update("INSERT INTO history (id,fromId,toId,type,numCode) VALUES(?,?,?,?,?)",
                         historyEntity.getId(), historyEntity.getFromId(), historyEntity.getToId(), 2, historyEntity.getNumCode());
@@ -120,7 +120,7 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public AgentEntity updateBank(AgentEntity agentEntity) {
-        int count = Db.update("UPDATE mate SET trueName = ? , zhifubao = ? WHERE id = ? ",
+        int count = Db.update("UPDATE agent SET trueName = ? , zhifubao = ? WHERE id = ? ",
                 agentEntity.getTrueName(), agentEntity.getZhifubao(), agentEntity.getId());
         if (count == 1) {
             return agentEntity;
@@ -131,7 +131,7 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public AgentEntity retrieveById(String id) {
-        List<Record> records = Db.find("SELECT * FROM mate WHERE id = ? ", id);
+        List<Record> records = Db.find("SELECT * FROM agent WHERE id = ? ", id);
         if (records != null && records.get(0) != null) {
             Map<String, Object> accountMap = records.get(0).getColumns();
             return JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
@@ -142,7 +142,7 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public AgentEntity retrieveByMark(String mark) {
-        List<Record> records = Db.find("SELECT * FROM mate WHERE mark = ? ", mark);
+        List<Record> records = Db.find("SELECT * FROM agent WHERE mark = ? ", mark);
         if (records != null && records.get(0) != null) {
             Map<String, Object> accountMap = records.get(0).getColumns();
             return JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
@@ -153,7 +153,7 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public AgentEntity retrieveByCellphone(String cellphone) {
-        List<Record> records = Db.find("SELECT * FROM mate WHERE cellphone = ? ", cellphone);
+        List<Record> records = Db.find("SELECT * FROM agent WHERE cellphone = ? ", cellphone);
         if (records != null && records.get(0) != null) {
             Map<String, Object> accountMap = records.get(0).getColumns();
             return JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
@@ -164,7 +164,8 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public LinkedList<AgentEntity> retrieveByPid(String pId, int pageIndex, int pageSize) {
-        List<Record> agentRecords = Db.find("SELECT * FROM mate WHERE pId = ? ORDER BY weight DESC , createTime DESC limit ? , ?", pId, pageIndex * pageSize, pageSize);
+        List<Record> agentRecords = Db.find("SELECT * FROM agent WHERE pId = ? ORDER BY weight DESC , createTime DESC limit ? , ?",
+                pId, pageIndex * pageSize, pageSize);
         LinkedList<AgentEntity> agentEntities = new LinkedList<>();
         for (Record agentRecord : agentRecords) {
             Map<String, Object> accountMap = agentRecord.getColumns();

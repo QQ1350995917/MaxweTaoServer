@@ -1,6 +1,7 @@
 package org.maxwe.tao.server.controller.account.model;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.serializer.PropertyFilter;
 import org.maxwe.tao.server.common.utils.CellPhoneUtils;
 
 import java.io.Serializable;
@@ -11,6 +12,15 @@ import java.io.Serializable;
  * Description: @TODO
  */
 public class RegisterModel implements Serializable {
+    public static final PropertyFilter propertyFilter = new PropertyFilter() {
+        @Override
+        public boolean apply(Object object, String name, Object value) {
+            if ("password".equals(name) || "smsCode".equals(name)) {
+                return false;
+            }
+            return true;
+        }
+    };
 
     private String cellphone;
     private String smsCode;

@@ -9,7 +9,6 @@ import org.maxwe.tao.server.common.utils.DateTime;
  */
 public class CSEntity {
     private String id;
-    private String mark;
     private String cellphone;
     private String token;
     private long timestamp;
@@ -18,10 +17,9 @@ public class CSEntity {
         super();
     }
 
-    public CSEntity(String id,String mark,String cellphone,String token) {
+    public CSEntity(String id,String cellphone,String token) {
         super();
         this.id = id;
-        this.mark = mark;
         this.cellphone = cellphone;
         this.token = token;
         this.timestamp = DateTime.getCurrentTimestamp();
@@ -33,14 +31,6 @@ public class CSEntity {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getMark() {
-        return mark;
-    }
-
-    public void setMark(String mark) {
-        this.mark = mark;
     }
 
     public String getCellphone() {
@@ -77,7 +67,6 @@ public class CSEntity {
                 "timestamp=" + timestamp +
                 ", token='" + token + '\'' +
                 ", cellphone='" + cellphone + '\'' +
-                ", mark='" + mark + '\'' +
                 ", id='" + id + '\'' +
                 '}';
     }

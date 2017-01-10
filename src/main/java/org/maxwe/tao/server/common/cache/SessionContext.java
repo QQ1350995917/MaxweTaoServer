@@ -20,9 +20,10 @@ public class SessionContext {
      * cellphone + type 弊端：容易别猜到；利益：数据短，效率高
      * Token 弊端：数据长，效率低，生成新的Token会有旧数据遗留，造成内存浪费；利益：安全
      * 采用：Token作为key
-     * 内存解决方式：定期（每周）清理不活跃的Token
+     * 内存解决方式：定期（每天）清理不活跃的Token
      */
     private static ConcurrentHashMap<String, CSEntity> tokenConcurrentHashMap = new ConcurrentHashMap();
+    private static ConcurrentHashMap<String, String> cellphoneToTokenConcurrentHashMap = new ConcurrentHashMap();
     private static final int DURATION = 1000 * 60 * 60 * 24;
 
     static {
@@ -36,6 +37,8 @@ public class SessionContext {
                             Map.Entry<String, CSEntity> next = iterator.next();
                             if (System.currentTimeMillis() - next.getValue().getTimestamp() >= DURATION) {
                                 CSEntity remove = tokenConcurrentHashMap.remove(next.getKey());
+                                String cellphone = remove.getCellphone();
+                                cellphoneToTokenConcurrentHashMap.remove(cellphone);
                                 logger.info("自动删除过期CS链接 : " + remove);
                             }
                         }
@@ -51,11 +54,18 @@ public class SessionContext {
 
 
     public static void addCSEntity(CSEntity csEntity) {
-        tokenConcurrentHashMap.put(csEntity.getToken(), csEntity);
+        String token = cellphoneToTokenConcurrentHashMap.get(csEntity.getCellphone());
+        if (token != null) {
+            cellphoneToTokenConcurrentHashMap.remove(csEntity.getCellphone());
+            tokenConcurrentHashMap.remove(token);
+        } else {
+            cellphoneToTokenConcurrentHashMap.put(csEntity.getCellphone(),csEntity.getToken());
+            tokenConcurrentHashMap.put(csEntity.getToken(), csEntity);
+        }
     }
 
     public static CSEntity getCSEntity(CSEntity csEntity) {
-        if (csEntity == null){
+        if (csEntity == null) {
             return null;
         }
         CSEntity existCSEntity = tokenConcurrentHashMap.get(csEntity.getToken());
@@ -63,6 +73,7 @@ public class SessionContext {
     }
 
     public static void delCSEntity(CSEntity csEntity) {
+        String remove1 = cellphoneToTokenConcurrentHashMap.remove(csEntity.getCellphone());
         CSEntity remove = tokenConcurrentHashMap.remove(csEntity.getToken());
     }
 }

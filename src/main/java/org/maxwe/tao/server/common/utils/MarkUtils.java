@@ -1,8 +1,5 @@
 package org.maxwe.tao.server.common.utils;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 /**
@@ -10,7 +7,7 @@ import java.util.*;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 生成和解析系统需要的编码
  */
-public class Code {
+public class MarkUtils {
 
     private static final String[] string0 = {"J", "V", "Z"};
     private static final String[] string1 = {"F", "B", "I", "Q"};
@@ -22,6 +19,7 @@ public class Code {
     private static final String[] string7 = {"P", "X"};
     private static final String[] string8 = {"S", "W"};
     private static final String[] string9 = {"M", "E", "K"};
+
     private static final HashMap<String, String[]> encodeMap = new HashMap<>();
     private static final HashMap<String, String> decodeMap = new HashMap<>();
 
@@ -61,7 +59,7 @@ public class Code {
         return decode;
     }
 
-    public static synchronized String enAccessCode(String cellphone) {
+    public static String enMark(String cellphone) {
         if (cellphone.length() != 11) {
             throw new UnknownFormatConversionException(cellphone);
         }
@@ -90,7 +88,7 @@ public class Code {
         return result + encodeInEncodeMap(lastFillIn);
     }
 
-    public static synchronized String deAccessCode(String accessCode) {
+    public static String deMark(String accessCode) {
         if (accessCode.length() != 11) {
             throw new UnknownFormatConversionException(accessCode);
         }
@@ -116,47 +114,16 @@ public class Code {
     }
 
 
-    public static synchronized String getToken(String cellphone,String password) {
-        try {
-            cellphone += password + DateTime.getCurrentTimestamp() + genRandom();
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(cellphone.getBytes());
-            String result = new BigInteger(1, md.digest()).toString(16);
-            md.update(result.getBytes());
-            return new BigInteger(1, md.digest()).toString(16);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static String genRandom() {
-        Random random = new Random();
-        return (random.nextInt(9) + 1) + ""
-                + random.nextInt(9) + ""
-                + random.nextInt(9) + ""
-                + random.nextInt(9) + ""
-                + random.nextInt(9) + ""
-                + random.nextInt(9) + ""
-                + random.nextInt(9) + ""
-                + random.nextInt(9) + ""
-                + random.nextInt(9) + ""
-                + random.nextInt(9) + ""
-                + random.nextInt(9) + "";
-    }
-
     public static void main(String[] args) throws Exception {
         String cellphone = "18511694468";
         long start = System.currentTimeMillis();
         for (int i = 0; i < 1; i++) {
-//            String enAccessCode = enAccessCode(cellphone);
-//            System.out.println(enAccessCode);
-            String deAccessCode = deAccessCode("OQQUENRUQSR");
+            String enAccessCode = enMark(cellphone);
+            System.out.println(enAccessCode);
+            String deAccessCode = deMark(enAccessCode);
             System.out.println(deAccessCode);
         }
-//        String md5 = getToken(cellphone);
-//        System.out.println(md5);
         long end = System.currentTimeMillis();
-//        System.out.println(end - start);
+        System.out.println(end - start);
     }
 }

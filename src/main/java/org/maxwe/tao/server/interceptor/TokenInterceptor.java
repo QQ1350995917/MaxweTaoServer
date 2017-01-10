@@ -26,7 +26,7 @@ public class TokenInterceptor implements Interceptor {
         this.logger.info("TokenInterceptor -> intercept : 请求参数 " + params);
         IResultSet iResultSet = new ResultSet();
         if (StringUtils.isEmpty(params)) {
-            this.logger.error("TokenInterceptor -> intercept -> " + inv.getActionKey() + " : 请求参数为空 " + params);
+            this.logger.error("TokenInterceptor ->  " + inv.getActionKey() + " : 请求参数为空 " + params);
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(params);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
@@ -35,9 +35,8 @@ public class TokenInterceptor implements Interceptor {
         }
 
         SessionModel requestModel = JSON.parseObject(params, SessionModel.class);
-        if (StringUtils.isEmpty(requestModel.getT())
-                || StringUtils.isEmpty(requestModel.getCellphone())) {
-            this.logger.error("TokenInterceptor -> intercept -> " + inv.getActionKey() + ": 请求参数不符合要求 " + params);
+        if (requestModel == null || !requestModel.isParamsOk()) {
+            this.logger.error("TokenInterceptor ->  " + inv.getActionKey() + ": 请求参数不符合要求 " + params);
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
@@ -45,10 +44,20 @@ public class TokenInterceptor implements Interceptor {
             return;
         }
 
-        // TODO 这里的 mark 为空
-        CSEntity agentCS = new CSEntity(null,requestModel.getMark(), requestModel.getCellphone(), requestModel.getT());
+        /**
+         * sign解密
+         */
+        if (!requestModel.isDecryptSignOK()){
+            this.logger.error("TokenInterceptor -> " + inv.getActionKey() + " : 试图破解中... " + params);
+            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR_AAA.getCode());
+            iResultSet.setData(requestModel);
+            inv.getController().renderJson(iResultSet);
+            return;
+        }
+
+        CSEntity agentCS = new CSEntity(null,requestModel.getCellphone(), requestModel.getT());
         if (SessionContext.getCSEntity(agentCS) == null) {
-            this.logger.error("TokenInterceptor -> intercept -> " + inv.getActionKey() + " : 客户端CS连接过期 " + params);
+            this.logger.error("TokenInterceptor ->  " + inv.getActionKey() + " : 客户端CS连接过期 " + params);
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_TIMEOUT.getCode());
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_TIMEOUT);

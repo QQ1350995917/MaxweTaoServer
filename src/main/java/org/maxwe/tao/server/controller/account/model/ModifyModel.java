@@ -1,6 +1,7 @@
 package org.maxwe.tao.server.controller.account.model;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.serializer.PropertyFilter;
 import org.maxwe.tao.server.common.model.SessionModel;
 
 /**
@@ -9,6 +10,16 @@ import org.maxwe.tao.server.common.model.SessionModel;
  * Description: @TODO
  */
 public class ModifyModel extends SessionModel {
+
+    public static final PropertyFilter propertyFilter = new PropertyFilter() {
+        @Override
+        public boolean apply(Object object, String name, Object value) {
+            if ("oldPassword".equals(name) || "newPassword".equals(name)) {
+                return false;
+            }
+            return true;
+        }
+    };
 
     private String oldPassword;
     private String newPassword;

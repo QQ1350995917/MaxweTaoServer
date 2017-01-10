@@ -9,10 +9,15 @@ import com.jfinal.plugin.c3p0.C3p0Plugin;
 import com.jfinal.render.ViewType;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PropertyConfigurator;
-import org.maxwe.tao.server.controller.business.BusinessController;
+import org.maxwe.tao.server.controller.account.agent.AgentController;
+import org.maxwe.tao.server.controller.account.user.UserController;
+import org.maxwe.tao.server.controller.history.HistoryController;
 import org.maxwe.tao.server.controller.mate.MateController;
+import org.maxwe.tao.server.controller.meta.MetaController;
 import org.maxwe.tao.server.controller.page.PageController;
+import org.maxwe.tao.server.controller.trade.TradeController;
 import org.maxwe.tao.server.controller.version.VersionController;
+import org.maxwe.tao.server.interceptor.ParamsInterceptor;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -62,6 +67,7 @@ public class ApplicationConfigure extends JFinalConfig {
 
     @Override
     public void configInterceptor(Interceptors me) {
+        me.addGlobalActionInterceptor(new ParamsInterceptor());
         me.addGlobalActionInterceptor(new Interceptor() {
             @Override
             public void intercept(Invocation inv) {
@@ -80,23 +86,13 @@ public class ApplicationConfigure extends JFinalConfig {
     @Override
     public void configRoute(Routes me) {
         me.add("/", PageController.class);
+        me.add("/agent", AgentController.class);
+        me.add("/user", UserController.class);
+        me.add("/history", HistoryController.class);
         me.add("/mate", MateController.class);
+        me.add("/meta", MetaController.class);
+        me.add("/trade", TradeController.class);
         me.add("/version", VersionController.class);
-
-//        me.add("/meta", MetaController.class);
-//        me.add("/menu", MenuController.class);
-//        me.add("/manager", ManagerController.class);
-//        me.add("/series", SeriesController.class);
-//        me.add("/type", TypeController.class);
-//        me.add("/format", FormatController.class);
-//        me.add("/link", LinkController.class);
-//        me.add("/poster", PosterController.class);
-//        me.add("/account", AccountController.class);
-//        me.add("/history", CartController.class);
-//        me.add("/order", OrderController.class);
-//        me.add("/receiver", ReceiverController.class);
-//        me.add("/file", FileController.class);
-//        me.add("/trade", SystemController.class);
     }
 
     @Override
