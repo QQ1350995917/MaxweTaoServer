@@ -1,6 +1,7 @@
 package org.maxwe.tao.server.controller.trade;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.annotation.JSONField;
 import org.maxwe.tao.server.controller.account.model.SessionModel;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 
@@ -62,6 +63,7 @@ public class TradeModel extends SessionModel {
     }
 
     @Override
+    @JSONField(serialize=false)
     public boolean isParamsOk() {
         if (this.getType() != 1 && this.getType() != 2) {
             return false;

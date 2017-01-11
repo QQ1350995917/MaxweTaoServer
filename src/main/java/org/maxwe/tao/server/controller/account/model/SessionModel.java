@@ -89,7 +89,7 @@ public class SessionModel implements Serializable {
             return false;
         }
         if (StringUtils.equals(split[0], this.getMark())
-                && System.currentTimeMillis() - Long.parseLong(split[1]) < 15000
+                && System.currentTimeMillis() - Long.parseLong(split[1]) < 60 * 1000
                 && StringUtils.equals(split[2], this.getCellphone())
                 ) {
             return true;

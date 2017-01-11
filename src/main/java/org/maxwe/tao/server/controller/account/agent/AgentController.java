@@ -182,12 +182,12 @@ public class AgentController extends Controller implements IAgentController {
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet, RegisterModel.propertyFilter));
         } else {
-            CSEntity agentCS = new CSEntity(saveAgentEntity.getId(), saveAgentEntity.getCellphone(), TokenUtils.getToken(saveAgentEntity.getCellphone(), requestModel.getPassword()));
-            SessionContext.addCSEntity(agentCS);
+            CSEntity csEntity = new CSEntity(saveAgentEntity.getId(), saveAgentEntity.getCellphone(), TokenUtils.getToken(saveAgentEntity.getCellphone(), requestModel.getPassword()));
+            SessionContext.addCSEntity(csEntity);
             this.logger.info("create : 注册成功 " + requestModel.toString());
 
             //创建
-            SessionModel sessionModel = new SessionModel(agentCS.getToken(), saveAgentEntity.getMark(), saveAgentEntity.getCellphone());
+            SessionModel sessionModel = new SessionModel(csEntity.getToken(), saveAgentEntity.getMark(), saveAgentEntity.getCellphone());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             iResultSet.setData(sessionModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
@@ -240,11 +240,11 @@ public class AgentController extends Controller implements IAgentController {
             iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_FAIL);
             renderJson(JSON.toJSONString(iResultSet));
         } else {
-            CSEntity agentCS = new CSEntity(updateAgent.getId(), updateAgent.getCellphone(), TokenUtils.getToken(updateAgent.getCellphone(), requestModel.getPassword()));
-            SessionContext.addCSEntity(agentCS);
+            CSEntity csEntity = new CSEntity(updateAgent.getId(), updateAgent.getCellphone(), TokenUtils.getToken(updateAgent.getCellphone(), requestModel.getPassword()));
+            SessionContext.addCSEntity(csEntity);
             this.logger.info("lost : 找回密码成功 " + requestModel.toString());
             //创建
-            SessionModel sessionModel = new SessionModel(agentCS.getToken(), updateAgent.getMark(), updateAgent.getCellphone());
+            SessionModel sessionModel = new SessionModel(csEntity.getToken(), updateAgent.getMark(), updateAgent.getCellphone());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             iResultSet.setData(sessionModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
@@ -275,11 +275,11 @@ public class AgentController extends Controller implements IAgentController {
             iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_FAIL);
             renderJson(JSON.toJSONString(iResultSet, LoginModel.propertyFilter));
         } else {
-            CSEntity agentCS = new CSEntity(agentEntity.getId(), agentEntity.getCellphone(), TokenUtils.getToken(agentEntity.getCellphone(), requestModel.getPassword()));
-            SessionContext.addCSEntity(agentCS);
+            CSEntity csEntity = new CSEntity(agentEntity.getId(), agentEntity.getCellphone(), TokenUtils.getToken(agentEntity.getCellphone(), requestModel.getPassword()));
+            SessionContext.addCSEntity(csEntity);
             this.logger.info("login : 登录成功 " + requestModel.toString());
 
-            SessionModel sessionModel = new SessionModel(agentCS.getToken(), agentEntity.getMark(), agentEntity.getCellphone());
+            SessionModel sessionModel = new SessionModel(csEntity.getToken(), agentEntity.getMark(), agentEntity.getCellphone());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             iResultSet.setData(sessionModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_SUCCESS);
@@ -324,11 +324,11 @@ public class AgentController extends Controller implements IAgentController {
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet, ModifyModel.propertyFilter));
         } else {
-            CSEntity agentCS = new CSEntity(updateAgentEntity.getId(), updateAgentEntity.getCellphone(), TokenUtils.getToken(updateAgentEntity.getCellphone(), requestModel.getNewPassword()));
-            SessionContext.addCSEntity(agentCS);
+            CSEntity newCSEntity = new CSEntity(updateAgentEntity.getId(), updateAgentEntity.getCellphone(), TokenUtils.getToken(updateAgentEntity.getCellphone(), requestModel.getNewPassword()));
+            SessionContext.addCSEntity(newCSEntity);
             this.logger.info("password : 修改密码成功 " + requestModel.toString());
 
-            SessionModel sessionModel = new SessionModel(agentCS.getToken(), updateAgentEntity.getMark(), updateAgentEntity.getCellphone());
+            SessionModel sessionModel = new SessionModel(newCSEntity.getToken(), updateAgentEntity.getMark(), updateAgentEntity.getCellphone());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             iResultSet.setData(sessionModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
@@ -356,8 +356,8 @@ public class AgentController extends Controller implements IAgentController {
         String params = this.getAttr("p");
         AgentModel requestModel = JSON.parseObject(params, AgentModel.class);
         IResultSet iResultSet = new ResultSet();
-        CSEntity agentCS = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
-        AgentEntity agentEntity = iAgentServices.retrieveById(SessionContext.getCSEntity(agentCS).getId());
+        CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
+        AgentEntity agentEntity = iAgentServices.retrieveById(SessionContext.getCSEntity(csEntity).getId());
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(agentEntity);
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);

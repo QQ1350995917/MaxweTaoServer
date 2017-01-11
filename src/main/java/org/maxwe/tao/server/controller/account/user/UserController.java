@@ -7,18 +7,13 @@ import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.cache.SessionContext;
-import org.maxwe.tao.server.controller.account.model.SessionModel;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.common.sms.SMSManager;
 import org.maxwe.tao.server.common.utils.MarkUtils;
 import org.maxwe.tao.server.common.utils.PasswordUtils;
 import org.maxwe.tao.server.common.utils.TokenUtils;
-import org.maxwe.tao.server.controller.account.agent.model.AgentModel;
-import org.maxwe.tao.server.controller.account.model.ExistModel;
-import org.maxwe.tao.server.controller.account.model.LoginModel;
-import org.maxwe.tao.server.controller.account.model.ModifyModel;
-import org.maxwe.tao.server.controller.account.model.RegisterModel;
+import org.maxwe.tao.server.controller.account.model.*;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.account.CSEntity;
 import org.maxwe.tao.server.service.account.user.IUserServices;
@@ -68,8 +63,8 @@ public class UserController extends Controller implements IUserController {
         }
 
 
-        CSEntity agentCS = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
-        UserEntity userEntity = iUserServices.retrieveById(SessionContext.getCSEntity(agentCS).getId());
+        CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
+        UserEntity userEntity = iUserServices.retrieveById(SessionContext.getCSEntity(csEntity).getId());
         historyEntity.setToId(userEntity.getId());
         HistoryEntity updateHistoryEntity = iHistoryServices.updateToId(historyEntity);
         if (updateHistoryEntity == null) {
@@ -166,12 +161,12 @@ public class UserController extends Controller implements IUserController {
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet, RegisterModel.propertyFilter));
         } else {
-            CSEntity agentCS = new CSEntity(saveUserEntity.getId(), saveUserEntity.getCellphone(), TokenUtils.getToken(saveUserEntity.getCellphone(), requestModel.getPassword()));
-            SessionContext.addCSEntity(agentCS);
+            CSEntity csEntity = new CSEntity(saveUserEntity.getId(), saveUserEntity.getCellphone(), TokenUtils.getToken(saveUserEntity.getCellphone(), requestModel.getPassword()));
+            SessionContext.addCSEntity(csEntity);
             this.logger.info("create : 注册成功 " + requestModel.toString());
 
             //创建
-            SessionModel sessionModel = new SessionModel(agentCS.getToken(), saveUserEntity.getMark(), saveUserEntity.getCellphone());
+            SessionModel sessionModel = new SessionModel(csEntity.getToken(), saveUserEntity.getMark(), saveUserEntity.getCellphone());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             iResultSet.setData(sessionModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
@@ -225,11 +220,11 @@ public class UserController extends Controller implements IUserController {
             renderJson(JSON.toJSONString(iResultSet));
             return;
         } else {
-            CSEntity agentCS = new CSEntity(updateUser.getId(), updateUser.getCellphone(), TokenUtils.getToken(updateUser.getCellphone(), requestModel.getPassword()));
-            SessionContext.addCSEntity(agentCS);
+            CSEntity csEntity = new CSEntity(updateUser.getId(), updateUser.getCellphone(), TokenUtils.getToken(updateUser.getCellphone(), requestModel.getPassword()));
+            SessionContext.addCSEntity(csEntity);
             this.logger.info("lost : 找回密码成功 " + requestModel.toString());
             //创建
-            SessionModel sessionModel = new SessionModel(agentCS.getToken(), updateUser.getMark(), updateUser.getCellphone());
+            SessionModel sessionModel = new SessionModel(csEntity.getToken(), updateUser.getMark(), updateUser.getCellphone());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             iResultSet.setData(sessionModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
@@ -260,11 +255,11 @@ public class UserController extends Controller implements IUserController {
             iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_FAIL);
             renderJson(JSON.toJSONString(iResultSet, LoginModel.propertyFilter));
         } else {
-            CSEntity agentCS = new CSEntity(userEntity.getId(), userEntity.getCellphone(), TokenUtils.getToken(userEntity.getCellphone(), requestModel.getPassword()));
-            SessionContext.addCSEntity(agentCS);
+            CSEntity csEntity = new CSEntity(userEntity.getId(), userEntity.getCellphone(), TokenUtils.getToken(userEntity.getCellphone(), requestModel.getPassword()));
+            SessionContext.addCSEntity(csEntity);
             this.logger.info("login : 登录成功 " + requestModel.toString());
 
-            SessionModel sessionModel = new SessionModel(agentCS.getToken(), userEntity.getMark(), userEntity.getCellphone());
+            SessionModel sessionModel = new SessionModel(csEntity.getToken(), userEntity.getMark(), userEntity.getCellphone());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             iResultSet.setData(sessionModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_SUCCESS);
@@ -309,11 +304,11 @@ public class UserController extends Controller implements IUserController {
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet, ModifyModel.propertyFilter));
         } else {
-            CSEntity agentCS = new CSEntity(updateUserEntity.getId(), updateUserEntity.getCellphone(), TokenUtils.getToken(updateUserEntity.getCellphone(), requestModel.getNewPassword()));
-            SessionContext.addCSEntity(agentCS);
+            CSEntity newCSEntity = new CSEntity(updateUserEntity.getId(), updateUserEntity.getCellphone(), TokenUtils.getToken(updateUserEntity.getCellphone(), requestModel.getNewPassword()));
+            SessionContext.addCSEntity(newCSEntity);
             this.logger.info("password : 修改密码成功 " + requestModel.toString());
 
-            SessionModel sessionModel = new SessionModel(agentCS.getToken(), updateUserEntity.getMark(), updateUserEntity.getCellphone());
+            SessionModel sessionModel = new SessionModel(newCSEntity.getToken(), updateUserEntity.getMark(), updateUserEntity.getCellphone());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             iResultSet.setData(sessionModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
@@ -339,10 +334,10 @@ public class UserController extends Controller implements IUserController {
     @Before(TokenInterceptor.class)
     public void mine() {
         String params = this.getAttr("p");
-        AgentModel requestModel = JSON.parseObject(params, AgentModel.class);
+        SessionModel requestModel = JSON.parseObject(params, SessionModel.class);
         IResultSet iResultSet = new ResultSet();
-        CSEntity agentCS = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
-        UserEntity userEntity = iUserServices.retrieveById(SessionContext.getCSEntity(agentCS).getId());
+        CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
+        UserEntity userEntity = iUserServices.retrieveById(SessionContext.getCSEntity(csEntity).getId());
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(userEntity);
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
