@@ -132,7 +132,7 @@ public class AgentServices implements IAgentServices {
     @Override
     public AgentEntity retrieveById(String id) {
         List<Record> records = Db.find("SELECT * FROM agent WHERE id = ? ", id);
-        if (records != null && records.get(0) != null) {
+        if (records != null && records.size() > 0 && records.get(0) != null) {
             Map<String, Object> accountMap = records.get(0).getColumns();
             return JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
         } else {
@@ -143,7 +143,7 @@ public class AgentServices implements IAgentServices {
     @Override
     public AgentEntity retrieveByMark(String mark) {
         List<Record> records = Db.find("SELECT * FROM agent WHERE mark = ? ", mark);
-        if (records != null && records.get(0) != null) {
+        if (records != null && records.size() > 0 && records.get(0) != null) {
             Map<String, Object> accountMap = records.get(0).getColumns();
             return JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
         } else {
@@ -154,7 +154,7 @@ public class AgentServices implements IAgentServices {
     @Override
     public AgentEntity retrieveByCellphone(String cellphone) {
         List<Record> records = Db.find("SELECT * FROM agent WHERE cellphone = ? ", cellphone);
-        if (records != null && records.get(0) != null) {
+        if (records != null && records.size() > 0 && records.get(0) != null) {
             Map<String, Object> accountMap = records.get(0).getColumns();
             return JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
         } else {

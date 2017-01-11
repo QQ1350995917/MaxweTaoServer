@@ -15,9 +15,4 @@ public interface IAgentController extends IAccountController {
      */
     void bank();
 
-    /**
-     * 通过用户ID（mark）查找
-     */
-    void find();
-
 }

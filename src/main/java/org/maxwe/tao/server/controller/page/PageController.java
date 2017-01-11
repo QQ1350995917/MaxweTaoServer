@@ -19,8 +19,8 @@ public class PageController extends Controller implements IPageController {
 
     @Override
     public void index() {
-        if ("initdata".equals(this.getPara("key"))) {
-            int times = Integer.parseInt(this.getPara("times").toString());
+        if ("initdata".equals(this.getAttr("key"))) {
+            int times = Integer.parseInt(this.getAttr("times").toString());
             LinkedList<Record> records = new LinkedList<>();
             for (int i = 0; i < times; i++) {
                 Record agentRecord = new Record()
@@ -44,7 +44,7 @@ public class PageController extends Controller implements IPageController {
         this.setAttr("title", "食坊-系列");
 
 //        LinkedList<Map<String, String>> metas = new LinkedList<>();
-//        String seriesId = this.getPara("seriesId");
+//        String seriesId = this.getAttr("seriesId");
 //        if (seriesId != null) {
 //            LinkedHashMap<String, String> formatMap = new LinkedHashMap<>();
 //            formatMap.put("metaId", "seriesId");
@@ -68,14 +68,14 @@ public class PageController extends Controller implements IPageController {
     public void pd() {
         this.setAttr("title", "食坊-详情");
 //        LinkedList<Map<String, String>> metas = new LinkedList<>();
-//        String typeId = this.getPara("typeId");
+//        String typeId = this.getAttr("typeId");
 //        if (typeId != null) {
 //            LinkedHashMap<String, String> typeMap = new LinkedHashMap<>();
 //            typeMap.put("metaId", "typeId");
 //            typeMap.put("metaValue", typeId);
 //            metas.add(typeMap);
 //        }
-//        String formatId = this.getPara("formatId");
+//        String formatId = this.getAttr("formatId");
 //        if (formatId != null) {
 //            LinkedHashMap<String, String> formatMap = new LinkedHashMap<>();
 //            formatMap.put("metaId", "formatId");
@@ -100,7 +100,7 @@ public class PageController extends Controller implements IPageController {
 
     @Override
     public void pb() {
-//        String params = this.getPara("p");
+//        String params = this.getAttr("p");
 //        Map<String, Object> objectMap = JSON.parseObject(params, Map.class);
 //
 //        LinkedList<Map<String, String>> metas = new LinkedList<>();
@@ -135,7 +135,7 @@ public class PageController extends Controller implements IPageController {
     @Override
     public void pq() {
 //        this.setAttr("title", "食坊-订单查询");
-//        String params = this.getPara("p");
+//        String params = this.getAttr("p");
 //        Map<String,Object> requestEntity = JSON.parseObject(params, Map.class);
 //        LinkedList<Map<String, String>> metas = new LinkedList<>();
 //        if (requestEntity != null && requestEntity.get("orderId") != null){
@@ -166,7 +166,7 @@ public class PageController extends Controller implements IPageController {
     @Before(TokenInterceptor.class)
     @Override
     public void pm() {
-//        String params = this.getPara("p");
+//        String params = this.getAttr("p");
 //        VPageEntity vPageEntity = JSON.parseObject(params, VPageEntity.class);
 //        if (vPageEntity.getDir() == null) {
 //            vPageEntity.setDir("history");
@@ -222,7 +222,7 @@ public class PageController extends Controller implements IPageController {
     @Override
     @Before({TokenInterceptor.class, ManagerInterceptor.class})
     public void frame() {
-//        String params = getPara("p");
+//        String params = getAttr("p");
 //        Map<String, Object> paramsMap = JSON.parseObject(params, Map.class);
 //        HttpSession session = SessionContext.getSession(paramsMap.get("cs").toString());
 //        // TODO 把JS文件进行拆分 根据管理员的权限进行动态分配JS文件

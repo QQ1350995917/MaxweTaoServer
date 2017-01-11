@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.common.sms.SMSManager;
-import org.maxwe.tao.server.common.utils.CellPhoneUtils;
 import org.maxwe.tao.server.common.utils.IPUtils;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 
@@ -22,17 +21,17 @@ public class MetaController extends Controller implements IMetaController {
 
     @Override
     public void smsCode() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         SMSCodeModel requestModel = JSON.parseObject(params, SMSCodeModel.class);
         IResultSet iResultSet = new ResultSet();
-        if (requestModel == null || !CellPhoneUtils.isCellphone(requestModel.getCellphone())) {
-            this.logger.info("smsCode : 请求参数错误 " + params);
-            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
-            renderJson(JSON.toJSONString(iResultSet));
-            return;
-        }
+//        if (requestModel == null || !requestModel.isParamsOk()) {
+//            this.logger.info("smsCode : 请求参数错误 " + params);
+//            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
+//            iResultSet.setData(requestModel);
+//            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+//            renderJson(JSON.toJSONString(iResultSet));
+//            return;
+//        }
 
         if (SMSManager.isCacheAddress(IPUtils.getIpAddress(this.getRequest()))) {
             this.logger.info("smsCode : 请求频繁 " + params);

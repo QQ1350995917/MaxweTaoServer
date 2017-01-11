@@ -7,7 +7,7 @@ import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.cache.SessionContext;
-import org.maxwe.tao.server.common.model.SessionModel;
+import org.maxwe.tao.server.controller.account.model.SessionModel;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.common.sms.SMSManager;
@@ -42,7 +42,7 @@ public class UserController extends Controller implements IUserController {
     @Override
     @Before(TokenInterceptor.class)
     public void active() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         ActiveModel requestModel = JSON.parseObject(params, ActiveModel.class);
         IResultSet iResultSet = new ResultSet();
         if (!requestModel.isParamsOk()) {
@@ -90,17 +90,17 @@ public class UserController extends Controller implements IUserController {
 
     @Override
     public void exist() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         ExistModel requestModel = JSON.parseObject(params, ExistModel.class);
         IResultSet iResultSet = new ResultSet();
-        if (requestModel == null || !requestModel.isParamsOk()) {
-            this.logger.info("exist : 请求参数错误 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
-            renderJson(JSON.toJSONString(iResultSet));
-            return;
-        }
+//        if (requestModel == null || !requestModel.isParamsOk()) {
+//            this.logger.info("exist : 请求参数错误 " + requestModel.toString());
+//            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
+//            iResultSet.setData(requestModel);
+//            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+//            renderJson(JSON.toJSONString(iResultSet));
+//            return;
+//        }
 
         //重复检测
         UserEntity userEntity = iUserServices.retrieveByCellphone(requestModel.getCellphone());
@@ -122,7 +122,7 @@ public class UserController extends Controller implements IUserController {
 
     @Override
     public void register() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         RegisterModel requestModel = JSON.parseObject(params, RegisterModel.class);
         IResultSet iResultSet = new ResultSet();
         //参数检测
@@ -183,7 +183,7 @@ public class UserController extends Controller implements IUserController {
 
     @Override
     public void lost() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         RegisterModel requestModel = JSON.parseObject(params, RegisterModel.class);
         IResultSet iResultSet = new ResultSet();
         //参数检测
@@ -240,7 +240,7 @@ public class UserController extends Controller implements IUserController {
 
     @Override
     public void login() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         LoginModel requestModel = JSON.parseObject(params, LoginModel.class);
         IResultSet iResultSet = new ResultSet();
         if (requestModel == null || !requestModel.isParamsOK()) {
@@ -276,7 +276,7 @@ public class UserController extends Controller implements IUserController {
     @Override
     @Before(TokenInterceptor.class)
     public void password() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         ModifyModel requestModel = JSON.parseObject(params, ModifyModel.class);
         IResultSet iResultSet = new ResultSet();
         CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
@@ -325,7 +325,7 @@ public class UserController extends Controller implements IUserController {
     @Override
     @Before(TokenInterceptor.class)
     public void logout() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         SessionModel requestModel = JSON.parseObject(params, SessionModel.class);
         IResultSet iResultSet = new ResultSet();
         CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
@@ -339,7 +339,7 @@ public class UserController extends Controller implements IUserController {
     @Override
     @Before(TokenInterceptor.class)
     public void mine() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         AgentModel requestModel = JSON.parseObject(params, AgentModel.class);
         IResultSet iResultSet = new ResultSet();
         CSEntity agentCS = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());

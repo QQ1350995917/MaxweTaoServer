@@ -1,6 +1,6 @@
 package org.maxwe.tao.server.controller.account.agent.model;
 
-import org.maxwe.tao.server.common.model.SessionModel;
+import org.maxwe.tao.server.controller.account.model.SessionModel;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 
 /**

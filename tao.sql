@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2017-01-08 07:16:31
+-- Generation Time: 2017-01-11 03:14:51
 -- 服务器版本： 5.6.22
 -- PHP Version: 5.5.20
 
@@ -25,28 +25,87 @@ USE `tao`;
 -- --------------------------------------------------------
 
 --
--- 表的结构 `mate`
+-- 表的结构 `agent`
 --
 
 DROP TABLE IF EXISTS `agent`;
 CREATE TABLE IF NOT EXISTS `agent` (
-  `agentId` varchar(36) NOT NULL COMMENT '代理的ID',
-  `agentPId` varchar(36) DEFAULT NULL COMMENT '上级代理ID',
+  `id` varchar(36) NOT NULL COMMENT '业务ID',
+  `pId` varchar(36) DEFAULT NULL COMMENT '上级代理ID，为空则表示没有上级',
+  `reach` int(1) DEFAULT '0' COMMENT '是否就代理达成一致意见，1达成，其他不达成',
+  `mark` varchar(12) NOT NULL COMMENT '显示ID',
   `cellphone` varchar(11) NOT NULL COMMENT '手机号码',
-  `password1` varchar(128) DEFAULT NULL COMMENT '业务类型1的密码',
-  `password2` varchar(36) DEFAULT NULL COMMENT '业务类型2的密码',
+  `password` varchar(36) NOT NULL COMMENT '登录密码',
   `name` varchar(36) DEFAULT NULL COMMENT '姓名',
   `named` varchar(36) DEFAULT NULL COMMENT '被命名',
-  `grantCode` varchar(11) DEFAULT NULL COMMENT '自己的授权码',
-  `level` int(1) NOT NULL DEFAULT '9' COMMENT '高级代理的级别',
+  `levelId` varchar(36) NOT NULL DEFAULT '0' COMMENT '代理的级别ID',
+  `weight` int(1) NOT NULL DEFAULT '0' COMMENT '排序，数据权重',
   `status` int(1) NOT NULL DEFAULT '1' COMMENT '代理的状态，-1删除，0禁用，1正常',
   `haveCodes` int(11) NOT NULL DEFAULT '0' COMMENT '累计的购买授权码数量',
   `spendCodes` int(11) NOT NULL DEFAULT '0' COMMENT '累计的授权码数量',
   `leftCodes` int(11) NOT NULL DEFAULT '0' COMMENT '当前可用的授权码数量',
+  `trueName` varchar(36) DEFAULT NULL COMMENT '真实姓名',
+  `zhifubao` varchar(36) DEFAULT NULL COMMENT '支付宝账户',
+  `pIdTime` timestamp NULL DEFAULT NULL COMMENT '申请加入代理体系的时间',
+  `reachTime` timestamp NULL DEFAULT NULL COMMENT '达成上下级代理的时间',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `grantTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '被授权的时间',
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `history`
+--
+
+DROP TABLE IF EXISTS `history`;
+CREATE TABLE IF NOT EXISTS `history` (
+  `id` varchar(36) NOT NULL COMMENT '业务ID',
+  `fromId` varchar(36) NOT NULL COMMENT '操作来源ID',
+  `toId` varchar(36) DEFAULT NULL COMMENT '操作流向ID，如果类型为1，则此ID为后来补充',
+  `type` int(11) NOT NULL COMMENT '1激活码，2批量激活码',
+  `actCode` varchar(12) DEFAULT NULL COMMENT '如果类型为1，则是向单个用激活；如果类型为2，则表示交易为数量',
+  `numCode` int(11) NOT NULL COMMENT '如果类型为2，则是代理之间交易，记录数量',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `level`
+--
+
+DROP TABLE IF EXISTS `level`;
+CREATE TABLE IF NOT EXISTS `level` (
+  `id` varchar(36) NOT NULL COMMENT '业务ID',
+  `pId` varchar(36) NOT NULL COMMENT '上级ID',
+  `name` varchar(36) NOT NULL COMMENT '名称',
+  `description` text NOT NULL COMMENT '描述',
+  `min` int(11) NOT NULL COMMENT '一次的最少取码量',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` varchar(36) NOT NULL COMMENT '业务ID，不能暴露给客户端',
+  `mark` varchar(12) NOT NULL COMMENT '用户ID',
+  `cellphone` varchar(15) NOT NULL COMMENT '手机号码',
+  `password` varchar(128) NOT NULL COMMENT '登录密码',
+  `name` varchar(36) DEFAULT NULL COMMENT '备注姓名',
+  `actCode` varchar(36) DEFAULT NULL COMMENT '激活码',
+  `actTime` timestamp NULL DEFAULT NULL COMMENT '激活时间',
+  `status` int(11) NOT NULL DEFAULT '1' COMMENT '0禁用，1正常',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- --------------------------------------------------------
 
@@ -74,11 +133,29 @@ CREATE TABLE IF NOT EXISTS `version` (
 --
 
 --
--- Indexes for table `mate`
+-- Indexes for table `agent`
 --
 ALTER TABLE `agent`
-  ADD PRIMARY KEY (`agentId`),
+  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `cellphone` (`cellphone`);
+
+--
+-- Indexes for table `history`
+--
+ALTER TABLE `history`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `level`
+--
+ALTER TABLE `level`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `version`

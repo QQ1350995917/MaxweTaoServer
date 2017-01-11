@@ -8,4 +8,7 @@ import org.maxwe.tao.server.controller.account.model.ExistModel;
  * Description: @TODO
  */
 public class SMSCodeModel extends ExistModel {
+    public SMSCodeModel() {
+        super();
+    }
 }

@@ -1,6 +1,6 @@
 package org.maxwe.tao.server.controller.mate;
 
-import org.maxwe.tao.server.common.model.SessionModel;
+import org.maxwe.tao.server.controller.account.model.SessionModel;
 import org.maxwe.tao.server.controller.account.agent.model.AgentModel;
 
 import java.util.LinkedList;

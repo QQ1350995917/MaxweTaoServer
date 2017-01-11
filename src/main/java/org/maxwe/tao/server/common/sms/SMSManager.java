@@ -1,10 +1,6 @@
 package org.maxwe.tao.server.common.sms;
 
 import com.taobao.api.ApiException;
-import com.taobao.api.DefaultTaobaoClient;
-import com.taobao.api.TaobaoClient;
-import com.taobao.api.request.AlibabaAliqinFcSmsNumSendRequest;
-import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
 import org.apache.log4j.Logger;
 
 import java.util.Iterator;
@@ -122,15 +118,15 @@ public class SMSManager {
             code = cacheCellphone.getCode();
         }
         logger.info("sendSMS : cellphone = " + cellphone + " ; code = " + code);
-        TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
-        AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
-        req.setSmsType("normal");
-        req.setSmsFreeSignName("测试");
-        req.setSmsParamString("{\"code\":\"" + code + "\",\"product\":\"" + product + "\"}");
-        req.setRecNum(cellphone);
-        req.setSmsTemplateCode(SMS_MODEL);
-        AlibabaAliqinFcSmsNumSendResponse rsp = client.execute(req);
-        logger.info("sendSMS : 发送结果 = " + rsp.getBody());
+//        TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
+//        AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
+//        req.setSmsType("normal");
+//        req.setSmsFreeSignName("测试");
+//        req.setSmsParamString("{\"code\":\"" + code + "\",\"product\":\"" + product + "\"}");
+//        req.setRecNum(cellphone);
+//        req.setSmsTemplateCode(SMS_MODEL);
+        //AlibabaAliqinFcSmsNumSendResponse rsp = client.execute(req);
+//        logger.info("sendSMS : 发送结果 = " + rsp.getBody());
 //        Map map = JSON.parseObject(rsp.getBody(), Map.class);
 //        if (Boolean.parseBoolean(((Map) ((Map) map.get("alibaba_aliqin_fc_sms_num_send_response")).get("result")).get("success").toString())) {
 //

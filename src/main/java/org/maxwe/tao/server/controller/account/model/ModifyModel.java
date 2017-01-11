@@ -1,8 +1,8 @@
 package org.maxwe.tao.server.controller.account.model;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.PropertyFilter;
-import org.maxwe.tao.server.common.model.SessionModel;
 
 /**
  * Created by Pengwei Ding on 2017-01-09 14:15.
@@ -45,6 +45,7 @@ public class ModifyModel extends SessionModel {
     }
 
     @Override
+    @JSONField(serialize=false)
     public boolean isParamsOk() {
         boolean paramsOk = super.isParamsOk();
         if (!StringUtils.isEmpty(this.getOldPassword())

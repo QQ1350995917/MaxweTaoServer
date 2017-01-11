@@ -7,7 +7,7 @@ import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.cache.SessionContext;
-import org.maxwe.tao.server.common.model.SessionModel;
+import org.maxwe.tao.server.controller.account.model.SessionModel;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.common.sms.SMSManager;
@@ -16,7 +16,6 @@ import org.maxwe.tao.server.common.utils.PasswordUtils;
 import org.maxwe.tao.server.common.utils.TokenUtils;
 import org.maxwe.tao.server.controller.account.agent.model.AgentModel;
 import org.maxwe.tao.server.controller.account.agent.model.BankModel;
-import org.maxwe.tao.server.controller.account.agent.model.FindModel;
 import org.maxwe.tao.server.controller.account.model.ExistModel;
 import org.maxwe.tao.server.controller.account.model.LoginModel;
 import org.maxwe.tao.server.controller.account.model.ModifyModel;
@@ -41,7 +40,7 @@ public class AgentController extends Controller implements IAgentController {
     @Override
     @Before(TokenInterceptor.class)
     public void bank() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         BankModel requestModel = JSON.parseObject(params, BankModel.class);
         IResultSet iResultSet = new ResultSet();
         if (!requestModel.isParamsOk()) {
@@ -93,67 +92,19 @@ public class AgentController extends Controller implements IAgentController {
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet));
-            return;
-        }
-
-        requestModel.setTimestamp(System.currentTimeMillis());
-        this.logger.info("bank : 绑定成功 " + requestModel.toString());
-        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(requestModel);
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        renderJson(JSON.toJSONString(iResultSet));
-    }
-
-    @Override
-    @Before(TokenInterceptor.class)
-    public void find() {
-        String params = this.getPara("p");
-        FindModel requestModel = JSON.parseObject(params, FindModel.class);
-        IResultSet iResultSet = new ResultSet();
-        if (!requestModel.isParamsOk()) {
-            this.logger.info("find : 请求参数错误 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
+        } else{
+            requestModel.setTimestamp(System.currentTimeMillis());
+            this.logger.info("bank : 绑定成功 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
             renderJson(JSON.toJSONString(iResultSet));
-            return;
         }
-
-        AgentEntity agentEntity = this.iAgentServices.retrieveByMark(requestModel.getTargetMark());
-        if (agentEntity == null) {
-            this.logger.info("find : 没有找到 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
-            renderJson(JSON.toJSONString(iResultSet));
-            return;
-        }
-
-        this.logger.info("find : 查找成功 " + requestModel.toString());
-        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(agentEntity);
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        String string = JSON.toJSONString(iResultSet,new PropertyFilter() {
-            @Override
-            public boolean apply(Object object, String name, Object value) {
-                if ("id".equals(name)
-                        || "password".equals(name)
-                        || "status".equals(name)
-                        || "pId".equals(name)
-                        || "named".equals(name)
-                        || "weight".equals(name)
-                        ) {
-                    return false;
-                }
-                return true;
-            }
-        });
-        renderJson(string);
     }
 
     @Override
     public void exist() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         ExistModel requestModel = JSON.parseObject(params, ExistModel.class);
         IResultSet iResultSet = new ResultSet();
         if (requestModel == null || !requestModel.isParamsOk()) {
@@ -173,19 +124,19 @@ public class AgentController extends Controller implements IAgentController {
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_CANNOT_REPEAT);
             renderJson(JSON.toJSONString(iResultSet));
-            return;
-        }
+        } else {
+            this.logger.info("exist : 账户重复性检测通过 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+            renderJson(JSON.toJSONString(iResultSet));
 
-        this.logger.info("exist : 账户重复性检测通过 " + requestModel.toString());
-        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(requestModel);
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        renderJson(JSON.toJSONString(iResultSet));
+        }
     }
 
     @Override
     public void register() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         RegisterModel requestModel = JSON.parseObject(params, RegisterModel.class);
         IResultSet iResultSet = new ResultSet();
         //参数检测
@@ -219,7 +170,7 @@ public class AgentController extends Controller implements IAgentController {
 
         AgentEntity agentEntity = new AgentEntity();
         agentEntity.setId(UUID.randomUUID().toString());
-        agentEntity.setMark(MarkUtils.deMark(requestModel.getCellphone()));
+        agentEntity.setMark(MarkUtils.enMark(requestModel.getCellphone()));
         agentEntity.setCellphone(requestModel.getCellphone());
         agentEntity.setPassword(PasswordUtils.enPassword(requestModel.getPassword()));
 
@@ -230,23 +181,23 @@ public class AgentController extends Controller implements IAgentController {
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet, RegisterModel.propertyFilter));
-            return;
+        } else {
+            CSEntity agentCS = new CSEntity(saveAgentEntity.getId(), saveAgentEntity.getCellphone(), TokenUtils.getToken(saveAgentEntity.getCellphone(), requestModel.getPassword()));
+            SessionContext.addCSEntity(agentCS);
+            this.logger.info("create : 注册成功 " + requestModel.toString());
+
+            //创建
+            SessionModel sessionModel = new SessionModel(agentCS.getToken(), saveAgentEntity.getMark(), saveAgentEntity.getCellphone());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            iResultSet.setData(sessionModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+            renderJson(JSON.toJSONString(iResultSet, RegisterModel.propertyFilter));
         }
-
-        CSEntity agentCS = new CSEntity(saveAgentEntity.getId(), saveAgentEntity.getCellphone(), TokenUtils.getToken(saveAgentEntity.getCellphone(), requestModel.getPassword()));
-        SessionContext.addCSEntity(agentCS);
-        this.logger.info("create : 注册成功 " + requestModel.toString());
-
-        //创建
-        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(agentCS.getToken());
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        renderJson(JSON.toJSONString(iResultSet, RegisterModel.propertyFilter));
     }
 
     @Override
     public void lost() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         RegisterModel requestModel = JSON.parseObject(params, RegisterModel.class);
         IResultSet iResultSet = new ResultSet();
         //参数检测
@@ -288,22 +239,22 @@ public class AgentController extends Controller implements IAgentController {
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_FAIL);
             renderJson(JSON.toJSONString(iResultSet));
-            return;
+        } else {
+            CSEntity agentCS = new CSEntity(updateAgent.getId(), updateAgent.getCellphone(), TokenUtils.getToken(updateAgent.getCellphone(), requestModel.getPassword()));
+            SessionContext.addCSEntity(agentCS);
+            this.logger.info("lost : 找回密码成功 " + requestModel.toString());
+            //创建
+            SessionModel sessionModel = new SessionModel(agentCS.getToken(), updateAgent.getMark(), updateAgent.getCellphone());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            iResultSet.setData(sessionModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+            renderJson(JSON.toJSONString(iResultSet));
         }
-
-        CSEntity agentCS = new CSEntity(updateAgent.getId(), updateAgent.getCellphone(), TokenUtils.getToken(updateAgent.getCellphone(), requestModel.getPassword()));
-        SessionContext.addCSEntity(agentCS);
-        this.logger.info("lost : 找回密码成功 " + requestModel.toString());
-        //创建
-        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(agentCS.getToken());
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        renderJson(JSON.toJSONString(iResultSet));
     }
 
     @Override
     public void login() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         LoginModel requestModel = JSON.parseObject(params, LoginModel.class);
         IResultSet iResultSet = new ResultSet();
         if (requestModel == null || !requestModel.isParamsOK()) {
@@ -323,23 +274,23 @@ public class AgentController extends Controller implements IAgentController {
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_FAIL);
             renderJson(JSON.toJSONString(iResultSet, LoginModel.propertyFilter));
-            return;
+        } else {
+            CSEntity agentCS = new CSEntity(agentEntity.getId(), agentEntity.getCellphone(), TokenUtils.getToken(agentEntity.getCellphone(), requestModel.getPassword()));
+            SessionContext.addCSEntity(agentCS);
+            this.logger.info("login : 登录成功 " + requestModel.toString());
+
+            SessionModel sessionModel = new SessionModel(agentCS.getToken(), agentEntity.getMark(), agentEntity.getCellphone());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            iResultSet.setData(sessionModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_SUCCESS);
+            renderJson(JSON.toJSONString(iResultSet));
         }
-
-        CSEntity agentCS = new CSEntity(agentEntity.getId(), agentEntity.getCellphone(), TokenUtils.getToken(agentEntity.getCellphone(), requestModel.getPassword()));
-        SessionContext.addCSEntity(agentCS);
-        this.logger.info("login : 登录成功 " + requestModel.toString());
-
-        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(agentCS.getToken());
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_SUCCESS);
-        renderJson(JSON.toJSONString(iResultSet));
     }
 
     @Override
     @Before(TokenInterceptor.class)
     public void password() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         ModifyModel requestModel = JSON.parseObject(params, ModifyModel.class);
         IResultSet iResultSet = new ResultSet();
         CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
@@ -372,23 +323,23 @@ public class AgentController extends Controller implements IAgentController {
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet, ModifyModel.propertyFilter));
-            return;
+        } else {
+            CSEntity agentCS = new CSEntity(updateAgentEntity.getId(), updateAgentEntity.getCellphone(), TokenUtils.getToken(updateAgentEntity.getCellphone(), requestModel.getNewPassword()));
+            SessionContext.addCSEntity(agentCS);
+            this.logger.info("password : 修改密码成功 " + requestModel.toString());
+
+            SessionModel sessionModel = new SessionModel(agentCS.getToken(), updateAgentEntity.getMark(), updateAgentEntity.getCellphone());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            iResultSet.setData(sessionModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+            renderJson(JSON.toJSONString(iResultSet));
         }
-
-        CSEntity agentCS = new CSEntity(updateAgentEntity.getId(), updateAgentEntity.getCellphone(), TokenUtils.getToken(updateAgentEntity.getCellphone(), requestModel.getNewPassword()));
-        SessionContext.addCSEntity(agentCS);
-        this.logger.info("password : 修改密码成功 " + requestModel.toString());
-
-        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(agentCS.getToken());
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        renderJson(JSON.toJSONString(iResultSet));
     }
 
     @Override
     @Before(TokenInterceptor.class)
     public void logout() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         SessionModel requestModel = JSON.parseObject(params, SessionModel.class);
         IResultSet iResultSet = new ResultSet();
         CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
@@ -402,7 +353,7 @@ public class AgentController extends Controller implements IAgentController {
     @Override
     @Before(TokenInterceptor.class)
     public void mine() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         AgentModel requestModel = JSON.parseObject(params, AgentModel.class);
         IResultSet iResultSet = new ResultSet();
         CSEntity agentCS = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
@@ -410,7 +361,7 @@ public class AgentController extends Controller implements IAgentController {
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(agentEntity);
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        String resultJson = JSON.toJSONString(iResultSet,new PropertyFilter() {
+        String resultJson = JSON.toJSONString(iResultSet, new PropertyFilter() {
             @Override
             public boolean apply(Object object, String name, Object value) {
                 if ("id".equals(name)

@@ -29,7 +29,7 @@ public class TradeController extends Controller implements ITradeController {
     @Override
     @Before(TokenInterceptor.class)
     public void grant() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         TradeModel requestModel = JSON.parseObject(params, TradeModel.class);
         IResultSet iResultSet = new ResultSet();
         if (!requestModel.isParamsOk()) {
@@ -90,7 +90,7 @@ public class TradeController extends Controller implements ITradeController {
     @Override
     @Before(TokenInterceptor.class)
     public void trade() {
-        String params = this.getPara("p");
+        String params = this.getAttr("p");
         TradeModel requestModel = JSON.parseObject(params, TradeModel.class);
         IResultSet iResultSet = new ResultSet();
         if (!requestModel.isParamsOk()) {

@@ -1,7 +1,7 @@
 package org.maxwe.tao.server.controller.trade;
 
 import com.alibaba.druid.util.StringUtils;
-import org.maxwe.tao.server.common.model.SessionModel;
+import org.maxwe.tao.server.controller.account.model.SessionModel;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 
 /**

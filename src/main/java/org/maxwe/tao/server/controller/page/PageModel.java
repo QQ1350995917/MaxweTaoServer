@@ -1,6 +1,6 @@
 package org.maxwe.tao.server.controller.page;
 
-import org.maxwe.tao.server.common.model.SessionModel;
+import org.maxwe.tao.server.controller.account.model.SessionModel;
 
 /**
  * Created by Pengwei Ding on 2016-10-17 16:05.

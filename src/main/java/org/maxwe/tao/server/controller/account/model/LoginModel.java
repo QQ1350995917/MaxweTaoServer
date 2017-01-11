@@ -1,6 +1,7 @@
 package org.maxwe.tao.server.controller.account.model;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.PropertyFilter;
 import org.maxwe.tao.server.common.utils.CellPhoneUtils;
 
@@ -46,6 +47,7 @@ public class LoginModel implements Serializable {
         this.password = password;
     }
 
+    @JSONField(serialize=false)
     public boolean isParamsOK() {
         if (CellPhoneUtils.isCellphone(this.getCellphone())
                 && !StringUtils.isEmpty(this.getPassword())

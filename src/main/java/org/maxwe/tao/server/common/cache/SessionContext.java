@@ -58,10 +58,9 @@ public class SessionContext {
         if (token != null) {
             cellphoneToTokenConcurrentHashMap.remove(csEntity.getCellphone());
             tokenConcurrentHashMap.remove(token);
-        } else {
-            cellphoneToTokenConcurrentHashMap.put(csEntity.getCellphone(),csEntity.getToken());
-            tokenConcurrentHashMap.put(csEntity.getToken(), csEntity);
         }
+        cellphoneToTokenConcurrentHashMap.put(csEntity.getCellphone(), csEntity.getToken());
+        tokenConcurrentHashMap.put(csEntity.getToken(), csEntity);
     }
 
     public static CSEntity getCSEntity(CSEntity csEntity) {

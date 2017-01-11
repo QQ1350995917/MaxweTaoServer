@@ -64,7 +64,7 @@ public class UserServices implements IUserServices {
     @Override
     public UserEntity retrieveById(String id) {
         List<Record> userRecords = Db.find("SELECT * FROM user WHERE id = ? ", id);
-        if (userRecords != null && userRecords.get(0) != null) {
+        if (userRecords != null && userRecords.size() > 0 && userRecords.get(0) != null) {
             Map<String, Object> accountMap = userRecords.get(0).getColumns();
             UserEntity userEntity = JSON.parseObject(JSON.toJSONString(accountMap), UserEntity.class);
             return userEntity;
@@ -76,7 +76,7 @@ public class UserServices implements IUserServices {
     @Override
     public UserEntity retrieveByMark(String mark) {
         List<Record> userRecords = Db.find("SELECT * FROM user WHERE mark = ? ", mark);
-        if (userRecords != null && userRecords.get(0) != null) {
+        if (userRecords != null && userRecords.size() > 0 && userRecords.get(0) != null) {
             Map<String, Object> accountMap = userRecords.get(0).getColumns();
             UserEntity userEntity = JSON.parseObject(JSON.toJSONString(accountMap), UserEntity.class);
             return userEntity;
@@ -88,7 +88,7 @@ public class UserServices implements IUserServices {
     @Override
     public UserEntity retrieveByCellphone(String cellphone) {
         List<Record> userRecords = Db.find("SELECT * FROM user WHERE cellphone = ? ", cellphone);
-        if (userRecords != null && userRecords.get(0) != null) {
+        if (userRecords != null && userRecords.size() > 0 && userRecords.get(0) != null) {
             Map<String, Object> accountMap = userRecords.get(0).getColumns();
             UserEntity userEntity = JSON.parseObject(JSON.toJSONString(accountMap), UserEntity.class);
             return userEntity;
@@ -101,7 +101,7 @@ public class UserServices implements IUserServices {
     public LinkedList<UserEntity> retrieveByMaster(String masterId) {
         LinkedList<UserEntity> userEntities = new LinkedList<>();
         List<Record> userRecords = Db.find("SELECT * FROM user WHERE master = ? ", masterId);
-        if (userRecords != null && userRecords.size() > 0) {
+        if (userRecords != null && userEntities.size() > 0 && userRecords.size() > 0) {
             for (Record userRecord : userRecords) {
                 Map<String, Object> userMap = userRecord.getColumns();
                 UserEntity userEntity = JSON.parseObject(JSON.toJSONString(userMap), UserEntity.class);

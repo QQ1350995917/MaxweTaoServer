@@ -1,6 +1,7 @@
 package org.maxwe.tao.server.controller.account.model;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import java.io.Serializable;
 
@@ -16,6 +17,10 @@ public class ExistModel implements Serializable {
         super();
     }
 
+    public ExistModel(String cellphone) {
+        this.cellphone = cellphone;
+    }
+
     public String getCellphone() {
         return cellphone;
     }
@@ -24,6 +29,7 @@ public class ExistModel implements Serializable {
         this.cellphone = cellphone;
     }
 
+    @JSONField(serialize=false)
     public boolean isParamsOk(){
         if (!StringUtils.isEmpty(this.getCellphone())){
             return true;

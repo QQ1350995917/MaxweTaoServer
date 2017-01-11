@@ -1,6 +1,6 @@
 package org.maxwe.tao.server.controller.history;
 
-import org.maxwe.tao.server.common.model.SessionModel;
+import org.maxwe.tao.server.controller.account.model.SessionModel;
 
 /**
  * Created by Pengwei Ding on 2017-01-09 18:38.
