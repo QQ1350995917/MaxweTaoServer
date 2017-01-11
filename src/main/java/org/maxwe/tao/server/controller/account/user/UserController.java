@@ -39,6 +39,7 @@ public class UserController extends Controller implements IUserController {
     private final Logger logger = Logger.getLogger(UserController.class.getName());
     private IUserServices iUserServices = new UserServices();
     private IHistoryServices iHistoryServices = new HistoryServices();
+
     @Override
     @Before(TokenInterceptor.class)
     public void active() {
@@ -57,7 +58,7 @@ public class UserController extends Controller implements IUserController {
         HistoryEntity historyEntity = iHistoryServices.retrieveByActCode(requestModel.getActCode());
         if (historyEntity == null
                 || !StringUtils.isEmpty(historyEntity.getToId())
-                || historyEntity.getType() != 1){
+                || historyEntity.getType() != 1) {
             this.logger.info("active : 请求参数错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
             iResultSet.setData(requestModel);
@@ -71,21 +72,19 @@ public class UserController extends Controller implements IUserController {
         UserEntity userEntity = iUserServices.retrieveById(SessionContext.getCSEntity(agentCS).getId());
         historyEntity.setToId(userEntity.getId());
         HistoryEntity updateHistoryEntity = iHistoryServices.updateToId(historyEntity);
-        if (updateHistoryEntity == null){
+        if (updateHistoryEntity == null) {
             this.logger.info("active : 激活失败-服务器内部错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet));
-            return;
+        } else {
+            this.logger.info("active : 激活成功 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+            renderJson(JSON.toJSONString(iResultSet));
         }
-
-        this.logger.info("active : 激活成功 " + requestModel.toString());
-        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(requestModel);
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        renderJson(JSON.toJSONString(iResultSet));
-
     }
 
     @Override
@@ -93,14 +92,14 @@ public class UserController extends Controller implements IUserController {
         String params = this.getAttr("p");
         ExistModel requestModel = JSON.parseObject(params, ExistModel.class);
         IResultSet iResultSet = new ResultSet();
-//        if (requestModel == null || !requestModel.isParamsOk()) {
-//            this.logger.info("exist : 请求参数错误 " + requestModel.toString());
-//            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
-//            iResultSet.setData(requestModel);
-//            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
-//            renderJson(JSON.toJSONString(iResultSet));
-//            return;
-//        }
+        if (requestModel == null || !requestModel.isParamsOk()) {
+            this.logger.info("exist : 请求参数错误 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+            renderJson(JSON.toJSONString(iResultSet));
+            return;
+        }
 
         //重复检测
         UserEntity userEntity = iUserServices.retrieveByCellphone(requestModel.getCellphone());
@@ -110,14 +109,13 @@ public class UserController extends Controller implements IUserController {
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_CANNOT_REPEAT);
             renderJson(JSON.toJSONString(iResultSet));
-            return;
+        } else {
+            this.logger.info("exist : 账户重复性检测通过 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+            renderJson(JSON.toJSONString(iResultSet));
         }
-
-        this.logger.info("exist : 账户重复性检测通过 " + requestModel.toString());
-        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(requestModel);
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        renderJson(JSON.toJSONString(iResultSet));
     }
 
     @Override
@@ -156,7 +154,7 @@ public class UserController extends Controller implements IUserController {
 
         UserEntity userEntity = new UserEntity();
         userEntity.setId(UUID.randomUUID().toString());
-        userEntity.setMark(MarkUtils.deMark(requestModel.getCellphone()));
+        userEntity.setMark(MarkUtils.enMark(requestModel.getCellphone()));
         userEntity.setCellphone(requestModel.getCellphone());
         userEntity.setPassword(PasswordUtils.enPassword(requestModel.getPassword()));
 
@@ -167,18 +165,18 @@ public class UserController extends Controller implements IUserController {
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet, RegisterModel.propertyFilter));
-            return;
+        } else {
+            CSEntity agentCS = new CSEntity(saveUserEntity.getId(), saveUserEntity.getCellphone(), TokenUtils.getToken(saveUserEntity.getCellphone(), requestModel.getPassword()));
+            SessionContext.addCSEntity(agentCS);
+            this.logger.info("create : 注册成功 " + requestModel.toString());
+
+            //创建
+            SessionModel sessionModel = new SessionModel(agentCS.getToken(), saveUserEntity.getMark(), saveUserEntity.getCellphone());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            iResultSet.setData(sessionModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+            renderJson(JSON.toJSONString(iResultSet, RegisterModel.propertyFilter));
         }
-
-        CSEntity agentCS = new CSEntity(saveUserEntity.getId(), saveUserEntity.getCellphone(), TokenUtils.getToken(saveUserEntity.getCellphone(), requestModel.getPassword()));
-        SessionContext.addCSEntity(agentCS);
-        this.logger.info("create : 注册成功 " + requestModel.toString());
-
-        //创建
-        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(agentCS.getToken());
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        renderJson(JSON.toJSONString(iResultSet, RegisterModel.propertyFilter));
     }
 
     @Override
@@ -226,16 +224,17 @@ public class UserController extends Controller implements IUserController {
             iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_FAIL);
             renderJson(JSON.toJSONString(iResultSet));
             return;
+        } else {
+            CSEntity agentCS = new CSEntity(updateUser.getId(), updateUser.getCellphone(), TokenUtils.getToken(updateUser.getCellphone(), requestModel.getPassword()));
+            SessionContext.addCSEntity(agentCS);
+            this.logger.info("lost : 找回密码成功 " + requestModel.toString());
+            //创建
+            SessionModel sessionModel = new SessionModel(agentCS.getToken(), updateUser.getMark(), updateUser.getCellphone());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            iResultSet.setData(sessionModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+            renderJson(JSON.toJSONString(iResultSet));
         }
-
-        CSEntity agentCS = new CSEntity(updateUser.getId(), updateUser.getCellphone(), TokenUtils.getToken(updateUser.getCellphone(), requestModel.getPassword()));
-        SessionContext.addCSEntity(agentCS);
-        this.logger.info("lost : 找回密码成功 " + requestModel.toString());
-        //创建
-        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(agentCS.getToken());
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        renderJson(JSON.toJSONString(iResultSet));
     }
 
     @Override
@@ -260,17 +259,17 @@ public class UserController extends Controller implements IUserController {
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_FAIL);
             renderJson(JSON.toJSONString(iResultSet, LoginModel.propertyFilter));
-            return;
+        } else {
+            CSEntity agentCS = new CSEntity(userEntity.getId(), userEntity.getCellphone(), TokenUtils.getToken(userEntity.getCellphone(), requestModel.getPassword()));
+            SessionContext.addCSEntity(agentCS);
+            this.logger.info("login : 登录成功 " + requestModel.toString());
+
+            SessionModel sessionModel = new SessionModel(agentCS.getToken(), userEntity.getMark(), userEntity.getCellphone());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            iResultSet.setData(sessionModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_SUCCESS);
+            renderJson(JSON.toJSONString(iResultSet));
         }
-
-        CSEntity agentCS = new CSEntity(userEntity.getId(), userEntity.getCellphone(), TokenUtils.getToken(userEntity.getCellphone(), requestModel.getPassword()));
-        SessionContext.addCSEntity(agentCS);
-        this.logger.info("login : 登录成功 " + requestModel.toString());
-
-        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(agentCS.getToken());
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_SUCCESS);
-        renderJson(JSON.toJSONString(iResultSet));
     }
 
     @Override
@@ -309,17 +308,17 @@ public class UserController extends Controller implements IUserController {
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet, ModifyModel.propertyFilter));
-            return;
+        } else {
+            CSEntity agentCS = new CSEntity(updateUserEntity.getId(), updateUserEntity.getCellphone(), TokenUtils.getToken(updateUserEntity.getCellphone(), requestModel.getNewPassword()));
+            SessionContext.addCSEntity(agentCS);
+            this.logger.info("password : 修改密码成功 " + requestModel.toString());
+
+            SessionModel sessionModel = new SessionModel(agentCS.getToken(), updateUserEntity.getMark(), updateUserEntity.getCellphone());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            iResultSet.setData(sessionModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+            renderJson(JSON.toJSONString(iResultSet));
         }
-
-        CSEntity agentCS = new CSEntity(updateUserEntity.getId(), updateUserEntity.getCellphone(), TokenUtils.getToken(updateUserEntity.getCellphone(), requestModel.getNewPassword()));
-        SessionContext.addCSEntity(agentCS);
-        this.logger.info("password : 修改密码成功 " + requestModel.toString());
-
-        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(agentCS.getToken());
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        renderJson(JSON.toJSONString(iResultSet));
     }
 
     @Override
@@ -347,7 +346,7 @@ public class UserController extends Controller implements IUserController {
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(userEntity);
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        String resultJson = JSON.toJSONString(iResultSet,new PropertyFilter() {
+        String resultJson = JSON.toJSONString(iResultSet, new PropertyFilter() {
             @Override
             public boolean apply(Object object, String name, Object value) {
                 if ("id".equals(name)
