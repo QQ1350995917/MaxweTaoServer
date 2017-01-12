@@ -111,7 +111,7 @@ public class AgentServices implements IAgentServices {
                 int agentSub = Db.update("UPDATE agent SET haveCodes = haveCodes + ?, leftCodes = leftCodes + ? " +
                         "where agentId = ? ", codes, codes, agentSubEntity.getId());
                 int history = Db.update("INSERT INTO history (id,fromId,toId,type,numCode) VALUES(?,?,?,?,?)",
-                        historyEntity.getId(), historyEntity.getFromId(), historyEntity.getToId(), 2, historyEntity.getNumCode());
+                        historyEntity.getId(), historyEntity.getFromId(), historyEntity.getToId(), 2, historyEntity.getCodeNum());
                 return agentMaster == 1 && agentSub == 1 && history == 1;
             }
         });

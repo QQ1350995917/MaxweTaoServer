@@ -13,7 +13,7 @@ public class HistoryEntity implements Serializable {
     private String toId; // 操作流向ID，如果类型为1，则此ID为后来补充
     private int type; // 1激活码，2批量激活码
     private String actCode; //如果类型为1，则是向单个用激活
-    private int numCode;//如果类型为2，则表示交易为数量
+    private int codeNum;//如果类型为2，则表示交易为数量
     private long createTime;//创建时间
     private long updateTime;//更新时间
 
@@ -61,12 +61,12 @@ public class HistoryEntity implements Serializable {
         this.actCode = actCode;
     }
 
-    public int getNumCode() {
-        return numCode;
+    public int getCodeNum() {
+        return codeNum;
     }
 
-    public void setNumCode(int numCode) {
-        this.numCode = numCode;
+    public void setCodeNum(int codeNum) {
+        this.codeNum = codeNum;
     }
 
     public long getCreateTime() {

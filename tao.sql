@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `history` (
   `toId` varchar(36) DEFAULT NULL COMMENT '操作流向ID，如果类型为1，则此ID为后来补充',
   `type` int(11) NOT NULL COMMENT '1激活码，2批量激活码',
   `actCode` varchar(12) DEFAULT NULL COMMENT '如果类型为1，则是向单个用激活；如果类型为2，则表示交易为数量',
-  `numCode` int(11) NOT NULL COMMENT '如果类型为2，则是代理之间交易，记录数量',
+  `codeNum` int(11) NOT NULL COMMENT '如果类型为2，则是代理之间交易，记录数量',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

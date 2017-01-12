@@ -19,6 +19,7 @@ public class SessionModel implements Serializable {
     private String t;
     private String mark;
     private String cellphone;
+    private String verification;//敏感操作的验证密码
     @JSONField(serialize=false)
     private String sign;
 
@@ -54,6 +55,14 @@ public class SessionModel implements Serializable {
 
     public void setCellphone(String cellphone) {
         this.cellphone = cellphone;
+    }
+
+    public String getVerification() {
+        return verification;
+    }
+
+    public void setVerification(String verification) {
+        this.verification = verification;
     }
 
     public String getSign() {

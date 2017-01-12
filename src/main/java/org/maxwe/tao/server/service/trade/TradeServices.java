@@ -28,7 +28,7 @@ public class TradeServices implements ITradeServices {
                         .set("toId", historyEntity.getToId())
                         .set("type", historyEntity.getType())
                         .set("actCode", historyEntity.getActCode())
-                        .set("numCode", historyEntity.getNumCode());
+                        .set("codeNum", historyEntity.getCodeNum());
                 boolean isSave = Db.save("history", historyRecord);
                 return updateAgent == 1 && isSave;
             }
@@ -42,9 +42,9 @@ public class TradeServices implements ITradeServices {
         boolean succeed = Db.tx(new IAtom() {
             public boolean run() throws SQLException {
                 int fromAgent = Db.update("UPDATE agent SET spendCodes = spendCodes + ?, leftCodes = leftCodes - ? " +
-                        "where id = ? ", historyEntity.getNumCode(), historyEntity.getNumCode(), fromAgentEntity.getId());
+                        "where id = ? ", historyEntity.getCodeNum(), historyEntity.getCodeNum(), fromAgentEntity.getId());
                 int toAgent = Db.update("UPDATE agent SET haveCodes = haveCodes + ?, leftCodes = leftCodes + ? " +
-                        "where id = ? ", historyEntity.getNumCode(), historyEntity.getNumCode(), toAgentEntity.getId());
+                        "where id = ? ", historyEntity.getCodeNum(), historyEntity.getCodeNum(), toAgentEntity.getId());
 
                 Record historyRecord = new Record()
                         .set("id", historyEntity.getId())
@@ -52,7 +52,7 @@ public class TradeServices implements ITradeServices {
                         .set("toId", historyEntity.getToId())
                         .set("type", historyEntity.getType())
                         .set("actCode", historyEntity.getActCode())
-                        .set("numCode", historyEntity.getNumCode());
+                        .set("codeNum", historyEntity.getCodeNum());
                 boolean isSave = Db.save("history", historyRecord);
 
                 return fromAgent == 1 && toAgent == 1 && isSave;

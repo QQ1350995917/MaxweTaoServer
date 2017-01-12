@@ -13,8 +13,9 @@ import org.maxwe.tao.server.service.account.agent.AgentEntity;
 public class TradeModel extends SessionModel {
     private AgentEntity toAgentEntity;
     private int type;
+    private String actCode;
     private String levelId;
-    private int numCode;
+    private int codeNum;
 
     public TradeModel() {
         super();
@@ -36,6 +37,14 @@ public class TradeModel extends SessionModel {
         this.type = type;
     }
 
+    public String getActCode() {
+        return actCode;
+    }
+
+    public void setActCode(String actCode) {
+        this.actCode = actCode;
+    }
+
     public String getLevelId() {
         return levelId;
     }
@@ -44,12 +53,12 @@ public class TradeModel extends SessionModel {
         this.levelId = levelId;
     }
 
-    public int getNumCode() {
-        return numCode;
+    public int getCodeNum() {
+        return codeNum;
     }
 
-    public void setNumCode(int numCode) {
-        this.numCode = numCode;
+    public void setCodeNum(int codeNum) {
+        this.codeNum = codeNum;
     }
 
     @Override
@@ -57,8 +66,9 @@ public class TradeModel extends SessionModel {
         return super.toString() + "TradeModel{" +
                 "toAgentEntity=" + toAgentEntity +
                 ", type=" + type +
+                ", actCode=" + actCode +
                 ", levelId=" + levelId +
-                ", numCode=" + numCode +
+                ", codeNum=" + codeNum +
                 '}';
     }
 
@@ -69,7 +79,7 @@ public class TradeModel extends SessionModel {
             return false;
         }
 
-        if (this.getType() == 1 && this.getNumCode() != 1) {
+        if (this.getType() == 1 && this.getCodeNum() != 1) {
             return false;
         }
 
@@ -81,11 +91,11 @@ public class TradeModel extends SessionModel {
             return false;
         }
 
-        if (this.getType() == 2 && this.getNumCode() < 1){
+        if (this.getType() == 2 && this.getCodeNum() < 1){
             return false;
         }
 
-        if (this.getType() == 2 && this.getNumCode() > 99999){
+        if (this.getType() == 2 && this.getCodeNum() > 99999){
             return false;
         }
 

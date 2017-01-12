@@ -6,4 +6,9 @@ package org.maxwe.tao.server.common.utils;
  * Description: @TODO
  */
 public class GrantCodeUtils {
+
+    public static String genGrantCode(){
+
+        return "temp";
+    }
 }
