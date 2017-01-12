@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2017-01-11 03:14:51
+-- Generation Time: 2017-01-12 10:26:45
 -- 服务器版本： 5.6.22
 -- PHP Version: 5.5.20
 
@@ -137,7 +137,8 @@ CREATE TABLE IF NOT EXISTS `version` (
 --
 ALTER TABLE `agent`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `cellphone` (`cellphone`);
+  ADD UNIQUE KEY `cellphone` (`cellphone`),
+  ADD UNIQUE KEY `mark` (`mark`);
 
 --
 -- Indexes for table `history`
@@ -155,7 +156,8 @@ ALTER TABLE `level`
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `mark` (`mark`);
 
 --
 -- Indexes for table `version`
