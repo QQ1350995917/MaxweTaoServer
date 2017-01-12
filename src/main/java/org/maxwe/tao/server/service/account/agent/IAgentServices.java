@@ -1,7 +1,5 @@
 package org.maxwe.tao.server.service.account.agent;
 
-import org.maxwe.tao.server.service.history.HistoryEntity;
-
 import java.util.LinkedList;
 
 /**
@@ -11,16 +9,41 @@ import java.util.LinkedList;
  */
 public interface IAgentServices {
     AgentEntity create(AgentEntity agentEntity);
-    AgentEntity[] createReach(AgentEntity agentMasterEntity,AgentEntity agentSubEntity);
     AgentEntity updatePassword(AgentEntity agentEntity);
     AgentEntity updateName(AgentEntity agentEntity);
     AgentEntity updateNamed(AgentEntity agentEntity);
-    AgentEntity updateGrant(AgentEntity agentEntity,HistoryEntity historyEntity);
-    AgentEntity[] updateReach(AgentEntity agentMasterEntity,AgentEntity agentSubEntity);
-    AgentEntity[] updateTrade(AgentEntity agentMasterEntity,AgentEntity agentSubEntity,int codes,HistoryEntity historyEntity);
+
+    /**
+     * 下级请求加入组织结构
+     * @param agentMasterEntity 上级
+     * @param agentSubEntity 霞姐
+     * @return
+     */
+    boolean askForReach(AgentEntity agentMasterEntity,AgentEntity agentSubEntity);
+
+    /**
+     * 上级同意或拒绝下级加入组织的请求
+     * @param agentSubEntity 下级
+     * @return
+     */
+    boolean updateReach(AgentEntity agentSubEntity);
+
+    /**
+     * 代理更新自己的银行账号
+     * @param agentEntity
+     * @return
+     */
     AgentEntity updateBank(AgentEntity agentEntity);
     AgentEntity retrieveById(String id);
     AgentEntity retrieveByMark(String mark);
     AgentEntity retrieveByCellphone(String cellphone);
+
+    /**
+     * 上级读取自己下边的代理
+     * @param pId
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
     LinkedList<AgentEntity> retrieveByPid(String pId,int pageIndex,int pageSize);
 }

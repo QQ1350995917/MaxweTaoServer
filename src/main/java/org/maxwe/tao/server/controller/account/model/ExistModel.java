@@ -3,14 +3,12 @@ package org.maxwe.tao.server.controller.account.model;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.annotation.JSONField;
 
-import java.io.Serializable;
-
 /**
  * Created by Pengwei Ding on 2017-01-09 19:08.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class ExistModel implements Serializable {
+public class ExistModel extends SessionModel {
     private String cellphone;
 
     public ExistModel() {
@@ -29,9 +27,9 @@ public class ExistModel implements Serializable {
         this.cellphone = cellphone;
     }
 
-    @JSONField(serialize=false)
-    public boolean isParamsOk(){
-        if (!StringUtils.isEmpty(this.getCellphone())){
+    @JSONField(serialize = false)
+    public boolean isParamsOk() {
+        if (!StringUtils.isEmpty(this.getCellphone())) {
             return true;
         }
         return false;

@@ -8,6 +8,6 @@ package org.maxwe.tao.server.common.utils;
 public class DateTimeTest {
 
     public static void main(String[] args) throws Exception {
-        DateTime.test();
+        DateTimeUtils.test();
     }
 }

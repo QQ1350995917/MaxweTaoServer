@@ -1,6 +1,6 @@
 package org.maxwe.tao.server.service.account;
 
-import org.maxwe.tao.server.common.utils.DateTime;
+import org.maxwe.tao.server.common.utils.DateTimeUtils;
 
 /**
  * Created by Pengwei Ding on 2016-12-25 16:16.
@@ -11,18 +11,20 @@ public class CSEntity {
     private String id;
     private String cellphone;
     private String token;
+    private int apt; // 登录类型
     private long timestamp;
 
     public CSEntity() {
         super();
     }
 
-    public CSEntity(String id,String cellphone,String token) {
+    public CSEntity(String id,String cellphone,String token,int apt) {
         super();
         this.id = id;
         this.cellphone = cellphone;
         this.token = token;
-        this.timestamp = DateTime.getCurrentTimestamp();
+        this.timestamp = DateTimeUtils.getCurrentTimestamp();
+        this.apt = apt;
     }
 
     public String getId() {
@@ -47,6 +49,14 @@ public class CSEntity {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public int getApt() {
+        return apt;
+    }
+
+    public void setApt(int apt) {
+        this.apt = apt;
     }
 
     public long getTimestamp() {

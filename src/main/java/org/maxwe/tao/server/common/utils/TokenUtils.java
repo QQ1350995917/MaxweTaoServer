@@ -29,7 +29,7 @@ public class TokenUtils {
 
     public static String getToken(String cellphone,String password) {
         try {
-            cellphone += password + DateTime.getCurrentTimestamp() + genRandom();
+            cellphone += password + DateTimeUtils.getCurrentTimestamp() + genRandom();
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(cellphone.getBytes());
             String result = new BigInteger(1, md.digest()).toString(16);

@@ -103,12 +103,6 @@ public class CryptionUtils {
         return result;
     }
 
-//    加密前：UUFaV1NYRURDUkZWLTE0ODQwMzg2NDcwNzMtMTIzNDU2Nzg5MDA=
-//    加密后：BA509F422C961A531FB9562BABCA67619DBD92D0F10570BB61A36D87368943E9D06180A2ADFF77450E810383FD6BD7B8636181D07F9B4539D56B8021746F2B60
-//    解密后：UUFaV1NYRURDUkZWLTE0ODQwMzg2NDcwNzMtMTIzNDU2Nzg5MDA=
-//    QAZWSXEDCRFV-1484038647073-12345678900
-
-
     public static void main(String[] args) throws Exception {
         String content1 = "QAZWSXEDCRFV-" + System.currentTimeMillis() + "-12345678900";
         String encodeContent = new String(Base64.getEncoder().encode(content1.getBytes()));

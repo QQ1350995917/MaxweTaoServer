@@ -20,6 +20,7 @@ public class SessionModel implements Serializable {
     private String mark;
     private String cellphone;
     private String verification;//敏感操作的验证密码
+    private int apt; // 登录类型
     @JSONField(serialize=false)
     private String sign;
 
@@ -65,12 +66,31 @@ public class SessionModel implements Serializable {
         this.verification = verification;
     }
 
+    public int getApt() {
+        return apt;
+    }
+
+    public void setApt(int apt) {
+        this.apt = apt;
+    }
+
     public String getSign() {
         return sign;
     }
 
     public void setSign(String sign) {
         this.sign = sign;
+    }
+
+    @Override
+    public String toString() {
+        return "SessionModel{" +
+                "t='" + t + '\'' +
+                ", mark='" + mark + '\'' +
+                ", cellphone='" + cellphone + '\'' +
+                ", verification='" + verification + '\'' +
+                ", apt=" + apt +
+                '}';
     }
 
     @JSONField(serialize=false)
@@ -111,7 +131,8 @@ public class SessionModel implements Serializable {
         if (!StringUtils.isEmpty(this.getT())
                 && !StringUtils.isEmpty(this.getMark())
                 && CellPhoneUtils.isCellphone(this.getCellphone())
-                && !StringUtils.isEmpty(this.getSign())) {
+                && !StringUtils.isEmpty(this.getSign())
+                && (this.getApt() == 1 || this.getApt() == 2)) {
             return true;
         } else {
             return false;

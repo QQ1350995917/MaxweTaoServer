@@ -1,7 +1,7 @@
 package org.maxwe.tao.server.controller.mate;
 
 import org.maxwe.tao.server.controller.account.model.SessionModel;
-import org.maxwe.tao.server.controller.account.agent.model.AgentModel;
+import org.maxwe.tao.server.service.account.agent.AgentEntity;
 
 import java.util.LinkedList;
 
@@ -10,13 +10,22 @@ import java.util.LinkedList;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class MateModel extends SessionModel {
+public class BranchModel extends SessionModel {
+    private int total;
     private int pageIndex;
     private int pageSize;
-    private LinkedList<AgentModel> mates;
+    private LinkedList<AgentEntity> agentEntities;
 
-    public MateModel() {
+    public BranchModel() {
         super();
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 
     public int getPageIndex() {
@@ -35,19 +44,16 @@ public class MateModel extends SessionModel {
         this.pageSize = pageSize;
     }
 
-    public LinkedList<AgentModel> getMates() {
-        return mates;
+    public LinkedList<AgentEntity> getAgentEntities() {
+        return agentEntities;
     }
 
-    public void setMates(LinkedList<AgentModel> mates) {
-        this.mates = mates;
+    public void setAgentEntities(LinkedList<AgentEntity> agentEntities) {
+        this.agentEntities = agentEntities;
     }
 
     @Override
     public boolean isParamsOk() {
-        if (this.getPageIndex() >= 0 && this.getPageSize() > 0) {
-            return true && super.isParamsOk();
-        }
-        return false;
+        return this.getPageIndex() >= 0 && this.getPageSize() > 0 && super.isParamsOk();
     }
 }

@@ -47,7 +47,7 @@ public class TradeController extends Controller implements ITradeController {
             return;
         }
 
-        CSEntity agentCS = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
+        CSEntity agentCS = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
         CSEntity csEntity = SessionContext.getCSEntity(agentCS);
 
         // 这里查询授权码的数量是否足够
@@ -132,7 +132,7 @@ public class TradeController extends Controller implements ITradeController {
             return;
         }
 
-        CSEntity agentCS = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
+        CSEntity agentCS = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
         CSEntity csEntity = SessionContext.getCSEntity(agentCS);
 
         // 这里查询授权码的数量是否足够

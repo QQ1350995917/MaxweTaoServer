@@ -62,7 +62,7 @@ public class TokenInterceptor implements Interceptor {
             return;
         }
 
-        CSEntity agentCS = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
+        CSEntity agentCS = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
         if (SessionContext.getCSEntity(agentCS) == null) {
             this.logger.error("TokenInterceptor ->  " + inv.getActionKey() + " : 客户端CS连接过期 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_TIMEOUT.getCode());

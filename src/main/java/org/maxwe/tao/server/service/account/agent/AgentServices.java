@@ -2,11 +2,8 @@ package org.maxwe.tao.server.service.account.agent;
 
 import com.alibaba.fastjson.JSON;
 import com.jfinal.plugin.activerecord.Db;
-import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Record;
-import org.maxwe.tao.server.service.history.HistoryEntity;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,17 +25,6 @@ public class AgentServices implements IAgentServices {
         boolean isSave = Db.save("agent", agentRecord);
         if (isSave) {
             return agentEntity;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public AgentEntity[] createReach(AgentEntity agentMasterEntity, AgentEntity agentSubEntity) {
-        int count = Db.update("UPDATE agent SET pId = ? , pIdTime = ? , weight = 1 , WHERE id = ? ",
-                agentMasterEntity.getId(), new Timestamp(agentSubEntity.getpIdTime()), agentSubEntity.getId());
-        if (count == 1) {
-            return new AgentEntity[]{agentMasterEntity, agentSubEntity};
         } else {
             return null;
         }
@@ -78,44 +64,26 @@ public class AgentServices implements IAgentServices {
     }
 
     @Override
-    public AgentEntity updateGrant(AgentEntity agentEntity, HistoryEntity historyEntity) {
-        boolean succeed = Db.tx(new IAtom() {
-            public boolean run() throws SQLException {
-                int grandAgent = Db.update("UPDATE agent SET spendCodes = spendCodes + 1, leftCodes = leftCodes - 1 " +
-                        "where agentId = ? ", agentEntity.getId());
-                int history = Db.update("INSERT INTO history (id,fromId,type,actCode,numCode) VALUES(?,?,?,?,?)",
-                        historyEntity.getId(), historyEntity.getFromId(), 1, historyEntity.getActCode(), 1);
-                return grandAgent == 1 && history == 1;
-            }
-        });
-        return agentEntity;
-    }
-
-    @Override
-    public AgentEntity[] updateReach(AgentEntity agentMasterEntity, AgentEntity agentSubEntity) {
-        int count = Db.update("UPDATE agent SET reach = 1 , weight = 0, reachTime = ? , WHERE id = ? ",
-                agentMasterEntity.getReachTime(), agentSubEntity.getId());
+    public boolean askForReach(AgentEntity agentMasterEntity, AgentEntity agentSubEntity) {
+        int count = Db.update("UPDATE agent SET pId = ? , weight = 1 , WHERE id = ? ",
+                agentMasterEntity.getId(), agentSubEntity.getId());
         if (count == 1) {
-            return new AgentEntity[]{agentMasterEntity, agentSubEntity};
+            return true;
         } else {
-            return null;
+            return false;
         }
     }
 
+
     @Override
-    public AgentEntity[] updateTrade(AgentEntity agentMasterEntity, AgentEntity agentSubEntity, int codes, HistoryEntity historyEntity) {
-        boolean succeed = Db.tx(new IAtom() {
-            public boolean run() throws SQLException {
-                int agentMaster = Db.update("UPDATE agent SET spendCodes = spendCodes + ?, leftCodes = leftCodes - ? " +
-                        "where agentId = ? ", codes, codes, agentMasterEntity.getId());
-                int agentSub = Db.update("UPDATE agent SET haveCodes = haveCodes + ?, leftCodes = leftCodes + ? " +
-                        "where agentId = ? ", codes, codes, agentSubEntity.getId());
-                int history = Db.update("INSERT INTO history (id,fromId,toId,type,numCode) VALUES(?,?,?,?,?)",
-                        historyEntity.getId(), historyEntity.getFromId(), historyEntity.getToId(), 2, historyEntity.getCodeNum());
-                return agentMaster == 1 && agentSub == 1 && history == 1;
-            }
-        });
-        return new AgentEntity[0];
+    public boolean updateReach(AgentEntity agentSubEntity) {
+        int count = Db.update("UPDATE agent SET pId = ? , reach = ? , weight = 0, reachTime = ? , WHERE id = ? ",
+                agentSubEntity.getpId(),agentSubEntity.getReach(),new Timestamp(System.currentTimeMillis()), agentSubEntity.getId());
+        if (count == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

@@ -38,7 +38,7 @@ public class HistoryController extends Controller implements IHistoryController 
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
             renderJson(JSON.toJSONString(iResultSet));
         } else {
-            CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
+            CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
             LinkedList<HistoryEntity> historyEntities = iHistoryServices.retrieveByFromId(SessionContext.getCSEntity(csEntity).getId(), requestModel.getPageIndex(), requestModel.getPageSize());
             if (historyEntities == null || historyEntities.size() == 0) {
                 iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
@@ -51,7 +51,7 @@ public class HistoryController extends Controller implements IHistoryController 
             String resultJson = JSON.toJSONString(iResultSet, new PropertyFilter() {
                 @Override
                 public boolean apply(Object object, String name, Object value) {
-                    if ("id".equals(name)) {
+                    if ("id".equals(name) || "fromId".equals(name)|| "toId".equals(name)) {
                         return false;
                     }
                     return true;

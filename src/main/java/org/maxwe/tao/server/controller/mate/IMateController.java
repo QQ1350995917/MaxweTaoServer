@@ -8,13 +8,9 @@ package org.maxwe.tao.server.controller.mate;
 public interface IMateController {
     /**
      * 根据代理的ID查找代理
-     */
-    void query();
-
-    /**
      * 请求上级激活我的账号
      */
-    void beg();
+    void query();
 
     /**
      * 批准下级的请求

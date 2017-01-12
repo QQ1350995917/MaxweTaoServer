@@ -63,7 +63,7 @@ public class UserController extends Controller implements IUserController {
         }
 
 
-        CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
+        CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
         UserEntity userEntity = iUserServices.retrieveById(SessionContext.getCSEntity(csEntity).getId());
         historyEntity.setToId(userEntity.getId());
         HistoryEntity updateHistoryEntity = iHistoryServices.updateToId(historyEntity);
@@ -161,7 +161,7 @@ public class UserController extends Controller implements IUserController {
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet, RegisterModel.propertyFilter));
         } else {
-            CSEntity csEntity = new CSEntity(saveUserEntity.getId(), saveUserEntity.getCellphone(), TokenUtils.getToken(saveUserEntity.getCellphone(), requestModel.getPassword()));
+            CSEntity csEntity = new CSEntity(saveUserEntity.getId(), saveUserEntity.getCellphone(), TokenUtils.getToken(saveUserEntity.getCellphone(), requestModel.getPassword()),requestModel.getApt());
             SessionContext.addCSEntity(csEntity);
             this.logger.info("create : 注册成功 " + requestModel.toString());
 
@@ -220,7 +220,7 @@ public class UserController extends Controller implements IUserController {
             renderJson(JSON.toJSONString(iResultSet));
             return;
         } else {
-            CSEntity csEntity = new CSEntity(updateUser.getId(), updateUser.getCellphone(), TokenUtils.getToken(updateUser.getCellphone(), requestModel.getPassword()));
+            CSEntity csEntity = new CSEntity(updateUser.getId(), updateUser.getCellphone(), TokenUtils.getToken(updateUser.getCellphone(), requestModel.getPassword()),requestModel.getApt());
             SessionContext.addCSEntity(csEntity);
             this.logger.info("lost : 找回密码成功 " + requestModel.toString());
             //创建
@@ -255,7 +255,7 @@ public class UserController extends Controller implements IUserController {
             iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_FAIL);
             renderJson(JSON.toJSONString(iResultSet, LoginModel.propertyFilter));
         } else {
-            CSEntity csEntity = new CSEntity(userEntity.getId(), userEntity.getCellphone(), TokenUtils.getToken(userEntity.getCellphone(), requestModel.getPassword()));
+            CSEntity csEntity = new CSEntity(userEntity.getId(), userEntity.getCellphone(), TokenUtils.getToken(userEntity.getCellphone(), requestModel.getPassword()),requestModel.getApt());
             SessionContext.addCSEntity(csEntity);
             this.logger.info("login : 登录成功 " + requestModel.toString());
 
@@ -273,7 +273,7 @@ public class UserController extends Controller implements IUserController {
         String params = this.getAttr("p");
         ModifyModel requestModel = JSON.parseObject(params, ModifyModel.class);
         IResultSet iResultSet = new ResultSet();
-        CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
+        CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
         CSEntity existCSEntity = SessionContext.getCSEntity(csEntity);
 
         UserEntity existUserEntity = iUserServices.retrieveById(existCSEntity.getId());
@@ -304,7 +304,7 @@ public class UserController extends Controller implements IUserController {
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet, ModifyModel.propertyFilter));
         } else {
-            CSEntity newCSEntity = new CSEntity(updateUserEntity.getId(), updateUserEntity.getCellphone(), TokenUtils.getToken(updateUserEntity.getCellphone(), requestModel.getNewPassword()));
+            CSEntity newCSEntity = new CSEntity(updateUserEntity.getId(), updateUserEntity.getCellphone(), TokenUtils.getToken(updateUserEntity.getCellphone(), requestModel.getNewPassword()),requestModel.getApt());
             SessionContext.addCSEntity(newCSEntity);
             this.logger.info("password : 修改密码成功 " + requestModel.toString());
 
@@ -322,7 +322,7 @@ public class UserController extends Controller implements IUserController {
         String params = this.getAttr("p");
         SessionModel requestModel = JSON.parseObject(params, SessionModel.class);
         IResultSet iResultSet = new ResultSet();
-        CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
+        CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
         SessionContext.delCSEntity(csEntity);
         this.logger.info("logout : 退出成功 " + requestModel.toString());
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
@@ -336,7 +336,7 @@ public class UserController extends Controller implements IUserController {
         String params = this.getAttr("p");
         SessionModel requestModel = JSON.parseObject(params, SessionModel.class);
         IResultSet iResultSet = new ResultSet();
-        CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT());
+        CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
         UserEntity userEntity = iUserServices.retrieveById(SessionContext.getCSEntity(csEntity).getId());
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(userEntity);

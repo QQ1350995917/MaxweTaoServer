@@ -37,8 +37,7 @@ public class SessionContext {
                             Map.Entry<String, CSEntity> next = iterator.next();
                             if (System.currentTimeMillis() - next.getValue().getTimestamp() >= DURATION) {
                                 CSEntity remove = tokenConcurrentHashMap.remove(next.getKey());
-                                String cellphone = remove.getCellphone();
-                                cellphoneToTokenConcurrentHashMap.remove(cellphone);
+                                cellphoneToTokenConcurrentHashMap.remove(remove.getCellphone() + remove.getApt());
                                 logger.info("自动删除过期CS链接 : " + remove);
                             }
                         }
@@ -54,12 +53,12 @@ public class SessionContext {
 
 
     public static void addCSEntity(CSEntity csEntity) {
-        String token = cellphoneToTokenConcurrentHashMap.get(csEntity.getCellphone());
+        String token = cellphoneToTokenConcurrentHashMap.get(csEntity.getCellphone() + csEntity.getApt());
         if (token != null) {
-            cellphoneToTokenConcurrentHashMap.remove(csEntity.getCellphone());
+            cellphoneToTokenConcurrentHashMap.remove(csEntity.getCellphone() + csEntity.getApt());
             tokenConcurrentHashMap.remove(token);
         }
-        cellphoneToTokenConcurrentHashMap.put(csEntity.getCellphone(), csEntity.getToken());
+        cellphoneToTokenConcurrentHashMap.put(csEntity.getCellphone()+ csEntity.getApt(), csEntity.getToken());
         tokenConcurrentHashMap.put(csEntity.getToken(), csEntity);
     }
 
@@ -72,7 +71,7 @@ public class SessionContext {
     }
 
     public static void delCSEntity(CSEntity csEntity) {
-        String remove1 = cellphoneToTokenConcurrentHashMap.remove(csEntity.getCellphone());
+        String remove1 = cellphoneToTokenConcurrentHashMap.remove(csEntity.getCellphone() + csEntity.getApt());
         CSEntity remove = tokenConcurrentHashMap.remove(csEntity.getToken());
     }
 }

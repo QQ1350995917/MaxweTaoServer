@@ -5,14 +5,12 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.PropertyFilter;
 import org.maxwe.tao.server.common.utils.CellPhoneUtils;
 
-import java.io.Serializable;
-
 /**
  * Created by Pengwei Ding on 2017-01-09 18:12.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class RegisterModel implements Serializable {
+public class RegisterModel extends SessionModel {
     public static final PropertyFilter propertyFilter = new PropertyFilter() {
         @Override
         public boolean apply(Object object, String name, Object value) {

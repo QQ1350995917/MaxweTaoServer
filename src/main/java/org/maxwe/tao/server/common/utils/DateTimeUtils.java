@@ -9,7 +9,7 @@ import java.util.Date;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 时间格式化工具
  */
-public class DateTime {
+public class DateTimeUtils {
 
     public static void test() {
         int year = Calendar.getInstance().get(Calendar.YEAR);
