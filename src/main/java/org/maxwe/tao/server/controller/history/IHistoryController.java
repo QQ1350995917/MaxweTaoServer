@@ -6,4 +6,8 @@ package org.maxwe.tao.server.controller.history;
  * Description: @TODO
  */
 public interface IHistoryController {
+    /**
+     * 根据授权者的fromId查询
+     */
+    void history();
 }

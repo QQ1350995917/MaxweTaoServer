@@ -63,4 +63,14 @@ public class HistoryServices implements IHistoryServices {
         }
         return historyEntities;
     }
+
+    @Override
+    public int countByFromId(String fromId) {
+        Record first = Db.findFirst("SELECT COUNT(id) AS counter FROM history WHERE fromId = ?", fromId);
+        if (first == null) {
+            return 0;
+        } else {
+            return first.getInt("counter");
+        }
+    }
 }

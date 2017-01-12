@@ -17,5 +17,6 @@ public interface IHistoryServices {
 
     LinkedList<HistoryEntity> retrieveByTime(String fromId,long startTime,long endTime,int pageIndex,int pageSize);
 
+    int countByFromId(String fromId);
 
 }

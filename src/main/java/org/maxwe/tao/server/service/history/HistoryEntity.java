@@ -84,4 +84,18 @@ public class HistoryEntity implements Serializable {
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
+
+    @Override
+    public String toString() {
+        return "HistoryEntity{" +
+                "updateTime=" + updateTime +
+                ", createTime=" + createTime +
+                ", codeNum=" + codeNum +
+                ", actCode='" + actCode + '\'' +
+                ", type=" + type +
+                ", toId='" + toId + '\'' +
+                ", fromId='" + fromId + '\'' +
+                ", id='" + id + '\'' +
+                '}';
+    }
 }
