@@ -27,7 +27,7 @@ public class MateController extends Controller implements IMateController {
 
     @Override
     @Before(TokenInterceptor.class)
-    public void query() {
+    public void beg() {
         String params = this.getAttr("p");
         TrunkModel requestModel = JSON.parseObject(params, TrunkModel.class);
         IResultSet iResultSet = new ResultSet();
@@ -61,12 +61,12 @@ public class MateController extends Controller implements IMateController {
             return;
         }
 
-
         CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
         CSEntity existCSEntity = SessionContext.getCSEntity(csEntity);
-        AgentEntity currentAgentEntity = new AgentEntity();// 由于底层接口仅仅需要一个ID,所以减少一个数据库操作步骤
-        currentAgentEntity.setId(existCSEntity.getId());
-        boolean askForReach = iAgentServices.askForReach(trunkEntity, currentAgentEntity);
+        AgentEntity trunkAgentEntity = new AgentEntity();// 由于底层接口仅仅需要一个ID,所以减少一个数据库操作步骤
+        trunkAgentEntity.setId(existCSEntity.getId());
+        trunkAgentEntity.setpId(trunkEntity.getId());
+        boolean askForReach = iAgentServices.askForReach(trunkAgentEntity);
         if (!askForReach) {
             this.logger.info("query : 申请加入-服务器内部错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());

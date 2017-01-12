@@ -10,7 +10,7 @@ public interface IMateController {
      * 根据代理的ID查找代理
      * 请求上级激活我的账号
      */
-    void query();
+    void beg();
 
     /**
      * 批准下级的请求

@@ -15,18 +15,17 @@ public interface IAgentServices {
 
     /**
      * 下级请求加入组织结构
-     * @param agentMasterEntity 上级
-     * @param agentSubEntity 霞姐
+     * @param branchEntity 下级
      * @return
      */
-    boolean askForReach(AgentEntity agentMasterEntity,AgentEntity agentSubEntity);
+    boolean askForReach(AgentEntity branchEntity);
 
     /**
      * 上级同意或拒绝下级加入组织的请求
-     * @param agentSubEntity 下级
+     * @param branchEntity 下级
      * @return
      */
-    boolean updateReach(AgentEntity agentSubEntity);
+    boolean updateReach(AgentEntity branchEntity);
 
     /**
      * 代理更新自己的银行账号
