@@ -11,12 +11,12 @@ public class GrantCodeUtils {
     private static final String[] string0 = {"V", "9", "Z", "N"};
     private static final String[] string1 = {"F", "G", "B", "Q", "7"};
     private static final String[] string2 = {"L", "2", "H", "J"};
-    private static final String[] string3 = {"D", "T", "0"};
+    private static final String[] string3 = {"D", "T"};
     private static final String[] string4 = {"R", "E", "Y", "6"};
     private static final String[] string5 = {"A", "O", "5"};
     private static final String[] string6 = {"U", "P", "1"};
     private static final String[] string7 = {"C", "X", "4"};
-    private static final String[] string8 = {"I", "S", "W", "8"};
+    private static final String[] string8 = {"S", "W", "8"};
     private static final String[] string9 = {"M", "K", "3"};
 
     private static final HashMap<String, String[]> encodeMap = new HashMap<>();
@@ -78,20 +78,25 @@ public class GrantCodeUtils {
 
 
     public static String genGrantCode() {
+        Random random = new Random();
+        int index0 = random.nextInt(10);
+        int index1 = random.nextInt(10);
+        int index2 = random.nextInt(10);
+        int index3 = random.nextInt(10);
+        int index4 = random.nextInt(10);
+        int index5 = random.nextInt(10);
+        int index6 = random.nextInt(10);
+        int index7 = random.nextInt(10);
+        String number = "" + index0 + index1 + index2 + index3 + index4 + index5 + index6 + index7 + "";
+        return enGrantCode(number);
+    }
+
+
+    public static void main(String[] args) {
         LinkedList<String> linkedList = new LinkedList<>();
         Set<String> set = new HashSet<String>();
-        Random random = new Random();
         for (int i = 0; i < 1000000; i++) {
-            int index0 = random.nextInt(10);
-            int index1 = random.nextInt(10);
-            int index2 = random.nextInt(10);
-            int index3 = random.nextInt(10);
-            int index4 = random.nextInt(10);
-            int index5 = random.nextInt(10);
-            int index6 = random.nextInt(10);
-            int index7 = random.nextInt(10);
-            String number = "" + index0 + index1 + index2 + index3 + index4 + index5 + index6 + index7 + "";
-            linkedList.add(number);
+            linkedList.add(genGrantCode());
         }
         System.out.println(linkedList.size());
 
@@ -104,16 +109,10 @@ public class GrantCodeUtils {
             }
             System.out.println("===");
         }
-
         System.out.println("不重复量：" + set.size());
         System.out.println("重复量：" + counter);
         System.out.println(DateTimeUtils.parseLongToFullTime(System.currentTimeMillis()));
-        return "temptemp";
-    }
 
-
-    public static void main(String[] args) {
-        genGrantCode();
     }
 }
 

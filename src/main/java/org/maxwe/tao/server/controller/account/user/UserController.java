@@ -65,6 +65,16 @@ public class UserController extends Controller implements IUserController {
 
         CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
         UserEntity userEntity = iUserServices.retrieveById(SessionContext.getCSEntity(csEntity).getId());
+        if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getVerification()), userEntity.getPassword())) {
+            this.logger.info("grant : 认证密码错误 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+            String resultJson = JSON.toJSONString(iResultSet);
+            renderJson(resultJson);
+            return;
+        }
+
         historyEntity.setToId(userEntity.getId());
         HistoryEntity updateHistoryEntity = iHistoryServices.updateToId(historyEntity);
         if (updateHistoryEntity == null) {

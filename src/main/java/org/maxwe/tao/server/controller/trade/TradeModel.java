@@ -3,7 +3,6 @@ package org.maxwe.tao.server.controller.trade;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.maxwe.tao.server.controller.account.model.SessionModel;
-import org.maxwe.tao.server.service.account.agent.AgentEntity;
 
 /**
  * Created by Pengwei Ding on 2017-01-10 10:24.
@@ -11,7 +10,7 @@ import org.maxwe.tao.server.service.account.agent.AgentEntity;
  * Description: @TODO
  */
 public class TradeModel extends SessionModel {
-    private AgentEntity toAgentEntity;
+    private String targetMark;
     private int type;
     private String actCode;
     private String levelId;
@@ -21,12 +20,12 @@ public class TradeModel extends SessionModel {
         super();
     }
 
-    public AgentEntity getToAgentEntity() {
-        return toAgentEntity;
+    public String getTargetMark() {
+        return targetMark;
     }
 
-    public void setToAgentEntity(AgentEntity toAgentEntity) {
-        this.toAgentEntity = toAgentEntity;
+    public void setTargetMark(String targetMark) {
+        this.targetMark = targetMark;
     }
 
     public int getType() {
@@ -63,11 +62,11 @@ public class TradeModel extends SessionModel {
 
     @Override
     public String toString() {
-        return super.toString() + "TradeModel{" +
-                "toAgentEntity=" + toAgentEntity +
+        return "TradeModel{" +
+                "targetMark='" + targetMark + '\'' +
                 ", type=" + type +
-                ", actCode=" + actCode +
-                ", levelId=" + levelId +
+                ", actCode='" + actCode + '\'' +
+                ", levelId='" + levelId + '\'' +
                 ", codeNum=" + codeNum +
                 '}';
     }
@@ -87,7 +86,7 @@ public class TradeModel extends SessionModel {
             return false;
         }
 
-        if (this.getType() == 2 && this.getToAgentEntity() == null){
+        if (this.getType() == 2 && StringUtils.isEmpty(this.getTargetMark())){
             return false;
         }
 

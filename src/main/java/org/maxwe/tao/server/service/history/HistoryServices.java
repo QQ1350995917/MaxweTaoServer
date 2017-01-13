@@ -30,7 +30,7 @@ public class HistoryServices implements IHistoryServices {
     @Override
     public HistoryEntity retrieveByActCode(String actCode) {
         List<Record> records = Db.find("SELECT * FROM history WHERE actCode = ? ", actCode);
-        if (records != null && records.get(0) != null) {
+        if (records != null && records.size() >= 1 && records.get(0) != null) {
             Map<String, Object> accountMap = records.get(0).getColumns();
             return JSON.parseObject(JSON.toJSONString(accountMap), HistoryEntity.class);
         } else {
