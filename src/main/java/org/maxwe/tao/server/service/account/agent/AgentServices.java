@@ -65,8 +65,8 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public boolean askForReach(AgentEntity agentSubEntity) {
-        int count = Db.update("UPDATE agent SET pId = ? ,pIdTime = ? , weight = 1 , WHERE id = ? ",
-                agentSubEntity.getpId(), new Timestamp(System.currentTimeMillis()), agentSubEntity.getId());
+        int count = Db.update("UPDATE agent SET pId = ? , pMark = ? , pIdTime = ? , weight = 1  WHERE id = ? ",
+                agentSubEntity.getpId(), agentSubEntity.getpMark(), new Timestamp(System.currentTimeMillis()), agentSubEntity.getId());
         if (count == 1) {
             return true;
         } else {
@@ -77,8 +77,8 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public boolean updateReach(AgentEntity agentSubEntity) {
-        int count = Db.update("UPDATE agent SET pId = ? , reach = ? , weight = 0, reachTime = ? , WHERE id = ? ",
-                agentSubEntity.getpId(),agentSubEntity.getReach(),new Timestamp(System.currentTimeMillis()), agentSubEntity.getId());
+        int count = Db.update("UPDATE agent SET pId = ? , pMark = ? , reach = ? , weight = 0, reachTime = ?  WHERE id = ? ",
+                agentSubEntity.getpId(), agentSubEntity.getpMark(), agentSubEntity.getReach(), new Timestamp(System.currentTimeMillis()), agentSubEntity.getId());
         if (count == 1) {
             return true;
         } else {

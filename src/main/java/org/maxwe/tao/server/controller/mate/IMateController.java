@@ -23,7 +23,13 @@ public interface IMateController {
     void reject();
 
     /**
+     * 查找上级信息
+     */
+    void leader();
+
+    /**
      * 下级列表
      */
     void mates();
+
 }

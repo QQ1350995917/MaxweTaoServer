@@ -1,5 +1,6 @@
 package org.maxwe.tao.server.controller.mate;
 
+import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.PropertyFilter;
 import com.jfinal.aop.Before;
@@ -32,7 +33,7 @@ public class MateController extends Controller implements IMateController {
         TrunkModel requestModel = JSON.parseObject(params, TrunkModel.class);
         IResultSet iResultSet = new ResultSet();
         if (!requestModel.isParamsOk()) {
-            this.logger.info("query : 请求参数错误 " + requestModel.toString());
+            this.logger.info("beg : 请求参数错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
@@ -41,9 +42,9 @@ public class MateController extends Controller implements IMateController {
         }
 
         // 通过mark查找上级
-        AgentEntity trunkEntity = this.iAgentServices.retrieveByMark(requestModel.getMark());
+        AgentEntity trunkEntity = this.iAgentServices.retrieveByMark(requestModel.getTargetMark());
         if (trunkEntity == null) {
-            this.logger.info("query : 没有找到 " + requestModel.toString());
+            this.logger.info("beg : 没有找到 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
@@ -53,7 +54,7 @@ public class MateController extends Controller implements IMateController {
 
         // 上级也没有经过审核通过
         if (trunkEntity.getReach() != 1) {
-            this.logger.info("query : 查找到的尚未通过授权 " + requestModel.toString());
+            this.logger.info("beg : 查找到的尚未通过授权 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD_2.getCode());
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
@@ -63,18 +64,28 @@ public class MateController extends Controller implements IMateController {
 
         CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
         CSEntity existCSEntity = SessionContext.getCSEntity(csEntity);
-        AgentEntity trunkAgentEntity = new AgentEntity();// 由于底层接口仅仅需要一个ID,所以减少一个数据库操作步骤
-        trunkAgentEntity.setId(existCSEntity.getId());
-        trunkAgentEntity.setpId(trunkEntity.getId());
-        boolean askForReach = iAgentServices.askForReach(trunkAgentEntity);
+        AgentEntity branchAgentEntity = this.iAgentServices.retrieveById(existCSEntity.getId());
+        if (!StringUtils.isEmpty(branchAgentEntity.getpId())){
+            this.logger.info("beg : 已经处于等待授权确认 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_REPEAT.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+            renderJson(JSON.toJSONString(iResultSet));
+            return;
+        }
+
+        branchAgentEntity.setId(existCSEntity.getId());
+        branchAgentEntity.setpId(trunkEntity.getId());
+        branchAgentEntity.setpMark(trunkEntity.getMark());
+        boolean askForReach = iAgentServices.askForReach(branchAgentEntity);
         if (!askForReach) {
-            this.logger.info("query : 申请加入-服务器内部错误 " + requestModel.toString());
+            this.logger.info("beg : 申请加入-服务器内部错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet));
         } else {
-            this.logger.info("query : 查找成功 " + requestModel.toString());
+            this.logger.info("beg : 查找成功 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             requestModel.setAgentEntity(trunkEntity);
             iResultSet.setData(requestModel);
@@ -105,7 +116,7 @@ public class MateController extends Controller implements IMateController {
         TrunkModel requestModel = JSON.parseObject(params, TrunkModel.class);
         IResultSet iResultSet = new ResultSet();
         if (!requestModel.isParamsOk()) {
-            this.logger.info("query : 请求参数错误 " + requestModel.toString());
+            this.logger.info("grant : 请求参数错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
@@ -114,9 +125,9 @@ public class MateController extends Controller implements IMateController {
         }
 
         // 通过mark查找下级
-        AgentEntity branchAgentEntity = this.iAgentServices.retrieveByMark(requestModel.getMark());
+        AgentEntity branchAgentEntity = this.iAgentServices.retrieveByMark(requestModel.getTargetMark());
         if (branchAgentEntity == null) {
-            this.logger.info("query : 服务器内部错误 " + requestModel.toString());
+            this.logger.info("grant : 服务器内部错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
@@ -127,13 +138,13 @@ public class MateController extends Controller implements IMateController {
         branchAgentEntity.setReach(1);
         boolean updateReach = iAgentServices.updateReach(branchAgentEntity);
         if (!updateReach) {
-            this.logger.info("query : 服务器内部错误 " + requestModel.toString());
+            this.logger.info("grant : 服务器内部错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet));
         } else {
-            this.logger.info("query : 授权代理加入成功 " + requestModel.toString());
+            this.logger.info("grant : 授权代理加入成功 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
@@ -148,7 +159,7 @@ public class MateController extends Controller implements IMateController {
         TrunkModel requestModel = JSON.parseObject(params, TrunkModel.class);
         IResultSet iResultSet = new ResultSet();
         if (!requestModel.isParamsOk()) {
-            this.logger.info("query : 请求参数错误 " + requestModel.toString());
+            this.logger.info("reject : 请求参数错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
@@ -157,30 +168,79 @@ public class MateController extends Controller implements IMateController {
         }
 
         // 通过mark查找下级
-        AgentEntity branchAgentEntity = this.iAgentServices.retrieveByMark(requestModel.getMark());
+        AgentEntity branchAgentEntity = this.iAgentServices.retrieveByMark(requestModel.getTargetMark());
         if (branchAgentEntity == null) {
-            this.logger.info("query : 服务器内部错误 " + requestModel.toString());
+            this.logger.info("reject : 服务器内部错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet));
             return;
         }
+
         branchAgentEntity.setpId(null);
+        branchAgentEntity.setpMark(null);
         branchAgentEntity.setReach(0);
         boolean updateReach = iAgentServices.updateReach(branchAgentEntity);
         if (!updateReach) {
-            this.logger.info("query : 服务器内部错误 " + requestModel.toString());
+            this.logger.info("reject : 服务器内部错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet));
         } else {
-            this.logger.info("query : 拒绝代理加入成功 " + requestModel.toString());
+            this.logger.info("reject : 拒绝代理加入成功 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
             renderJson(JSON.toJSONString(iResultSet));
+        }
+    }
+
+    @Override
+    public void leader() {
+        String params = this.getAttr("p");
+        TrunkModel requestModel = JSON.parseObject(params, TrunkModel.class);
+        IResultSet iResultSet = new ResultSet();
+        if (!requestModel.isParamsOk()) {
+            this.logger.info("leader : 请求参数错误 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+            renderJson(JSON.toJSONString(iResultSet));
+            return;
+        }
+
+        // 通过mark查找上级
+        AgentEntity trunkEntity = this.iAgentServices.retrieveByMark(requestModel.getTargetMark());
+        if (trunkEntity == null) {
+            this.logger.info("leader : 服务器内部错误 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+            renderJson(JSON.toJSONString(iResultSet));
+        } else {
+            this.logger.info("leader : 查找成功 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            requestModel.setAgentEntity(trunkEntity);
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+            String string = JSON.toJSONString(iResultSet, new PropertyFilter() {
+                @Override
+                public boolean apply(Object object, String name, Object value) {
+                    if ("id".equals(name)
+                            || "password".equals(name)
+                            || "status".equals(name)
+                            || "pId".equals(name)
+                            || "named".equals(name)
+                            || "weight".equals(name)
+                            ) {
+                        return false;
+                    }
+                    return true;
+                }
+            });
+            renderJson(string);
         }
     }
 
