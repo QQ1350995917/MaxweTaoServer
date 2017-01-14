@@ -6,8 +6,9 @@ package org.maxwe.tao.server.controller.mate;
  * Description: @TODO
  */
 public interface IMateController {
+
+
     /**
-     * 根据代理的ID查找代理
      * 请求上级激活我的账号
      */
     void beg();
@@ -28,7 +29,8 @@ public interface IMateController {
     void leader();
 
     /**
-     * 下级列表
+     * 根据自己的id查找
+     * 用于获取下级列表
      */
     void mates();
 

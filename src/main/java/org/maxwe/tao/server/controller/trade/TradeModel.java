@@ -13,7 +13,6 @@ public class TradeModel extends SessionModel {
     private String targetMark;
     private int type;
     private String actCode;
-    private String levelId;
     private int codeNum;
 
     public TradeModel() {
@@ -44,14 +43,6 @@ public class TradeModel extends SessionModel {
         this.actCode = actCode;
     }
 
-    public String getLevelId() {
-        return levelId;
-    }
-
-    public void setLevelId(String levelId) {
-        this.levelId = levelId;
-    }
-
     public int getCodeNum() {
         return codeNum;
     }
@@ -66,7 +57,6 @@ public class TradeModel extends SessionModel {
                 "targetMark='" + targetMark + '\'' +
                 ", type=" + type +
                 ", actCode='" + actCode + '\'' +
-                ", levelId='" + levelId + '\'' +
                 ", codeNum=" + codeNum +
                 '}';
     }
@@ -79,10 +69,6 @@ public class TradeModel extends SessionModel {
         }
 
         if (this.getType() == 1 && this.getCodeNum() != 1) {
-            return false;
-        }
-
-        if (this.getType() == 2 && StringUtils.isEmpty(this.getLevelId())) {
             return false;
         }
 

@@ -2,6 +2,7 @@ package org.maxwe.tao.server.controller.account.agent.model;
 
 import org.maxwe.tao.server.controller.account.model.SessionModel;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
+import org.maxwe.tao.server.service.level.LevelEntity;
 
 /**
  * Created by Pengwei Ding on 2017-01-09 18:37.
@@ -10,9 +11,15 @@ import org.maxwe.tao.server.service.account.agent.AgentEntity;
  */
 public class AgentModel extends SessionModel {
     private AgentEntity agentEntity; // 响应字段
+    private LevelEntity levelEntity; // 响应字段
 
     public AgentModel() {
         super();
+    }
+
+    public AgentModel(AgentEntity agentEntity, LevelEntity levelEntity) {
+        this.agentEntity = agentEntity;
+        this.levelEntity = levelEntity;
     }
 
     public AgentEntity getAgentEntity() {
@@ -21,5 +28,13 @@ public class AgentModel extends SessionModel {
 
     public void setAgentEntity(AgentEntity agentEntity) {
         this.agentEntity = agentEntity;
+    }
+
+    public LevelEntity getLevelEntity() {
+        return levelEntity;
+    }
+
+    public void setLevelEntity(LevelEntity levelEntity) {
+        this.levelEntity = levelEntity;
     }
 }

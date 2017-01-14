@@ -20,6 +20,7 @@ import org.maxwe.tao.server.controller.account.model.ExistModel;
 import org.maxwe.tao.server.controller.account.model.LoginModel;
 import org.maxwe.tao.server.controller.account.model.ModifyModel;
 import org.maxwe.tao.server.controller.account.model.RegisterModel;
+import org.maxwe.tao.server.controller.level.LevelController;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.account.CSEntity;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
@@ -65,7 +66,7 @@ public class AgentController extends Controller implements IAgentController {
         }
 
         // 如果密码不等
-        if (!StringUtils.equals(requestModel.getPassword(), agentEntity.getPassword())) {
+        if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getCellphone(),requestModel.getPassword()), agentEntity.getPassword())) {
             this.logger.info("bank : 密码错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
             iResultSet.setData(requestModel);
@@ -172,7 +173,7 @@ public class AgentController extends Controller implements IAgentController {
         agentEntity.setId(UUID.randomUUID().toString());
         agentEntity.setMark(MarkUtils.enMark(requestModel.getCellphone()));
         agentEntity.setCellphone(requestModel.getCellphone());
-        agentEntity.setPassword(PasswordUtils.enPassword(requestModel.getPassword()));
+        agentEntity.setPassword(PasswordUtils.enPassword(requestModel.getCellphone(),requestModel.getPassword()));
 
         AgentEntity saveAgentEntity = iAgentServices.create(agentEntity);
         if (saveAgentEntity == null) {
@@ -231,7 +232,7 @@ public class AgentController extends Controller implements IAgentController {
             return;
         }
 
-        existAgent.setPassword(PasswordUtils.enPassword(requestModel.getPassword()));
+        existAgent.setPassword(PasswordUtils.enPassword(requestModel.getCellphone(),requestModel.getPassword()));
         AgentEntity updateAgent = iAgentServices.updatePassword(existAgent);
         if (updateAgent == null) {
             this.logger.info("lost : 找回密码失败-服务器内部错误 " + requestModel.toString());
@@ -268,7 +269,7 @@ public class AgentController extends Controller implements IAgentController {
 
         //查找
         AgentEntity agentEntity = iAgentServices.retrieveByCellphone(requestModel.getCellphone());
-        if (agentEntity == null || !StringUtils.equals(agentEntity.getPassword(), PasswordUtils.enPassword(requestModel.getPassword()))) {
+        if (agentEntity == null || !StringUtils.equals(agentEntity.getPassword(), PasswordUtils.enPassword(requestModel.getCellphone(),requestModel.getPassword()))) {
             this.logger.info("login : 用户名或密码错误，无法登陆 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
             iResultSet.setData(requestModel);
@@ -358,8 +359,10 @@ public class AgentController extends Controller implements IAgentController {
         IResultSet iResultSet = new ResultSet();
         CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
         AgentEntity agentEntity = iAgentServices.retrieveById(SessionContext.getCSEntity(csEntity).getId());
+        requestModel.setAgentEntity(agentEntity);
+        requestModel.setLevelEntity(LevelController.levelByMinNumber(agentEntity.getHaveCodes()));
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(agentEntity);
+        iResultSet.setData(requestModel);
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
         String resultJson = JSON.toJSONString(iResultSet, new PropertyFilter() {
             @Override

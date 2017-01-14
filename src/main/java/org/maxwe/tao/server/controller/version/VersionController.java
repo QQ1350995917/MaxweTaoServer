@@ -3,10 +3,12 @@ package org.maxwe.tao.server.controller.version;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.PropertyFilter;
+import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
+import org.maxwe.tao.server.interceptor.ParamsInterceptor;
 import org.maxwe.tao.server.service.version.IVersionServices;
 import org.maxwe.tao.server.service.version.VersionEntity;
 import org.maxwe.tao.server.service.version.VersionServices;
@@ -63,6 +65,7 @@ public class VersionController extends Controller implements IVersionController 
     }
 
     @Override
+    @Clear({ParamsInterceptor.class})
     public void reversion() {
         IResultSet iResultSet = new ResultSet();
         List<VersionEntity> reversion = iVersionServices.reversion();

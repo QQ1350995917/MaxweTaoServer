@@ -10,12 +10,14 @@ import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.common.utils.GrantCodeUtils;
 import org.maxwe.tao.server.common.utils.PasswordUtils;
+import org.maxwe.tao.server.controller.level.LevelController;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.account.CSEntity;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 import org.maxwe.tao.server.service.account.agent.AgentServices;
 import org.maxwe.tao.server.service.account.agent.IAgentServices;
 import org.maxwe.tao.server.service.history.HistoryEntity;
+import org.maxwe.tao.server.service.level.LevelEntity;
 import org.maxwe.tao.server.service.trade.ITradeServices;
 import org.maxwe.tao.server.service.trade.TradeServices;
 
@@ -61,7 +63,7 @@ public class TradeController extends Controller implements ITradeController {
             return;
         }
 
-        if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getVerification()), agentEntity.getPassword())) {
+        if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getCellphone(),requestModel.getVerification()), agentEntity.getPassword())) {
             this.logger.info("grant : 认证密码错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestModel);
@@ -156,17 +158,6 @@ public class TradeController extends Controller implements ITradeController {
             return;
         }
 
-        // 查询级别ID下对应的数量
-//        if (requestModel.getCodeNum() < leve id 对应的数量) {
-//            this.logger.info("grant : 账户的授权数量不足 " + requestModel.toString());
-//            iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD_2.getCode());
-//            iResultSet.setData(requestModel);
-//            iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_BAD);
-//            String resultJson = JSON.toJSONString(iResultSet);
-//            renderJson(resultJson);
-//            return;
-//        }
-
         // 检测流向账户信息
         AgentEntity branchEntity = iAgentServices.retrieveByMark(requestModel.getTargetMark());
         if (branchEntity == null) {
@@ -178,10 +169,23 @@ public class TradeController extends Controller implements ITradeController {
             return;
         }
 
+        LevelEntity levelEntity = LevelController.levelByMinNumber(branchEntity.getHaveCodes());
+        // 查询级别ID下对应的数量
+        if (requestModel.getCodeNum() < levelEntity.getMinNum()) {
+            this.logger.info("grant : 当前转让数量小于最小转让数量 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD_2.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_BAD);
+            String resultJson = JSON.toJSONString(iResultSet);
+            renderJson(resultJson);
+            return;
+        }
+
         HistoryEntity historyEntity = new HistoryEntity();
         historyEntity.setId(UUID.randomUUID().toString());
         historyEntity.setFromId(trunkEntity.getId());
         historyEntity.setToId(branchEntity.getId());
+        historyEntity.setToMark(branchEntity.getMark());
         historyEntity.setType(2);
         historyEntity.setCodeNum(requestModel.getCodeNum());
         boolean grant = iTradeServices.trade(trunkEntity, branchEntity, historyEntity);

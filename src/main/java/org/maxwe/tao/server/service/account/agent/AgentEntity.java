@@ -12,7 +12,6 @@ public class AgentEntity extends AccountEntity{
     private int reach; // 就代理关系达成一致意见 数据库可为空，1达成，其他不达成
     private String pMark; // 上级的显示ID
     private String named; // 可为空，被上级命名的名字
-    private String levelId; // 级别的ID
     private String weight; // 数据权重 下级对上级发出操作请求权重变为1，上级操作后权重变为0，上级读取下级列表时候按照更新时间和数据权重降序排列
     private int haveCodes; // 累计购买
     private int spendCodes; // 已经消费
@@ -56,14 +55,6 @@ public class AgentEntity extends AccountEntity{
 
     public void setNamed(String named) {
         this.named = named;
-    }
-
-    public String getLevelId() {
-        return levelId;
-    }
-
-    public void setLevelId(String levelId) {
-        this.levelId = levelId;
     }
 
     public String getWeight() {
@@ -137,7 +128,6 @@ public class AgentEntity extends AccountEntity{
                 ", reach='" + reach + '\'' +
                 ", pMark='" + pMark + '\'' +
                 ", named='" + named + '\'' +
-                ", levelId='" + levelId + '\'' +
                 ", weight='" + weight + '\'' +
                 ", haveCodes=" + haveCodes +
                 ", spendCodes=" + spendCodes +

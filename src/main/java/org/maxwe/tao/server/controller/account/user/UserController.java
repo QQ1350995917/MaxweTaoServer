@@ -65,7 +65,7 @@ public class UserController extends Controller implements IUserController {
 
         CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
         UserEntity userEntity = iUserServices.retrieveById(SessionContext.getCSEntity(csEntity).getId());
-        if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getVerification()), userEntity.getPassword())) {
+        if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getCellphone(),requestModel.getVerification()), userEntity.getPassword())) {
             this.logger.info("grant : 认证密码错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestModel);
@@ -76,6 +76,7 @@ public class UserController extends Controller implements IUserController {
         }
 
         historyEntity.setToId(userEntity.getId());
+        historyEntity.setToMark(userEntity.getMark());
         HistoryEntity updateHistoryEntity = iHistoryServices.updateToId(historyEntity);
         if (updateHistoryEntity == null) {
             this.logger.info("active : 激活失败-服务器内部错误 " + requestModel.toString());
@@ -161,7 +162,7 @@ public class UserController extends Controller implements IUserController {
         userEntity.setId(UUID.randomUUID().toString());
         userEntity.setMark(MarkUtils.enMark(requestModel.getCellphone()));
         userEntity.setCellphone(requestModel.getCellphone());
-        userEntity.setPassword(PasswordUtils.enPassword(requestModel.getPassword()));
+        userEntity.setPassword(PasswordUtils.enPassword(requestModel.getCellphone(),requestModel.getPassword()));
 
         UserEntity saveUserEntity = iUserServices.create(userEntity);
         if (saveUserEntity == null) {
@@ -220,7 +221,7 @@ public class UserController extends Controller implements IUserController {
             return;
         }
 
-        existEntity.setPassword(PasswordUtils.enPassword(requestModel.getPassword()));
+        existEntity.setPassword(PasswordUtils.enPassword(requestModel.getCellphone(),requestModel.getPassword()));
         UserEntity updateUser = iUserServices.updatePassword(existEntity);
         if (updateUser == null) {
             this.logger.info("lost : 找回密码失败-服务器内部错误 " + requestModel.toString());
@@ -258,7 +259,7 @@ public class UserController extends Controller implements IUserController {
 
         //查找
         UserEntity userEntity = iUserServices.retrieveByCellphone(requestModel.getCellphone());
-        if (userEntity == null || !StringUtils.equals(userEntity.getPassword(), PasswordUtils.enPassword(requestModel.getPassword()))) {
+        if (userEntity == null || !StringUtils.equals(userEntity.getPassword(), PasswordUtils.enPassword(requestModel.getCellphone(),requestModel.getPassword()))) {
             this.logger.info("login : 用户名或密码错误，无法登陆 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
             iResultSet.setData(requestModel);

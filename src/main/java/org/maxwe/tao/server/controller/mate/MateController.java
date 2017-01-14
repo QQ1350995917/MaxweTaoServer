@@ -9,6 +9,8 @@ import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.cache.SessionContext;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
+import org.maxwe.tao.server.controller.account.agent.model.AgentModel;
+import org.maxwe.tao.server.controller.level.LevelController;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.account.CSEntity;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
@@ -198,6 +200,7 @@ public class MateController extends Controller implements IMateController {
     }
 
     @Override
+    @Before(TokenInterceptor.class)
     public void leader() {
         String params = this.getAttr("p");
         TrunkModel requestModel = JSON.parseObject(params, TrunkModel.class);
@@ -223,6 +226,7 @@ public class MateController extends Controller implements IMateController {
             this.logger.info("leader : 查找成功 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             requestModel.setAgentEntity(trunkEntity);
+            requestModel.setLevelEntity(LevelController.levelByMinNumber(trunkEntity.getHaveCodes()));
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
             String string = JSON.toJSONString(iResultSet, new PropertyFilter() {
@@ -265,7 +269,12 @@ public class MateController extends Controller implements IMateController {
             } else {
                 iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             }
-            requestModel.setAgentEntities(agentEntities);
+            LinkedList<AgentModel> agentModels = new LinkedList<>();
+            for (AgentEntity agentEntity:agentEntities){
+                AgentModel agentModel = new AgentModel(agentEntity, LevelController.levelByMinNumber(agentEntity.getHaveCodes()));
+                agentModels.add(agentModel);
+            }
+            requestModel.setAgentEntities(agentModels);
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
             String resultJson = JSON.toJSONString(iResultSet, new PropertyFilter() {

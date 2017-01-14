@@ -53,7 +53,7 @@ public class PageController extends Controller implements IPageController {
 //            this.setAttr("metas", metas);
 //        }
 //        LinkedList<String> styleSheets = new LinkedList<>();
-//        styleSheets.add("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.css\">");
+//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.css\">");
 //        this.setAttr("styleSheets", styleSheets);
 //        LinkedList<String> javaScripts = new LinkedList<>();
 //        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/toast.js\"></script>");
@@ -85,8 +85,8 @@ public class PageController extends Controller implements IPageController {
 //        this.setAttr("metas", metas);
 //
 //        LinkedList<String> styleSheets = new LinkedList<>();
-//        styleSheets.add("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.css\">");
-//        styleSheets.add("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/detail.css\">");
+//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.css\">");
+//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/detail.css\">");
 //        this.setAttr("styleSheets", styleSheets);
 //
 //        LinkedList<String> javaScripts = new LinkedList<>();
@@ -113,9 +113,9 @@ public class PageController extends Controller implements IPageController {
 //
 //        this.setAttr("title", "食坊-支付");
 //        LinkedList<String> styleSheets = new LinkedList<>();
-//        styleSheets.add("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.css\">");
-//        styleSheets.add("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/billing.css\">");
-//        styleSheets.add("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/receiver.css\">");
+//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.css\">");
+//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/billing.css\">");
+//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/receiver.css\">");
 //        this.setAttr("styleSheets", styleSheets);
 //
 //        LinkedList<String> javaScripts = new LinkedList<>();
@@ -150,8 +150,8 @@ public class PageController extends Controller implements IPageController {
 //        this.setAttr("metas", metas);
 //
 //        LinkedList<String> styleSheets = new LinkedList<>();
-//        styleSheets.add("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.css\">");
-//        styleSheets.add("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/query.css\">");
+//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.css\">");
+//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/query.css\">");
 //        this.setAttr("styleSheets", styleSheets);
 //
 //        LinkedList<String> javaScripts = new LinkedList<>();
@@ -183,12 +183,12 @@ public class PageController extends Controller implements IPageController {
 //        this.setAttr("title", "食坊-我的");
 //
 //        LinkedList<String> styleSheets = new LinkedList<>();
-//        styleSheets.add("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/receiver.css\">");
-//        styleSheets.add("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine_cart.css\">");
-//        styleSheets.add("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine_order.css\">");
-//        styleSheets.add("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine_account.css\">");
-//        styleSheets.add("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine_receiver.css\">");
-//        styleSheets.add("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine.css\">");
+//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/receiver.css\">");
+//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine_cart.css\">");
+//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine_order.css\">");
+//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine_account.css\">");
+//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine_receiver.css\">");
+//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine.css\">");
 //        this.setAttr("styleSheets", styleSheets);
 //
 //        LinkedList<String> javaScripts = new LinkedList<>();

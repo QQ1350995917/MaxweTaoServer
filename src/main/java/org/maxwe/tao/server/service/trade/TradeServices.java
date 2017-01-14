@@ -50,6 +50,7 @@ public class TradeServices implements ITradeServices {
                         .set("id", historyEntity.getId())
                         .set("fromId", historyEntity.getFromId())
                         .set("toId", historyEntity.getToId())
+                        .set("toMark", historyEntity.getToMark())
                         .set("type", historyEntity.getType())
                         .set("actCode", historyEntity.getActCode())
                         .set("codeNum", historyEntity.getCodeNum());

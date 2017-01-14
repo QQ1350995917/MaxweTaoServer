@@ -1,7 +1,7 @@
 package org.maxwe.tao.server.controller.mate;
 
+import org.maxwe.tao.server.controller.account.agent.model.AgentModel;
 import org.maxwe.tao.server.controller.account.model.SessionModel;
-import org.maxwe.tao.server.service.account.agent.AgentEntity;
 
 import java.util.LinkedList;
 
@@ -14,7 +14,7 @@ public class BranchModel extends SessionModel {
     private int total;
     private int pageIndex;
     private int pageSize;
-    private LinkedList<AgentEntity> agentEntities;
+    private LinkedList<AgentModel> agentEntities; // 相应字段
 
     public BranchModel() {
         super();
@@ -44,11 +44,11 @@ public class BranchModel extends SessionModel {
         this.pageSize = pageSize;
     }
 
-    public LinkedList<AgentEntity> getAgentEntities() {
+    public LinkedList<AgentModel> getAgentEntities() {
         return agentEntities;
     }
 
-    public void setAgentEntities(LinkedList<AgentEntity> agentEntities) {
+    public void setAgentEntities(LinkedList<AgentModel> agentEntities) {
         this.agentEntities = agentEntities;
     }
 

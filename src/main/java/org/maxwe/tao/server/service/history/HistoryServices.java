@@ -18,8 +18,8 @@ public class HistoryServices implements IHistoryServices {
 
     @Override
     public HistoryEntity updateToId(HistoryEntity historyEntity) {
-        int count = Db.update("UPDATE history SET toId = ? WHERE id = ? ",
-                historyEntity.getToId(), historyEntity.getId());
+        int count = Db.update("UPDATE history SET toId = ? , toMark = ? WHERE id = ? ",
+                historyEntity.getToId(),historyEntity.getToMark(), historyEntity.getId());
         if (count == 1) {
             return historyEntity;
         } else {

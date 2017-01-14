@@ -132,7 +132,7 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public LinkedList<AgentEntity> retrieveByPid(String pId, int pageIndex, int pageSize) {
-        List<Record> agentRecords = Db.find("SELECT * FROM agent WHERE pId = ? ORDER BY weight DESC , createTime DESC limit ? , ?",
+        List<Record> agentRecords = Db.find("SELECT * FROM agent WHERE pId = ? AND id != pId ORDER BY weight DESC , createTime DESC limit ? , ?",
                 pId, pageIndex * pageSize, pageSize);
         LinkedList<AgentEntity> agentEntities = new LinkedList<>();
         for (Record agentRecord : agentRecords) {

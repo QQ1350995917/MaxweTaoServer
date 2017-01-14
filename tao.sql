@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2017-01-12 10:26:45
+-- Generation Time: 2017-01-14 06:56:13
 -- 服务器版本： 5.6.22
 -- PHP Version: 5.5.20
 
@@ -34,8 +34,9 @@ CREATE TABLE IF NOT EXISTS `agent` (
   `pId` varchar(36) DEFAULT NULL COMMENT '上级代理ID，为空则表示没有上级',
   `reach` int(1) DEFAULT '0' COMMENT '是否就代理达成一致意见，1达成，其他不达成',
   `mark` varchar(12) NOT NULL COMMENT '显示ID',
+  `pMark` varchar(12) DEFAULT NULL COMMENT '上级的显示ID',
   `cellphone` varchar(11) NOT NULL COMMENT '手机号码',
-  `password` varchar(36) NOT NULL COMMENT '登录密码',
+  `password` varchar(64) NOT NULL COMMENT '登录密码',
   `name` varchar(36) DEFAULT NULL COMMENT '姓名',
   `named` varchar(36) DEFAULT NULL COMMENT '被命名',
   `levelId` varchar(36) NOT NULL DEFAULT '0' COMMENT '代理的级别ID',
@@ -63,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `history` (
   `id` varchar(36) NOT NULL COMMENT '业务ID',
   `fromId` varchar(36) NOT NULL COMMENT '操作来源ID',
   `toId` varchar(36) DEFAULT NULL COMMENT '操作流向ID，如果类型为1，则此ID为后来补充',
+  `toMark` varchar(12) DEFAULT NULL COMMENT '流向的显示ID',
   `type` int(11) NOT NULL COMMENT '1激活码，2批量激活码',
   `actCode` varchar(12) DEFAULT NULL COMMENT '如果类型为1，则是向单个用激活；如果类型为2，则表示交易为数量',
   `codeNum` int(11) NOT NULL COMMENT '如果类型为2，则是代理之间交易，记录数量',
@@ -79,12 +81,12 @@ CREATE TABLE IF NOT EXISTS `history` (
 DROP TABLE IF EXISTS `level`;
 CREATE TABLE IF NOT EXISTS `level` (
   `id` varchar(36) NOT NULL COMMENT '业务ID',
-  `pId` varchar(36) NOT NULL COMMENT '上级ID',
   `name` varchar(36) NOT NULL COMMENT '名称',
   `description` text NOT NULL COMMENT '描述',
-  `min` int(11) NOT NULL COMMENT '一次的最少取码量',
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updateTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '更新时间'
+  `minNum` int(11) NOT NULL COMMENT '一次的最少取码量',
+  `price` float NOT NULL COMMENT '每码价格',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -98,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `id` varchar(36) NOT NULL COMMENT '业务ID，不能暴露给客户端',
   `mark` varchar(12) NOT NULL COMMENT '用户ID',
   `cellphone` varchar(15) NOT NULL COMMENT '手机号码',
-  `password` varchar(128) NOT NULL COMMENT '登录密码',
+  `password` varchar(64) NOT NULL COMMENT '登录密码',
   `name` varchar(36) DEFAULT NULL COMMENT '备注姓名',
   `actCode` varchar(36) DEFAULT NULL COMMENT '激活码',
   `actTime` timestamp NULL DEFAULT NULL COMMENT '激活时间',
