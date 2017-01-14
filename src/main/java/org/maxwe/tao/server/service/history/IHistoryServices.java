@@ -9,7 +9,7 @@ import java.util.LinkedList;
  */
 public interface IHistoryServices {
 
-    HistoryEntity updateToId(HistoryEntity historyEntity);
+//    HistoryEntity updateToId(HistoryEntity historyEntity);
 
     HistoryEntity retrieveByActCode(String actCode);
 

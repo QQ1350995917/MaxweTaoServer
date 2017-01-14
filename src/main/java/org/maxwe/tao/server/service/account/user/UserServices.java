@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Record;
+import org.maxwe.tao.server.service.history.HistoryEntity;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -44,21 +45,17 @@ public class UserServices implements IUserServices {
     }
 
     @Override
-    public UserEntity updateMasterHistory(UserEntity userEntity) {
+    public boolean updateActiveStatus(UserEntity userEntity, HistoryEntity historyEntity) {
         boolean succeed = Db.tx(new IAtom() {
             public boolean run() throws SQLException {
                 int updateUser = Db.update("UPDATE user SET actCode = ? ,actTime = ?  WHERE id = ? ",
-                        userEntity.getActCode(), new Timestamp(userEntity.getActTime()), userEntity.getId());
-                int updateHistory = Db.update("UPDATE history SET toId = ? WHERE actCode = ?",
-                        userEntity.getId(), userEntity.getActCode());
+                        userEntity.getActCode(), new Timestamp(System.currentTimeMillis()), userEntity.getId());
+                int updateHistory = Db.update("UPDATE history SET toId = ? , toMark = ?  WHERE id = ?",
+                        historyEntity.getToId(),historyEntity.getToMark(), historyEntity.getId());
                 return updateUser == 1 && updateHistory == 1;
             }
         });
-        if (succeed) {
-            return userEntity;
-        } else {
-            return null;
-        }
+        return succeed;
     }
 
     @Override

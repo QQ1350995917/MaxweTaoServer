@@ -1,5 +1,7 @@
 package org.maxwe.tao.server.service.account.user;
 
+import org.maxwe.tao.server.service.history.HistoryEntity;
+
 import java.util.LinkedList;
 
 /**
@@ -29,7 +31,7 @@ public interface IUserServices {
      * @param userEntity
      * @return
      */
-    UserEntity updateMasterHistory(UserEntity userEntity);
+    boolean updateActiveStatus(UserEntity userEntity,HistoryEntity historyEntity);
 
     /**
      * 通过业务ID查找

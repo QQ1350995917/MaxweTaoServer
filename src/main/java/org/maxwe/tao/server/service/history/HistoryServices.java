@@ -16,16 +16,16 @@ import java.util.Map;
 public class HistoryServices implements IHistoryServices {
 
 
-    @Override
-    public HistoryEntity updateToId(HistoryEntity historyEntity) {
-        int count = Db.update("UPDATE history SET toId = ? , toMark = ? WHERE id = ? ",
-                historyEntity.getToId(),historyEntity.getToMark(), historyEntity.getId());
-        if (count == 1) {
-            return historyEntity;
-        } else {
-            return null;
-        }
-    }
+//    @Override
+//    public HistoryEntity updateToId(HistoryEntity historyEntity) {
+//        int count = Db.update("UPDATE history SET toId = ? , toMark = ? WHERE id = ? ",
+//                historyEntity.getToId(),historyEntity.getToMark(), historyEntity.getId());
+//        if (count == 1) {
+//            return historyEntity;
+//        } else {
+//            return null;
+//        }
+//    }
 
     @Override
     public HistoryEntity retrieveByActCode(String actCode) {

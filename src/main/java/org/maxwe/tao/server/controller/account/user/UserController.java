@@ -74,11 +74,11 @@ public class UserController extends Controller implements IUserController {
             renderJson(resultJson);
             return;
         }
-
+        userEntity.setActCode(requestModel.getActCode());
         historyEntity.setToId(userEntity.getId());
         historyEntity.setToMark(userEntity.getMark());
-        HistoryEntity updateHistoryEntity = iHistoryServices.updateToId(historyEntity);
-        if (updateHistoryEntity == null) {
+        boolean updateActiveStatus = iUserServices.updateActiveStatus(userEntity,historyEntity);
+        if (!updateActiveStatus) {
             this.logger.info("active : 激活失败-服务器内部错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestModel);
