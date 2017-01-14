@@ -66,7 +66,7 @@ public class AgentController extends Controller implements IAgentController {
         }
 
         // 如果密码不等
-        if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getCellphone(),requestModel.getPassword()), agentEntity.getPassword())) {
+        if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getCellphone(),requestModel.getVerification()), agentEntity.getPassword())) {
             this.logger.info("bank : 密码错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
             iResultSet.setData(requestModel);
@@ -85,6 +85,8 @@ public class AgentController extends Controller implements IAgentController {
             return;
         }
 
+        agentEntity.setTrueName(requestModel.getTrueName());
+        agentEntity.setZhifubao(requestModel.getZhifubao());
         // 更新
         AgentEntity updateAgentEntity = iAgentServices.updateBank(agentEntity);
         if (updateAgentEntity == null) {

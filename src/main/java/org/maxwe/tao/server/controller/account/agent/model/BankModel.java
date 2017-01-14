@@ -11,7 +11,6 @@ import org.maxwe.tao.server.controller.account.model.SessionModel;
 public class BankModel extends SessionModel {
     private String trueName;
     private String zhifubao;
-    private String password;
     private long timestamp;// 响应字段
 
     public BankModel() {
@@ -34,14 +33,6 @@ public class BankModel extends SessionModel {
         this.zhifubao = zhifubao;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public long getTimestamp() {
         return timestamp;
     }
@@ -55,7 +46,6 @@ public class BankModel extends SessionModel {
         return "BankModel{" +
                 "trueName='" + trueName + '\'' +
                 ", zhifubao='" + zhifubao + '\'' +
-                ", password='" + password + '\'' +
                 ", timestamp='" + timestamp + '\'' +
                 '}';
     }
@@ -64,9 +54,9 @@ public class BankModel extends SessionModel {
     public boolean isParamsOk() {
         if (StringUtils.isEmpty(this.getTrueName())
                 || StringUtils.isEmpty(this.getZhifubao())
-                || StringUtils.isEmpty(this.getPassword())
-                || this.getPassword().length() < 6
-                || this.getPassword().length() > 12) {
+                || StringUtils.isEmpty(this.getVerification())
+                || this.getVerification().length() < 6
+                || this.getVerification().length() > 12) {
             return false;
         }
         return super.isParamsOk();
