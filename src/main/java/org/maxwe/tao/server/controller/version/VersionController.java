@@ -37,8 +37,9 @@ public class VersionController extends Controller implements IVersionController 
     };
 
     @Override
+    @Clear({ParamsInterceptor.class})
     public void version() {
-        String params = this.getAttr("p");
+        String params = this.getPara("p");
         VersionEntity requestVersionEntity = JSON.parseObject(params, VersionEntity.class);
         IResultSet iResultSet = new ResultSet();
         if (requestVersionEntity == null || StringUtils.isEmpty(requestVersionEntity.getPlatform()) || requestVersionEntity.getType() == 0) {
