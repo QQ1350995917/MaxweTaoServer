@@ -29,9 +29,11 @@ import java.util.Properties;
  * Description: 配置管理器
  */
 public class ApplicationConfigure extends JFinalConfig {
-    public static String SMS_KEY = "";
-    public static String SMS_SECRET = "";
-    public static String SMS_MODEL = "";
+    public static String APP_KEY = "";
+    public static String APP_SECRET = "";
+    public static String APP_SMS_KEY = "";
+    public static String APP_SMS_SECRET = "";
+    public static String APP_SMS_MODEL = "";
     private static String url;
     private static String username;
     private static String password;
@@ -45,9 +47,11 @@ public class ApplicationConfigure extends JFinalConfig {
             PropertyConfigurator.configure(log4jProperties);
             Properties smsProperties = new Properties();
             smsProperties.load(ApplicationConfigure.class.getClassLoader().getResourceAsStream("properties.properties"));
-            SMS_KEY = smsProperties.getProperty("SMS_KEY");
-            SMS_SECRET = smsProperties.getProperty("SMS_SECRET");
-            SMS_MODEL = smsProperties.getProperty("SMS_MODEL");
+            APP_KEY = smsProperties.getProperty("APP_KEY");
+            APP_SECRET = smsProperties.getProperty("APP_SECRET");
+            APP_SMS_KEY = smsProperties.getProperty("APP_SMS_KEY");
+            APP_SMS_SECRET = smsProperties.getProperty("APP_SMS_SECRET");
+            APP_SMS_MODEL = smsProperties.getProperty("APP_SMS_MODEL");
             Properties dbProperties = new Properties();
             dbProperties.load(ApplicationConfigure.class.getClassLoader().getResourceAsStream("db.properties"));
             url = dbProperties.getProperty("url");

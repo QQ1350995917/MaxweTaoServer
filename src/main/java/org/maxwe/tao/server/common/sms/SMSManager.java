@@ -121,13 +121,13 @@ public class SMSManager {
             code = cacheCellphone.getCode();
         }
         logger.info("sendSMS : cellphone = " + cellphone + " ; code = " + code);
-        TaobaoClient client = new DefaultTaobaoClient(url, ApplicationConfigure.SMS_KEY, ApplicationConfigure.SMS_SECRET);
+        TaobaoClient client = new DefaultTaobaoClient(url, ApplicationConfigure.APP_SMS_KEY, ApplicationConfigure.APP_SMS_SECRET);
         AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
         req.setSmsType("normal");
         req.setSmsFreeSignName("测试");
         req.setSmsParamString("{\"code\":\"" + code + "\",\"product\":\"" + product + "\"}");
         req.setRecNum(cellphone);
-        req.setSmsTemplateCode(ApplicationConfigure.SMS_MODEL);
+        req.setSmsTemplateCode(ApplicationConfigure.APP_SMS_MODEL);
         AlibabaAliqinFcSmsNumSendResponse rsp = client.execute(req);
         logger.info("sendSMS : 发送结果 = " + rsp.getBody());
         Map map = JSON.parseObject(rsp.getBody(), Map.class);
@@ -144,7 +144,7 @@ public class SMSManager {
         return SMS_CACHE_CELLPHONE.get(cellphone) == null ? null :SMS_CACHE_CELLPHONE.get(cellphone).getCode();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 //        String[] address = {"123", "456", "789", "012", "345"};
 //        SMSEntity[] smsEntities = {new SMSEntity("a", "a"), new SMSEntity("b", "b"), new SMSEntity("c", "c"), new SMSEntity("d", "d"), new SMSEntity("e", "e")};
 //        while (true) {
@@ -165,5 +165,7 @@ public class SMSManager {
 //                e.printStackTrace();
 //            }
 //        }
+
+        sendSMS("18511694468");
     }
 }
