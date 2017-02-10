@@ -7,7 +7,7 @@ import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
-import org.maxwe.tao.server.interceptor.ParamsInterceptor;
+import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.service.level.ILevelServices;
 import org.maxwe.tao.server.service.level.LevelEntity;
 import org.maxwe.tao.server.service.level.LevelServices;
@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 /**
  * Created by Pengwei Ding on 2017-01-14 10:06.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description: 更新代理等级的控制器
  */
 public class LevelController extends Controller implements ILevelController {
 
@@ -59,7 +59,7 @@ public class LevelController extends Controller implements ILevelController {
     }
 
     @Override
-    @Clear({ParamsInterceptor.class})
+    @Clear({AppInterceptor.class})
     public void refresh() {
         IResultSet iResultSet = new ResultSet();
         if (System.currentTimeMillis() - lastRefresh > duration) {

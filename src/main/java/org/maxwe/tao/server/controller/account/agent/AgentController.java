@@ -21,6 +21,7 @@ import org.maxwe.tao.server.controller.account.model.LoginModel;
 import org.maxwe.tao.server.controller.account.model.ModifyModel;
 import org.maxwe.tao.server.controller.account.model.RegisterModel;
 import org.maxwe.tao.server.controller.level.LevelController;
+import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.account.CSEntity;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
@@ -39,7 +40,7 @@ public class AgentController extends Controller implements IAgentController {
     private IAgentServices iAgentServices = new AgentServices();
 
     @Override
-    @Before(TokenInterceptor.class)
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void bank() {
         String params = this.getAttr("p");
         BankModel requestModel = JSON.parseObject(params, BankModel.class);
@@ -106,6 +107,7 @@ public class AgentController extends Controller implements IAgentController {
     }
 
     @Override
+    @Before({AppInterceptor.class})
     public void exist() {
         String params = this.getAttr("p");
         ExistModel requestModel = JSON.parseObject(params, ExistModel.class);
@@ -138,6 +140,7 @@ public class AgentController extends Controller implements IAgentController {
     }
 
     @Override
+    @Before({AppInterceptor.class})
     public void register() {
         String params = this.getAttr("p");
         RegisterModel requestModel = JSON.parseObject(params, RegisterModel.class);
@@ -199,6 +202,7 @@ public class AgentController extends Controller implements IAgentController {
     }
 
     @Override
+    @Before({AppInterceptor.class})
     public void lost() {
         String params = this.getAttr("p");
         RegisterModel requestModel = JSON.parseObject(params, RegisterModel.class);
@@ -256,6 +260,7 @@ public class AgentController extends Controller implements IAgentController {
     }
 
     @Override
+    @Before({AppInterceptor.class})
     public void login() {
         String params = this.getAttr("p");
         LoginModel requestModel = JSON.parseObject(params, LoginModel.class);
@@ -291,7 +296,7 @@ public class AgentController extends Controller implements IAgentController {
     }
 
     @Override
-    @Before(TokenInterceptor.class)
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void password() {
         String params = this.getAttr("p");
         ModifyModel requestModel = JSON.parseObject(params, ModifyModel.class);
@@ -340,7 +345,7 @@ public class AgentController extends Controller implements IAgentController {
     }
 
     @Override
-    @Before(TokenInterceptor.class)
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void logout() {
         String params = this.getAttr("p");
         SessionModel requestModel = JSON.parseObject(params, SessionModel.class);
@@ -354,7 +359,7 @@ public class AgentController extends Controller implements IAgentController {
     }
 
     @Override
-    @Before(TokenInterceptor.class)
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void mine() {
         String params = this.getAttr("p");
         AgentModel requestModel = JSON.parseObject(params, AgentModel.class);

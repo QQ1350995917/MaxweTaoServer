@@ -11,6 +11,7 @@ import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.common.utils.GrantCodeUtils;
 import org.maxwe.tao.server.common.utils.PasswordUtils;
 import org.maxwe.tao.server.controller.level.LevelController;
+import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.account.CSEntity;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
@@ -34,7 +35,7 @@ public class TradeController extends Controller implements ITradeController {
     private ITradeServices iTradeServices = new TradeServices();
 
     @Override
-    @Before(TokenInterceptor.class)
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void grant() {
         String params = this.getAttr("p");
         TradeModel requestModel = JSON.parseObject(params, TradeModel.class);
@@ -119,7 +120,7 @@ public class TradeController extends Controller implements ITradeController {
     }
 
     @Override
-    @Before(TokenInterceptor.class)
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void trade() {
         String params = this.getAttr("p");
         TradeModel requestModel = JSON.parseObject(params, TradeModel.class);

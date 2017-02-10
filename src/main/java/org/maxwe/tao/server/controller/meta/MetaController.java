@@ -2,6 +2,7 @@ package org.maxwe.tao.server.controller.meta;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.taobao.api.ApiException;
 import org.apache.log4j.Logger;
@@ -9,6 +10,7 @@ import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.common.sms.SMSManager;
 import org.maxwe.tao.server.common.utils.IPUtils;
+import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 
 /**
@@ -20,6 +22,7 @@ public class MetaController extends Controller implements IMetaController {
     private final Logger logger = Logger.getLogger(MetaController.class.getName());
 
     @Override
+    @Before({AppInterceptor.class})
     public void smsCode() {
         String params = this.getAttr("p");
         SMSCodeModel requestModel = JSON.parseObject(params, SMSCodeModel.class);

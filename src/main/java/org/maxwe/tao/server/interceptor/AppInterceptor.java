@@ -12,7 +12,7 @@ import sun.misc.BASE64Decoder;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 参数与加解密拦截器
  */
-public class ParamsInterceptor implements Interceptor {
+public class AppInterceptor implements Interceptor {
 
     @Override
     public void intercept(Invocation inv) {

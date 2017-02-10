@@ -11,6 +11,7 @@ import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.controller.account.agent.model.AgentModel;
 import org.maxwe.tao.server.controller.level.LevelController;
+import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.account.CSEntity;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
@@ -29,7 +30,7 @@ public class MateController extends Controller implements IMateController {
     private IAgentServices iAgentServices = new AgentServices();
 
     @Override
-    @Before(TokenInterceptor.class)
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void beg() {
         String params = this.getAttr("p");
         TrunkModel requestModel = JSON.parseObject(params, TrunkModel.class);
@@ -112,7 +113,7 @@ public class MateController extends Controller implements IMateController {
     }
 
     @Override
-    @Before(TokenInterceptor.class)
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void grant() {
         String params = this.getAttr("p");
         TrunkModel requestModel = JSON.parseObject(params, TrunkModel.class);
@@ -155,7 +156,7 @@ public class MateController extends Controller implements IMateController {
     }
 
     @Override
-    @Before(TokenInterceptor.class)
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void reject() {
         String params = this.getAttr("p");
         TrunkModel requestModel = JSON.parseObject(params, TrunkModel.class);
@@ -200,7 +201,7 @@ public class MateController extends Controller implements IMateController {
     }
 
     @Override
-    @Before(TokenInterceptor.class)
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void leader() {
         String params = this.getAttr("p");
         TrunkModel requestModel = JSON.parseObject(params, TrunkModel.class);
@@ -249,7 +250,7 @@ public class MateController extends Controller implements IMateController {
     }
 
     @Override
-    @Before(TokenInterceptor.class)
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void mates() {
         String params = this.getAttr("p");
         BranchModel requestModel = JSON.parseObject(params, BranchModel.class);

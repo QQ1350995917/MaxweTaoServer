@@ -8,7 +8,7 @@ import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
-import org.maxwe.tao.server.interceptor.ParamsInterceptor;
+import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.service.version.IVersionServices;
 import org.maxwe.tao.server.service.version.VersionEntity;
 import org.maxwe.tao.server.service.version.VersionServices;
@@ -37,7 +37,7 @@ public class VersionController extends Controller implements IVersionController 
     };
 
     @Override
-    @Clear({ParamsInterceptor.class})
+    @Clear({AppInterceptor.class})
     public void version() {
         String params = this.getPara("p");
         VersionEntity requestVersionEntity = JSON.parseObject(params, VersionEntity.class);
@@ -66,7 +66,7 @@ public class VersionController extends Controller implements IVersionController 
     }
 
     @Override
-    @Clear({ParamsInterceptor.class})
+    @Clear({AppInterceptor.class})
     public void reversion() {
         IResultSet iResultSet = new ResultSet();
         List<VersionEntity> reversion = iVersionServices.reversion();

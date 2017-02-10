@@ -14,6 +14,7 @@ import org.maxwe.tao.server.common.utils.MarkUtils;
 import org.maxwe.tao.server.common.utils.PasswordUtils;
 import org.maxwe.tao.server.common.utils.TokenUtils;
 import org.maxwe.tao.server.controller.account.model.*;
+import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.account.CSEntity;
 import org.maxwe.tao.server.service.account.user.IUserServices;
@@ -36,7 +37,7 @@ public class UserController extends Controller implements IUserController {
     private IHistoryServices iHistoryServices = new HistoryServices();
 
     @Override
-    @Before(TokenInterceptor.class)
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void active() {
         String params = this.getAttr("p");
         ActiveModel requestModel = JSON.parseObject(params, ActiveModel.class);
@@ -94,6 +95,7 @@ public class UserController extends Controller implements IUserController {
     }
 
     @Override
+    @Before({AppInterceptor.class})
     public void exist() {
         String params = this.getAttr("p");
         ExistModel requestModel = JSON.parseObject(params, ExistModel.class);
@@ -125,6 +127,7 @@ public class UserController extends Controller implements IUserController {
     }
 
     @Override
+    @Before({AppInterceptor.class})
     public void register() {
         String params = this.getAttr("p");
         RegisterModel requestModel = JSON.parseObject(params, RegisterModel.class);
@@ -186,6 +189,7 @@ public class UserController extends Controller implements IUserController {
     }
 
     @Override
+    @Before({AppInterceptor.class})
     public void lost() {
         String params = this.getAttr("p");
         RegisterModel requestModel = JSON.parseObject(params, RegisterModel.class);
@@ -244,6 +248,7 @@ public class UserController extends Controller implements IUserController {
     }
 
     @Override
+    @Before({AppInterceptor.class})
     public void login() {
         String params = this.getAttr("p");
         LoginModel requestModel = JSON.parseObject(params, LoginModel.class);
@@ -279,7 +284,7 @@ public class UserController extends Controller implements IUserController {
     }
 
     @Override
-    @Before(TokenInterceptor.class)
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void password() {
         String params = this.getAttr("p");
         ModifyModel requestModel = JSON.parseObject(params, ModifyModel.class);
@@ -328,7 +333,7 @@ public class UserController extends Controller implements IUserController {
     }
 
     @Override
-    @Before(TokenInterceptor.class)
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void logout() {
         String params = this.getAttr("p");
         SessionModel requestModel = JSON.parseObject(params, SessionModel.class);
@@ -342,7 +347,7 @@ public class UserController extends Controller implements IUserController {
     }
 
     @Override
-    @Before(TokenInterceptor.class)
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void mine() {
         String params = this.getAttr("p");
         SessionModel requestModel = JSON.parseObject(params, SessionModel.class);

@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.cache.SessionContext;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
+import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.account.CSEntity;
 import org.maxwe.tao.server.service.history.HistoryEntity;
@@ -26,7 +27,7 @@ public class HistoryController extends Controller implements IHistoryController 
     private IHistoryServices iHistoryServices = new HistoryServices();
 
     @Override
-    @Before(TokenInterceptor.class)
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void history() {
         String params = this.getAttr("p");
         HistoryModel requestModel = JSON.parseObject(params, HistoryModel.class);

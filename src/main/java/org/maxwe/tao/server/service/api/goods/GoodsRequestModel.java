@@ -15,9 +15,9 @@ public class GoodsRequestModel extends BaseTaobaoRequest<GoodsResponseModel> {
 
     // 需返回的字段列表
     private String fields; // 是
-    // 查询词
+//    // 查询词
     private String q;// 否
-    // 后台类目ID，用,分割，最大10个，该ID可以通过taobao.itemcats.get接口获取到
+//    // 后台类目ID，用,分割，最大10个，该ID可以通过taobao.itemcats.get接口获取到
     private String cat = "16";// 否
     // 所在地
     private String itemloc;// 否
@@ -39,7 +39,7 @@ public class GoodsRequestModel extends BaseTaobaoRequest<GoodsResponseModel> {
     private int platform = 2;// 否
     // 第几页，默认：１
     private int page_no;// 否
-    // 页大小，默认20，1~100
+//    // 页大小，默认20，1~100
     private int page_size;// 否
 
     private String methodName;
