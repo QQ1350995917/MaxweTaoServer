@@ -314,7 +314,7 @@ public class AgentController extends Controller implements IAgentController {
             return;
         }
 
-        if (!StringUtils.equals(existAgentEntity.getPassword(), requestModel.getOldPassword())) {
+        if (!StringUtils.equals(existAgentEntity.getPassword(), PasswordUtils.enPassword(requestModel.getCellphone(), requestModel.getOldPassword()))) {
             this.logger.info("password : 修改密码新旧密码不一致 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
             iResultSet.setData(requestModel);
@@ -323,7 +323,7 @@ public class AgentController extends Controller implements IAgentController {
             return;
         }
 
-        existAgentEntity.setPassword(requestModel.getNewPassword());
+        existAgentEntity.setPassword(PasswordUtils.enPassword(requestModel.getCellphone(), requestModel.getNewPassword()));
         AgentEntity updateAgentEntity = iAgentServices.updatePassword(existAgentEntity);
         if (updateAgentEntity == null) {
             this.logger.info("password : 修改密码-服务器内部更新错误 " + requestModel.toString());

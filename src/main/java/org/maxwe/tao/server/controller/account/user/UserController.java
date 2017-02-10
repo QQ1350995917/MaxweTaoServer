@@ -302,7 +302,7 @@ public class UserController extends Controller implements IUserController {
             return;
         }
 
-        if (!StringUtils.equals(existUserEntity.getPassword(), requestModel.getOldPassword())) {
+        if (!StringUtils.equals(existUserEntity.getPassword(), PasswordUtils.enPassword(requestModel.getCellphone(), requestModel.getOldPassword()))) {
             this.logger.info("password : 修改密码新旧密码不一致 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
             iResultSet.setData(requestModel);
@@ -311,7 +311,7 @@ public class UserController extends Controller implements IUserController {
             return;
         }
 
-        existUserEntity.setPassword(requestModel.getNewPassword());
+        existUserEntity.setPassword(PasswordUtils.enPassword(requestModel.getCellphone(), requestModel.getNewPassword()));
         UserEntity updateUserEntity = iUserServices.updatePassword(existUserEntity);
         if (updateUserEntity == null) {
             this.logger.info("password : 修改密码-服务器内部更新错误 " + requestModel.toString());

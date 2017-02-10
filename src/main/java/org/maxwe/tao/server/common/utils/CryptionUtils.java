@@ -1,11 +1,7 @@
 package org.maxwe.tao.server.common.utils;
 
-import com.alibaba.fastjson.JSON;
-import org.maxwe.tao.server.controller.account.model.ExistModel;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Base64;
 
 /**
  * Created by Pengwei Ding on 2017-01-10 13:26.
@@ -104,27 +100,27 @@ public class CryptionUtils {
     }
 
     public static void main(String[] args) throws Exception {
-        String content1 = "QAZWSXEDCRFV-" + System.currentTimeMillis() + "-12345678900";
-        String encodeContent = new String(Base64.getEncoder().encode(content1.getBytes()));
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < 100; i++) {
-            CryptionUtils cryptionUtils = new CryptionUtils();
-            String content = JSON.toJSONString(new ExistModel("18511694468"));
-            //加密
-//            System.out.println("加密前：" + content);
-            byte[] encryptResult = cryptionUtils.encryptDefault(content);
-            String encryptResultStr = parseByte2HexStr(encryptResult);
-            System.out.println("加密后：" + encryptResultStr);
-            //解密 D6882D57FC66E6D0D256D4C2BBD8BFD4B47C726BF8081E8FF27E876429322D10
-//            encryptResultStr = "CCD0ECD33CC34611F22D215E04799F3BFB3D5A0DEF3E9873697E80711E9207E6";
-            byte[] decryptFrom = parseHexStr2Byte(encryptResultStr);
-            byte[] decryptResult = cryptionUtils.decryptDefault(decryptFrom);
-//            System.out.println("解密后：" + new String(decryptResult));
-//            byte[] decode = Base64.getDecoder().decode(decryptResult);
-//            System.out.println(new String(decode));
-        }
-        long end = System.currentTimeMillis();
-        System.out.println((end - start) / 1000);
+//        String content1 = "QAZWSXEDCRFV-" + System.currentTimeMillis() + "-12345678900";
+//        String encodeContent = new String(Base64.getEncoder().encode(content1.getBytes()));
+//        long start = System.currentTimeMillis();
+//        for (int i = 0; i < 100; i++) {
+//            CryptionUtils cryptionUtils = new CryptionUtils();
+//            String content = JSON.toJSONString(new ExistModel("18511694468"));
+//            //加密
+////            System.out.println("加密前：" + content);
+//            byte[] encryptResult = cryptionUtils.encryptDefault(content);
+//            String encryptResultStr = parseByte2HexStr(encryptResult);
+//            System.out.println("加密后：" + encryptResultStr);
+//            //解密 D6882D57FC66E6D0D256D4C2BBD8BFD4B47C726BF8081E8FF27E876429322D10
+////            encryptResultStr = "CCD0ECD33CC34611F22D215E04799F3BFB3D5A0DEF3E9873697E80711E9207E6";
+//            byte[] decryptFrom = parseHexStr2Byte(encryptResultStr);
+//            byte[] decryptResult = cryptionUtils.decryptDefault(decryptFrom);
+////            System.out.println("解密后：" + new String(decryptResult));
+////            byte[] decode = Base64.getDecoder().decode(decryptResult);
+////            System.out.println(new String(decode));
+//        }
+//        long end = System.currentTimeMillis();
+//        System.out.println((end - start) / 1000);
     }
 
 }

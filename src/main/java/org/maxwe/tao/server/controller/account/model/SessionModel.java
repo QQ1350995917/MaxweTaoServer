@@ -2,11 +2,10 @@ package org.maxwe.tao.server.controller.account.model;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.annotation.JSONField;
+import org.apache.commons.codec.binary.Base64;
 import org.maxwe.tao.server.common.utils.CellPhoneUtils;
 import org.maxwe.tao.server.common.utils.CryptionUtils;
 import org.maxwe.tao.server.common.utils.MarkUtils;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import java.io.Serializable;
 
@@ -101,7 +100,8 @@ public class SessionModel implements Serializable {
         String deMark = MarkUtils.deMark(this.getMark());//生成的ID是11位
         String password = (deMark + deMark).substring(0, 16);//生成的ID是11位，补全16位密码
         String content = this.getMark() + "-" + System.currentTimeMillis() + "-" + this.getCellphone();
-        String encodeContent = new String(new BASE64Encoder().encode(content.getBytes()));
+//        String encodeContent = new String(new BASE64Encoder().encode());
+        String encodeContent = new String(Base64.encodeBase64(content.getBytes()));
         byte[] encryptResult = CryptionUtils.encryptCustomer(encodeContent, password);
         String encryptResultStr = CryptionUtils.parseByte2HexStr(encryptResult);
         return encryptResultStr;
@@ -112,7 +112,8 @@ public class SessionModel implements Serializable {
         String deMark = MarkUtils.deMark(this.getMark());
         String password = (deMark + deMark).substring(0, 16);
         byte[] decryptResult = CryptionUtils.decryptCustomer(CryptionUtils.parseHexStr2Byte(this.getSign()), password);
-        byte[] decode = new BASE64Decoder().decodeBuffer(new String(decryptResult));
+//        byte[] decode = new BASE64Decoder().decodeBuffer(new String(decryptResult));
+        byte[] decode = Base64.decodeBase64(decryptResult);
         String[] split = new String(decode).split("-");
         if (split == null || split.length != 3) {
             return false;

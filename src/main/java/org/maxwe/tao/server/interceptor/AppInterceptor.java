@@ -2,10 +2,10 @@ package org.maxwe.tao.server.interceptor;
 
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
+import org.apache.commons.codec.binary.Base64;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.common.utils.CryptionUtils;
-import sun.misc.BASE64Decoder;
 
 /**
  * Created by Pengwei Ding on 2016-09-20 16:48.
@@ -21,7 +21,8 @@ public class AppInterceptor implements Interceptor {
         if (params != null) {
             try {
                 byte[] decrypt = CryptionUtils.decryptDefault(CryptionUtils.parseHexStr2Byte(params));
-                String content = new String(new BASE64Decoder().decodeBuffer(new String(decrypt)));
+//                String content = new String(new BASE64Decoder().decodeBuffer(new String(decrypt)));
+                String content = new String(Base64.decodeBase64(decrypt));
                 System.out.println(content);
                 inv.getController().setAttr("p", content);
                 inv.invoke();
