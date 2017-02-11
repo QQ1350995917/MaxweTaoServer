@@ -12,8 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class SessionContext {
-    private final static Logger logger = Logger.getLogger(SessionContext.class.getName());
+public class TokenContext {
+    private final static Logger logger = Logger.getLogger(TokenContext.class.getName());
     /**
      * tokenConcurrentHashMap
      * 可以使用cellphone + type 和 Token作为key

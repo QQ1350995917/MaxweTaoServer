@@ -53,10 +53,10 @@ dependencies {
 
     compile 'log4j:log4j:1.2.17'
     compile 'org.ehcache:ehcache:3.2.0'
-    compile 'javax.cache:cache-api:1.0.0'
+    compile 'javax.cache:cache-goods:1.0.0'
     def tomcatVersion = '7.0.59'
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
             "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
             "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
-    providedCompile 'javax.servlet:javax.servlet-api:3.0.1'
+    providedCompile 'javax.servlet:javax.servlet-goods:3.0.1'
 }

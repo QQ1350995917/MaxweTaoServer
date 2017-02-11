@@ -1,7 +1,8 @@
-package org.maxwe.tao.server.service.api.goods;
+package org.maxwe.tao.server.controller.goods;
 
 import com.taobao.api.ApiRuleException;
 import com.taobao.api.BaseTaobaoRequest;
+import org.maxwe.tao.server.service.api.goods.GoodsResponseModel;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -207,11 +208,11 @@ public class GoodsRequestModel extends BaseTaobaoRequest<GoodsResponseModel> {
                 ", start_price=" + start_price +
                 ", is_overseas=" + is_overseas +
                 ", is_tmall=" + is_tmall +
-                ", sort='" + sort + '\'' +
-                ", itemloc='" + itemloc + '\'' +
-                ", cat='" + cat + '\'' +
-                ", q='" + q + '\'' +
-                ", fields='" + fields + '\'' +
+                ", sort='" + sort +
+                ", itemloc='" + itemloc +
+                ", cat='" + cat +
+                ", q='" + q +
+                ", fields='" + fields +
                 '}';
     }
 }

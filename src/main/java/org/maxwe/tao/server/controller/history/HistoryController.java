@@ -5,7 +5,7 @@ import com.alibaba.fastjson.serializer.PropertyFilter;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
-import org.maxwe.tao.server.common.cache.SessionContext;
+import org.maxwe.tao.server.common.cache.TokenContext;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
@@ -40,7 +40,7 @@ public class HistoryController extends Controller implements IHistoryController 
             renderJson(JSON.toJSONString(iResultSet));
         } else {
             CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
-            LinkedList<HistoryEntity> historyEntities = iHistoryServices.retrieveByFromId(SessionContext.getCSEntity(csEntity).getId(), requestModel.getPageIndex(), requestModel.getPageSize());
+            LinkedList<HistoryEntity> historyEntities = iHistoryServices.retrieveByFromId(TokenContext.getCSEntity(csEntity).getId(), requestModel.getPageIndex(), requestModel.getPageSize());
             if (historyEntities == null || historyEntities.size() == 0) {
                 iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
             } else {

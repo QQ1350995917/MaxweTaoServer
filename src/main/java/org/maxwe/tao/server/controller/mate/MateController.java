@@ -6,7 +6,7 @@ import com.alibaba.fastjson.serializer.PropertyFilter;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
-import org.maxwe.tao.server.common.cache.SessionContext;
+import org.maxwe.tao.server.common.cache.TokenContext;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.controller.account.agent.model.AgentModel;
@@ -66,7 +66,7 @@ public class MateController extends Controller implements IMateController {
         }
 
         CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
-        CSEntity existCSEntity = SessionContext.getCSEntity(csEntity);
+        CSEntity existCSEntity = TokenContext.getCSEntity(csEntity);
         AgentEntity branchAgentEntity = this.iAgentServices.retrieveById(existCSEntity.getId());
         if (!StringUtils.isEmpty(branchAgentEntity.getpId())){
             this.logger.info("beg : 已经处于等待授权确认 " + requestModel.toString());
@@ -263,7 +263,7 @@ public class MateController extends Controller implements IMateController {
             renderJson(JSON.toJSONString(iResultSet));
         } else {
             CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
-            LinkedList<AgentEntity> agentEntities = iAgentServices.retrieveByPid(SessionContext.getCSEntity(csEntity).getId(), requestModel.getPageIndex(), requestModel.getPageSize());
+            LinkedList<AgentEntity> agentEntities = iAgentServices.retrieveByPid(TokenContext.getCSEntity(csEntity).getId(), requestModel.getPageIndex(), requestModel.getPageSize());
 
             if (agentEntities == null || agentEntities.size() == 0) {
                 iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());

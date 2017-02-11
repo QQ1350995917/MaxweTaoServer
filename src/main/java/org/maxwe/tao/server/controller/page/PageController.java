@@ -230,6 +230,6 @@ public class PageController extends Controller implements IPageController {
     }
 
     public void api() {
-        this.render("/webapp/widgets/api.html");
+        this.render("/webapp/widgets/goods.html");
     }
 }

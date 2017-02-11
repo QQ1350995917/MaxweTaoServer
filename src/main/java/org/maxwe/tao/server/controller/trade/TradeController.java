@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
-import org.maxwe.tao.server.common.cache.SessionContext;
+import org.maxwe.tao.server.common.cache.TokenContext;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.common.utils.GrantCodeUtils;
@@ -51,7 +51,7 @@ public class TradeController extends Controller implements ITradeController {
         }
 
         CSEntity agentCS = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
-        CSEntity csEntity = SessionContext.getCSEntity(agentCS);
+        CSEntity csEntity = TokenContext.getCSEntity(agentCS);
 
         // 这里查询授权码的数量是否足够
         AgentEntity agentEntity = iAgentServices.retrieveById(csEntity.getId());
@@ -136,7 +136,7 @@ public class TradeController extends Controller implements ITradeController {
         }
 
         CSEntity agentCS = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
-        CSEntity csEntity = SessionContext.getCSEntity(agentCS);
+        CSEntity csEntity = TokenContext.getCSEntity(agentCS);
 
         // 这里查询授权码的数量是否足够
         AgentEntity trunkEntity = iAgentServices.retrieveById(csEntity.getId());

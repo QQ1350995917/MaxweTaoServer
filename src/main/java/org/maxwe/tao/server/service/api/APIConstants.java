@@ -11,8 +11,8 @@ import org.maxwe.tao.server.ApplicationConfigure;
  */
 public class APIConstants {
 
-    public static final String URL_FORMAL = "http://gw.api.taobao.com/router/rest";
-    public static final String URL_SANDBOX = "http://gw.api.tbsandbox.com/router/rest";
+    public static final String URL_FORMAL = "http://gw.goods.taobao.com/router/rest";
+    public static final String URL_SANDBOX = "http://gw.goods.tbsandbox.com/router/rest";
 
     // 获取类目
     public static final String METHOD_NAME_ITEM = "taobao.itemcats.get"; // http://open.taobao.com/docs/api.htm?spm=a219a.7386793.0.0.owNYvV&apiId=122
