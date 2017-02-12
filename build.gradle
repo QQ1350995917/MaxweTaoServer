@@ -49,14 +49,14 @@ dependencies {
     compile 'org.slf4j:slf4j-log4j12:1.7.22'
     compile 'org.slf4j:slf4j-jdk14:1.7.22'
 //    compile 'commons-codec:commons-codec:1.10'
-//    compile 'org.bouncycastle:bcprov-jdk15on:1.56'
 
     compile 'log4j:log4j:1.2.17'
     compile 'org.ehcache:ehcache:3.2.0'
-    compile 'javax.cache:cache-goods:1.0.0'
+
     def tomcatVersion = '7.0.59'
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
             "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
             "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
-    providedCompile 'javax.servlet:javax.servlet-goods:3.0.1'
+    providedCompile 'org.apache.tomcat:tomcat-servlet-api:8.0.41'
+
 }

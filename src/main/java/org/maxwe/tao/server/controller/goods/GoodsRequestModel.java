@@ -2,6 +2,7 @@ package org.maxwe.tao.server.controller.goods;
 
 import com.taobao.api.ApiRuleException;
 import com.taobao.api.BaseTaobaoRequest;
+import org.maxwe.tao.server.service.api.APIConstants;
 import org.maxwe.tao.server.service.api.goods.GoodsResponseModel;
 
 import java.util.LinkedHashMap;
@@ -15,35 +16,35 @@ import java.util.Map;
 public class GoodsRequestModel extends BaseTaobaoRequest<GoodsResponseModel> {
 
     // 需返回的字段列表
-    private String fields; // 是
+    private String fields = APIConstants.METHOD_NAME_GOODS_FIELDS; // 是
 //    // 查询词
     private String q;// 否
 //    // 后台类目ID，用,分割，最大10个，该ID可以通过taobao.itemcats.get接口获取到
-    private String cat = "16";// 否
+    private String cat = "0";// 否
     // 所在地
     private String itemloc;// 否
     // 排序_des（降序），排序_asc（升序），销量（total_sales），淘客佣金比率（tk_rate）， 累计推广量（tk_total_sales），总支出佣金（tk_total_commi）
     private String sort;// 否
     // 是否商城商品，设置为true表示该商品是属于淘宝商城商品，设置为false或不设置表示不判断这个属性
-    private boolean is_tmall;// 否
+    private boolean is_tmall = false;// 否
     // 是否海外商品，设置为true表示该商品是属于海外商品，设置为false或不设置表示不判断这个属性
-    private boolean is_overseas;// 否
+    private boolean is_overseas = false;// 否
     // 折扣价范围下限，单位：元
-    private int start_price;// 否
+    private int start_price = 0000;// 否
     // 折扣价范围上限，单位：元
-    private int end_price;// 否
+    private int end_price = 9999;// 否
     // 淘客佣金比率上限，如：1234表示12.34%
-    private int start_tk_rate;// 否
+    private int start_tk_rate = 0000;// 否
     // 淘客佣金比率下限，如：1234表示12.34%
-    private int end_tk_rate;// 否
+    private int end_tk_rate = 9999;// 否
     // 链接形式：1：PC，2：无线，默认：１
     private int platform = 2;// 否
     // 第几页，默认：１
-    private int page_no;// 否
+    private int page_no = 1;// 否
 //    // 页大小，默认20，1~100
-    private int page_size;// 否
+    private int page_size = 20;// 否
 
-    private String methodName;
+    private String methodName = APIConstants.METHOD_NAME_GOODS;
 
     public String getFields() {
         return fields;
