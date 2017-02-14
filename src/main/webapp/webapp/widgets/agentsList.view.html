@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h2 class="page-header">代理总览</h2>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>ID</th>
+            <th>PID</th>
+            <th>手机</th>
+            <th>累计码量</th>
+            <th>消费码量</th>
+            <th>剩余码量</th>
+            <th>真实姓名</th>
+            <th>支付宝</th>
+            <th>注册时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <#if agents?exists>
+            <#list agents as agent>
+                <tr>
+                    <td>${agent_index+1}</td>
+                    <td>${agent.mark}</td>
+                    <td>${agent.pMark!""}</td>
+                    <td>${agent.cellphone}</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>""</td>
+                    <td>""</td>
+                    <td>""</td>
+                </tr>
+            </#list>
+        </#if>
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <#if pageIndex gt 0>
+                <li>
+                    <a href="#" onclick="createManagerListView('${pageIndex - 1}',12);" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            </#if>
+            <#if pages?exists>
+                <#list 0..pages - 1 as page>
+                    <#if pageIndex == page>
+                        <li class="active"><a>${page + 1}</a></li>
+                        <#else>
+                            <li><a href="#" onclick="createManagerListView('${page}',12);">${page + 1}</a></li>
+                    </#if>
+                </#list>
+            </#if>
+            <#if pageIndex lt pages - 1>
+                <li>
+                    <a href="#" onclick="createManagerListView('${pageIndex + 1}',12);"  aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </#if>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>

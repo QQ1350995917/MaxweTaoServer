@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<form id="form_manager_create" class="form" role="form" method="post">
+    <h1 id="modifyResult" class="page-header">添加账号</h1>
+
+    <div class="input-group marginV">
+        <span class="input-group-addon info"><span style="color:transparent">站</span>登录名</span>
+        <input id="loginName" name="loginName" type="text" class="form-control info" placeholder="请您输入登录名"
+               aria-describedby="basic-addon1" minlength="8" maxlength="22" required>
+    </div>
+    <div class="input-group marginV">
+        <span class="input-group-addon"><span style="color:transparent">站</span>用户名</span>
+        <input id="nickName" name="nickName" type="text" class="form-control" placeholder="请您输入用户名"
+               aria-describedby="basic-addon1" minlength="2" maxlength="64" required>
+    </div>
+    <div class="input-group marginV">
+        <span class="input-group-addon"><span style="color:transparent">站位</span>手机</span>
+        <input id="cellphone" name="cellphone" type="text" class="form-control" placeholder="请您输入手机号"
+               aria-describedby="basic-addon1" minlength="11" maxlength="11" required>
+    </div>
+    <div class="input-group marginV">
+        <span class="input-group-addon"><span style="color:transparent">站位</span>密码</span>
+        <input id="newPassword" name="password" type="password" class="form-control"
+               placeholder="请输入您的密码"
+               aria-describedby="basic-addon1" minlength="12" maxlength="22" required>
+    </div>
+    <div class="input-group marginV hidden">
+        <span class="input-group-addon">确认密码</span>
+        <input id="confirmPassword" name="confirmPassword" type="password" class="form-control"
+               placeholder="请确认您的密码" aria-describedby="basic-addon1" minlength="1" maxlength="22" >
+    </div>
+
+    <div class="row marginV">
+        <#if managerMenus?exists>
+            <#list managerMenus as managerMenu>
+                <div class="col-lg-6" style="width: 130px">
+                    <div class="input-group" style="width: 120px">
+                                <span class="input-group-addon">
+                                    <input name="access" value="${managerMenu.id}" type="checkbox" aria-label="...">
+                                </span>
+                        <span type="text" class="form-control" aria-label="...">${managerMenu.label}</span>
+                    </div>
+                </div>
+            </#list>
+        </#if>
+        <#if workMenus?exists>
+            <#list workMenus as workMenu>
+                <div class="col-lg-6" style="width: 130px">
+                    <div class="input-group" style="width: 120px">
+                                <span class="input-group-addon">
+                                    <input name="access" value="${workMenu.id}" type="checkbox" aria-label="...">
+                                </span>
+                        <span type="text" class="form-control" aria-label="...">${workMenu.label}</span>
+                    </div>
+                </div>
+            </#list>
+        </#if>
+    </div>
+    <button id="createManagerAction" class="btn btn-lg btn-primary btn-block" type="submit">保存</button>
+</form>
+</body>
+</html>

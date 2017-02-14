@@ -6,24 +6,34 @@ package org.maxwe.tao.server.service.menu;
  * Description: 管理界面菜单对象
  */
 public class MenuEntity {
-    private String menuId; //ID
+    private String id; //ID
     private String label; //显示的名称
-    private String flag; //调用标记
+    private String flag; //前端点击调用标记
     private int queue; // 顺序
     private int category; //种类
     private int status; //-1删除状态，1，禁用状态，2正常状态，3该菜单除了超级管理员不可授予其他人
-    private String actionKey;
+    private String actionKey;//使用,分割的动作名称
     private String createTime;
     private String updateTime;
 
     public MenuEntity() {}
 
-    public String getMenuId() {
-        return menuId;
+    public MenuEntity(String id, String label, String flag, int queue, int category, int status, String actionKey) {
+        this.id = id;
+        this.label = label;
+        this.flag = flag;
+        this.queue = queue;
+        this.category = category;
+        this.status = status;
+        this.actionKey = actionKey;
     }
 
-    public void setMenuId(String menuId) {
-        this.menuId = menuId;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getLabel() {

@@ -142,4 +142,21 @@ public class AgentServices implements IAgentServices {
         }
         return agentEntities;
     }
+
+    @Override
+    public LinkedList<AgentEntity> retrieveAll(int pageIndex, int pageSize) {
+        List<Record> agentRecords = Db.find("SELECT * FROM agent ORDER BY createTime DESC limit ? , ?", pageIndex * pageSize, pageSize);
+        LinkedList<AgentEntity> agentEntities = new LinkedList<>();
+        for (Record agentRecord : agentRecords) {
+            Map<String, Object> accountMap = agentRecord.getColumns();
+            AgentEntity agentEntity = JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
+            agentEntities.add(agentEntity);
+        }
+        return agentEntities;
+    }
+
+    @Override
+    public int retrieveAllSum() {
+        return Db.find("SELECT * FROM agent ").size();
+    }
 }

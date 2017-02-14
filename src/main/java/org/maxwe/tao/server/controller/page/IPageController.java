@@ -14,15 +14,15 @@ public interface IPageController {
 
     /**
      * short of Page Series
-     * 跳转到系列页面
+     * 显示添加管理账号的面板
      */
-    void ps();
+    void addm();
 
     /**
      * short of Page Detail
      * 跳转到详情页面
      */
-    void pd();
+    void password();
 
     /**
      * short of Page Billing

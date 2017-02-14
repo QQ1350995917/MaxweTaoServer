@@ -1,7 +1,5 @@
 package org.maxwe.tao.server.service.manager;
 
-import org.maxwe.tao.server.service.menu.MenuEntity;
-
 import java.util.LinkedList;
 
 /**
@@ -12,24 +10,23 @@ import java.util.LinkedList;
  */
 public interface IManagerServices {
 
+    /**
+     * 系统管理员接口
+     * 系统管理员添加管理员检测用户名是否已经存在
+     *
+     * @param loginName 管理员登录名称
+     * @return success 管理员对象 fail null
+     */
+    boolean exist(String loginName);
 
     /**
-     * 管理员接口
-     * 管理员登录
+     * 系统管理员接口
+     * 创建一个新的管理员
      *
      * @param managerEntity 管理员对象
      * @return success 管理员对象 fail null
      */
-    ManagerEntity mLogin(ManagerEntity managerEntity);
-
-    /**
-     * 管理员接口
-     * 管理员查询信息
-     *
-     * @param managerEntity 管理员对象
-     * @return success 管理员对象 fail null
-     */
-    ManagerEntity mRetrieveById(ManagerEntity managerEntity);
+    ManagerEntity create(ManagerEntity managerEntity);
 
     /**
      * 管理员接口
@@ -38,68 +35,43 @@ public interface IManagerServices {
      * @param managerEntity 管理员对象
      * @return success 管理员对象 fail null
      */
-    ManagerEntity mUpdate(ManagerEntity managerEntity);
+    ManagerEntity update(ManagerEntity managerEntity);
+    ManagerEntity updatePassword(ManagerEntity managerEntity);
+
+    ManagerEntity delete(ManagerEntity managerEntity);
+    ManagerEntity block(ManagerEntity managerEntity);
+    ManagerEntity UnBlock(ManagerEntity managerEntity);
+
+
+    /**
+     * 管理员接口
+     * 管理员登录
+     *
+     * @return success 管理员对象 fail null
+     */
+    ManagerEntity retrieveByLogin(String loginName,String password);
+
+    /**
+     * 管理员接口
+     * 管理员查询信息
+     *
+     * @param managerEntity 管理员对象
+     * @return success 管理员对象 fail null
+     */
+    ManagerEntity retrieveById(ManagerEntity managerEntity);
 
     /**
      * 系统管理员接口
      *
      * @return success 管理员对象集合 fail null
      */
-    LinkedList<ManagerEntity> MRetrieves();
+    LinkedList<ManagerEntity> retrieves(int pageIndex,int pageSize);
 
     /**
      * 系统管理员接口
-     * 系统管理员添加管理员检测用户名是否已经存在
      *
-     * @param managerEntity 管理员对象
-     * @return success 管理员对象 fail null
+     * @return success 管理员对象集合 fail null
      */
-    boolean MExist(ManagerEntity managerEntity);
+    int retrievesSum();
 
-    /**
-     * 系统管理员接口
-     * 创建一个新的管理员
-     *
-     * @param managerEntity 管理员对象
-     * @param menuEntities  管理的菜单对象
-     * @return success 管理员对象 fail null
-     */
-    ManagerEntity MCreate(ManagerEntity managerEntity, LinkedList<? extends MenuEntity> menuEntities);
-
-    /**
-     * 系统管理员接口
-     * 更新管理员接口
-     *
-     * @param managerEntity 管理员对象
-     * @param menuEntities  管理的菜单对象
-     * @return success 管理员对象 fail null
-     */
-    ManagerEntity MUpdate(ManagerEntity managerEntity, LinkedList<? extends MenuEntity> menuEntities);
-
-    /**
-     * 系统管理员接口
-     * 禁用管理员
-     *
-     * @param managerEntity 管理员对象
-     * @return success 管理员对象 fail null
-     */
-    ManagerEntity MBlock(ManagerEntity managerEntity);
-
-    /**
-     * 系统管理员接口
-     * 启用管理员
-     *
-     * @param managerEntity 管理员对象
-     * @return success 管理员对象 fail null
-     */
-    ManagerEntity MUnBlock(ManagerEntity managerEntity);
-
-    /**
-     * 系统管理员接口
-     * 删除管理员
-     *
-     * @param managerEntity 管理员对象
-     * @return success 管理员对象 fail null
-     */
-    ManagerEntity MDelete(ManagerEntity managerEntity);
 }

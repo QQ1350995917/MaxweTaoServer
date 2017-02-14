@@ -108,6 +108,7 @@ public class ApplicationConfigure extends JFinalConfig {
         me.add("/level", LevelController.class);
         me.add("/version", VersionController.class);
         me.add("/goods", GoodsController.class);
+        me.add("/view", PageController.class);
         me.add("/manager", ManagerController.class);
 
     }

@@ -103,3 +103,9 @@ body {
     display: inline-block;
     border-radius: 50%;
 }
+
+.marginV{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+

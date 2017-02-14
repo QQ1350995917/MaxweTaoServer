@@ -1,12 +1,9 @@
 package org.maxwe.tao.server.service.manager;
 
-import org.maxwe.tao.server.service.menu.MenuEntity;
 import com.alibaba.fastjson.JSON;
 import com.jfinal.plugin.activerecord.Db;
-import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Record;
 
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,52 +15,8 @@ import java.util.List;
 public class ManagerServices implements IManagerServices {
 
     @Override
-    public ManagerEntity mLogin(ManagerEntity managerEntity) {
-        List<Record> records = Db.find("SELECT * FROM manager WHERE loginName = ? AND password = ? AND status = 2", managerEntity.getLoginName(), managerEntity.getPassword());
-        if (records.size() > 0) {
-            return JSON.parseObject(JSON.toJSONString(records.get(0).getColumns()), ManagerEntity.class);
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public ManagerEntity mRetrieveById(ManagerEntity managerEntity) {
-        List<Record> records = Db.find("SELECT * FROM manager WHERE managerId = ? AND status = 2", managerEntity.getManagerId());
-        if (records.size() > 0) {
-            return JSON.parseObject(JSON.toJSONString(records.get(0).getColumns()), ManagerEntity.class);
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public ManagerEntity mUpdate(ManagerEntity managerEntity) {
-        Record updateManagerRecord = new Record()
-                .set("managerId", managerEntity.getManagerId())
-                .set("username", managerEntity.getUsername())
-                .set("password", managerEntity.getPassword());
-        boolean updateManager = Db.update("manager", "managerId", updateManagerRecord);
-        if (updateManager) {
-            return managerEntity;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public LinkedList<ManagerEntity> MRetrieves() {
-        LinkedList<ManagerEntity> managerEntities = new LinkedList<>();
-        List<Record> records = Db.find("SELECT * FROM manager WHERE status > 0 AND level > 0 ORDER BY queue");
-        for (Record record : records) {
-            managerEntities.add(JSON.parseObject(JSON.toJSONString(record.getColumns()), ManagerEntity.class));
-        }
-        return managerEntities;
-    }
-
-    @Override
-    public boolean MExist(ManagerEntity managerEntity) {
-        List<Record> records = Db.find("SELECT * FROM manager WHERE loginName = ? AND status != -1", managerEntity.getLoginName());
+    public boolean exist(String loginName) {
+        List<Record> records = Db.find("SELECT * FROM manager WHERE loginName = ? AND status != -1", loginName);
         if (records.size() > 0) {
             return true;
         } else {
@@ -72,39 +25,18 @@ public class ManagerServices implements IManagerServices {
     }
 
     @Override
-    public ManagerEntity MCreate(ManagerEntity managerEntity, LinkedList<? extends MenuEntity> menuEntities) {
-        boolean succeed = Db.tx(new IAtom() {
-            public boolean run() throws SQLException {
-                Db.update("UPDATE manager SET queue = queue + 1");
-                Record saveManagerRecord = new Record()
-                        .set("managerId", managerEntity.getManagerId())
-                        .set("loginName", managerEntity.getLoginName())
-                        .set("username", managerEntity.getUsername())
-                        .set("password", managerEntity.getPassword())
-                        .set("level", 1)
-                        .set("queue", managerEntity.getQueue())
-                        .set("status", managerEntity.getStatus());
-                boolean saveManager = Db.save("manager", "managerId", saveManagerRecord);
-                if (!saveManager) {
-                    return false;
-                }
-
-                boolean result = true;
-                if (menuEntities != null) {
-                    for (MenuEntity menuEntity : menuEntities) {
-                        Record saveMenuMappingRecord = new Record().set("managerId", managerEntity.getManagerId()).set("menuId", menuEntity.getMenuId());
-                        boolean save = Db.save("manager_menu", "managerId, menuId", saveMenuMappingRecord);
-                        result = result && save;
-                        if (!result) {
-                            break;
-                        }
-                    }
-                }
-                return result;
-            }
-        });
-
-        if (succeed) {
+    public ManagerEntity create(ManagerEntity managerEntity) {
+        Record saveManagerRecord = new Record()
+                .set("id", managerEntity.getId())
+                .set("loginName", managerEntity.getLoginName())
+                .set("nickName", managerEntity.getNickName())
+                .set("cellphone", managerEntity.getCellphone())
+                .set("password", managerEntity.getPassword())
+                .set("level", 2)
+                .set("access", managerEntity.getAccess())
+                .set("status", 2);
+        boolean saveManager = Db.save("manager", "id", saveManagerRecord);
+        if (saveManager) {
             return managerEntity;
         } else {
             return null;
@@ -112,35 +44,16 @@ public class ManagerServices implements IManagerServices {
     }
 
     @Override
-    public ManagerEntity MUpdate(ManagerEntity managerEntity, LinkedList<? extends MenuEntity> menuEntities) {
-        boolean succeed = Db.tx(new IAtom() {
-            public boolean run() throws SQLException {
-                Record updateManagerRecord = new Record()
-                        .set("managerId", managerEntity.getManagerId())
-                        .set("username", managerEntity.getUsername())
-                        .set("password", managerEntity.getPassword());
-                boolean updateManager = Db.update("manager", "managerId", updateManagerRecord);
-                if (!updateManager) {
-                    return false;
-                }
+    public ManagerEntity update(ManagerEntity managerEntity) {
+        return null;
+    }
 
-                boolean result = true;
-                if (menuEntities != null) {
-                    Db.deleteById("manager_menu", "managerId", managerEntity.getManagerId());
-                    for (MenuEntity menuEntity : menuEntities) {
-                        Record saveMenuMappingRecord = new Record().set("managerId", managerEntity.getManagerId()).set("menuId", menuEntity.getMenuId());
-                        boolean save = Db.save("manager_menu", "managerId, menuId", saveMenuMappingRecord);
-                        result = result && save;
-                        if (!result) {
-                            break;
-                        }
-                    }
-                }
-                return result;
-            }
-        });
-
-        if (succeed) {
+    @Override
+    public ManagerEntity updatePassword(ManagerEntity managerEntity) {
+        Record updateManagerRecord = new Record()
+                .set("id", managerEntity.getId()).set("password", managerEntity.getPassword());
+        boolean updateManager = Db.update("manager", "id", updateManagerRecord);
+        if (updateManager) {
             return managerEntity;
         } else {
             return null;
@@ -148,9 +61,11 @@ public class ManagerServices implements IManagerServices {
     }
 
     @Override
-    public ManagerEntity MBlock(ManagerEntity managerEntity) {
-        int update = Db.update("UPDATE manager SET status = 1 WHERE managerId = ? ", managerEntity.getManagerId());
-        if (update == 1) {
+    public ManagerEntity delete(ManagerEntity managerEntity) {
+        Record updateManagerRecord = new Record()
+                .set("id", managerEntity.getId()).set("status", -1);
+        boolean updateManager = Db.update("manager", "id", updateManagerRecord);
+        if (updateManager) {
             return managerEntity;
         } else {
             return null;
@@ -158,9 +73,11 @@ public class ManagerServices implements IManagerServices {
     }
 
     @Override
-    public ManagerEntity MUnBlock(ManagerEntity managerEntity) {
-        int update = Db.update("UPDATE manager SET status = 2 WHERE managerId = ? ", managerEntity.getManagerId());
-        if (update == 1) {
+    public ManagerEntity block(ManagerEntity managerEntity) {
+        Record updateManagerRecord = new Record()
+                .set("id", managerEntity.getId()).set("status", 1);
+        boolean updateManager = Db.update("manager", "id", updateManagerRecord);
+        if (updateManager) {
             return managerEntity;
         } else {
             return null;
@@ -168,19 +85,176 @@ public class ManagerServices implements IManagerServices {
     }
 
     @Override
-    public ManagerEntity MDelete(ManagerEntity managerEntity) {
-        boolean succeed = Db.tx(new IAtom() {
-            public boolean run() throws SQLException {
-                Db.update("UPDATE manager SET status = -1 WHERE managerId = ? ", managerEntity.getManagerId());
-                Db.update("DELETE FROM manager_menu WHERE managerId = ? ", managerEntity.getManagerId());
-                return true;
-            }
-        });
-
-        if (succeed) {
+    public ManagerEntity UnBlock(ManagerEntity managerEntity) {
+        Record updateManagerRecord = new Record()
+                .set("id", managerEntity.getId()).set("status", 2);
+        boolean updateManager = Db.update("manager", "id", updateManagerRecord);
+        if (updateManager) {
             return managerEntity;
         } else {
             return null;
         }
     }
+
+    @Override
+    public ManagerEntity retrieveByLogin(String loginName, String password) {
+        List<Record> records = Db.find("SELECT * FROM manager WHERE loginName = ? AND password = ? AND status != -1", loginName, password);
+        if (records.size() > 0) {
+            return JSON.parseObject(JSON.toJSONString(records.get(0).getColumns()), ManagerEntity.class);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public ManagerEntity retrieveById(ManagerEntity managerEntity) {
+        List<Record> records = Db.find("SELECT * FROM manager WHERE id = ? AND status != -1", managerEntity.getId());
+        if (records.size() > 0) {
+            return JSON.parseObject(JSON.toJSONString(records.get(0).getColumns()), ManagerEntity.class);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public LinkedList<ManagerEntity> retrieves(int pageIndex,int pageSize) {
+        LinkedList<ManagerEntity> managerEntities = new LinkedList<>();
+        List<Record> records = Db.find("SELECT * FROM manager WHERE status > 0 AND level > 0 ORDER BY createTime limit ? , ?",pageIndex * pageSize, pageSize);
+        for (Record record : records) {
+            managerEntities.add(JSON.parseObject(JSON.toJSONString(record.getColumns()), ManagerEntity.class));
+        }
+        return managerEntities;
+    }
+
+    @Override
+    public int retrievesSum() {
+        return Db.find("SELECT * FROM manager WHERE status > 0 AND level > 0 ").size();
+    }
+
+    //    @Override
+//    public ManagerEntity mUpdate(ManagerEntity managerEntity) {
+//        Record updateManagerRecord = new Record()
+//                .set("managerId", managerEntity.getManagerId())
+//                .set("username", managerEntity.getUsername())
+//                .set("password", managerEntity.getPassword());
+//        boolean updateManager = Db.update("manager", "managerId", updateManagerRecord);
+//        if (updateManager) {
+//            return managerEntity;
+//        } else {
+//            return null;
+//        }
+//    }
+//
+//    @Override
+//    public ManagerEntity MCreate(ManagerEntity managerEntity, LinkedList<? extends MenuEntity> menuEntities) {
+//        boolean succeed = Db.tx(new IAtom() {
+//            public boolean run() throws SQLException {
+//                Db.update("UPDATE manager SET queue = queue + 1");
+//                Record saveManagerRecord = new Record()
+//                        .set("managerId", managerEntity.getManagerId())
+//                        .set("loginName", managerEntity.getLoginName())
+//                        .set("username", managerEntity.getUsername())
+//                        .set("password", managerEntity.getPassword())
+//                        .set("level", 1)
+//                        .set("queue", managerEntity.getQueue())
+//                        .set("status", managerEntity.getStatus());
+//                boolean saveManager = Db.save("manager", "managerId", saveManagerRecord);
+//                if (!saveManager) {
+//                    return false;
+//                }
+//
+//                boolean result = true;
+//                if (menuEntities != null) {
+//                    for (MenuEntity menuEntity : menuEntities) {
+//                        Record saveMenuMappingRecord = new Record().set("managerId", managerEntity.getManagerId()).set("menuId", menuEntity.getMenuId());
+//                        boolean save = Db.save("manager_menu", "managerId, menuId", saveMenuMappingRecord);
+//                        result = result && save;
+//                        if (!result) {
+//                            break;
+//                        }
+//                    }
+//                }
+//                return result;
+//            }
+//        });
+//
+//        if (succeed) {
+//            return managerEntity;
+//        } else {
+//            return null;
+//        }
+//    }
+//
+//    @Override
+//    public ManagerEntity MUpdate(ManagerEntity managerEntity, LinkedList<? extends MenuEntity> menuEntities) {
+//        boolean succeed = Db.tx(new IAtom() {
+//            public boolean run() throws SQLException {
+//                Record updateManagerRecord = new Record()
+//                        .set("managerId", managerEntity.getManagerId())
+//                        .set("username", managerEntity.getUsername())
+//                        .set("password", managerEntity.getPassword());
+//                boolean updateManager = Db.update("manager", "managerId", updateManagerRecord);
+//                if (!updateManager) {
+//                    return false;
+//                }
+//
+//                boolean result = true;
+//                if (menuEntities != null) {
+//                    Db.deleteById("manager_menu", "managerId", managerEntity.getManagerId());
+//                    for (MenuEntity menuEntity : menuEntities) {
+//                        Record saveMenuMappingRecord = new Record().set("managerId", managerEntity.getManagerId()).set("menuId", menuEntity.getMenuId());
+//                        boolean save = Db.save("manager_menu", "managerId, menuId", saveMenuMappingRecord);
+//                        result = result && save;
+//                        if (!result) {
+//                            break;
+//                        }
+//                    }
+//                }
+//                return result;
+//            }
+//        });
+//
+//        if (succeed) {
+//            return managerEntity;
+//        } else {
+//            return null;
+//        }
+//    }
+//
+//    @Override
+//    public ManagerEntity MBlock(ManagerEntity managerEntity) {
+//        int update = Db.update("UPDATE manager SET status = 1 WHERE managerId = ? ", managerEntity.getManagerId());
+//        if (update == 1) {
+//            return managerEntity;
+//        } else {
+//            return null;
+//        }
+//    }
+//
+//    @Override
+//    public ManagerEntity MUnBlock(ManagerEntity managerEntity) {
+//        int update = Db.update("UPDATE manager SET status = 2 WHERE managerId = ? ", managerEntity.getManagerId());
+//        if (update == 1) {
+//            return managerEntity;
+//        } else {
+//            return null;
+//        }
+//    }
+//
+//    @Override
+//    public ManagerEntity MDelete(ManagerEntity managerEntity) {
+//        boolean succeed = Db.tx(new IAtom() {
+//            public boolean run() throws SQLException {
+//                Db.update("UPDATE manager SET status = -1 WHERE managerId = ? ", managerEntity.getManagerId());
+//                Db.update("DELETE FROM manager_menu WHERE managerId = ? ", managerEntity.getManagerId());
+//                return true;
+//            }
+//        });
+//
+//        if (succeed) {
+//            return managerEntity;
+//        } else {
+//            return null;
+//        }
+//    }
 }

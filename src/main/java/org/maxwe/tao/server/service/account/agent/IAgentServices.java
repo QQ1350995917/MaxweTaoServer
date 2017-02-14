@@ -45,4 +45,7 @@ public interface IAgentServices {
      * @return
      */
     LinkedList<AgentEntity> retrieveByPid(String pId,int pageIndex,int pageSize);
+
+    LinkedList<AgentEntity> retrieveAll(int pageIndex,int pageSize);
+    int retrieveAllSum();
 }

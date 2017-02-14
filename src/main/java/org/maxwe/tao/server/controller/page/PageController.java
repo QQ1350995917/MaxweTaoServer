@@ -4,8 +4,10 @@ import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
+import org.maxwe.tao.server.controller.account.manager.ManagerController;
 import org.maxwe.tao.server.interceptor.ManagerInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
+import org.maxwe.tao.server.service.manager.ManagerEntity;
 
 import java.util.LinkedList;
 import java.util.UUID;
@@ -40,33 +42,17 @@ public class PageController extends Controller implements IPageController {
     }
 
     @Override
-    public void ps() {
-        this.setAttr("title", "食坊-系列");
-
-//        LinkedList<Map<String, String>> metas = new LinkedList<>();
-//        String seriesId = this.getAttr("seriesId");
-//        if (seriesId != null) {
-//            LinkedHashMap<String, String> formatMap = new LinkedHashMap<>();
-//            formatMap.put("metaId", "seriesId");
-//            formatMap.put("metaValue", seriesId);
-//            metas.add(formatMap);
-//            this.setAttr("metas", metas);
-//        }
-//        LinkedList<String> styleSheets = new LinkedList<>();
-//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.css\">");
-//        this.setAttr("styleSheets", styleSheets);
-//        LinkedList<String> javaScripts = new LinkedList<>();
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/toast.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mask.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/series.js\"></script>");
-//        this.setAttr("javaScripts", javaScripts);
-        this.render("/webapp/widgets/index.html");
+    public void addm() {
+        this.setAttr("managerMenus", ManagerController.managerMenus);
+        this.setAttr("workMenus", ManagerController.workMenus);
+        this.render("/webapp/widgets/managerCreate.view.html");
     }
 
     @Override
-    public void pd() {
-        this.setAttr("title", "食坊-详情");
+    public void password() {
+        ManagerEntity manager = this.getSessionAttr("manager");
+        this.setAttr("manager",manager);
+        this.render("/webapp/widgets/managerPassword.view.html");
 //        LinkedList<Map<String, String>> metas = new LinkedList<>();
 //        String typeId = this.getAttr("typeId");
 //        if (typeId != null) {
@@ -95,7 +81,7 @@ public class PageController extends Controller implements IPageController {
 //        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.js\"></script>");
 //        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/detail.js\"></script>");
 //        this.setAttr("javaScripts", javaScripts);
-        this.render("/webapp/widgets/index.html");
+//        this.render("/webapp/widgets/index.html");
     }
 
     @Override
@@ -128,7 +114,7 @@ public class PageController extends Controller implements IPageController {
 //        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/receiver.js\"></script>");
 //        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/billing_payment.js\"></script>");
 //        this.setAttr("javaScripts", javaScripts);
-        this.render("/webapp/widgets/index.html");
+//        this.render("/webapp/widgets/index.html");
     }
 
 
@@ -160,7 +146,7 @@ public class PageController extends Controller implements IPageController {
 //        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/toast.js\"></script>");
 //        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/query.js\"></script>");
 //        this.setAttr("javaScripts", javaScripts);
-        this.render("/webapp/widgets/index.html");
+//        this.render("/webapp/widgets/index.html");
     }
 
     @Before(TokenInterceptor.class)
@@ -201,7 +187,7 @@ public class PageController extends Controller implements IPageController {
 //        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine.js\"></script>");
 //        this.setAttr("javaScripts", javaScripts);
 
-        this.render("/webapp/widgets/index.html");
+//        this.render("/webapp/widgets/index.html");
     }
 
     @Override

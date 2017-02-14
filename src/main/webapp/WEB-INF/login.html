@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Title</title>
+    <title>淘妈咪控制台登录</title>
     <!-- Bootstrap core CSS -->
     <link href="../webapp/dependency/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
@@ -22,10 +22,14 @@
 <body>
 <div class="container">
     <!---->
-    <form id="form0" class="form-signin" role="form" method="post" onsubmit="encrypt()" action="${basePath}/manager/access">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <input id="loginName" name="loginName" type="text" class="form-control" minlength="6" maxlength="12" placeholder="Login name" required autofocus>
-        <input id="password" name="password" type="password" class="form-control" minlength="8" maxlength="16" placeholder="Password" required>
+    <form id="form" class="form-signin" role="form" method="post" onsubmit="encrypt()"
+          action="${basePath}/manager/access">
+        <h2 class="form-signin-heading">${loginErrorMessage!"Please sign in"}</h2>
+        <input value="administrator" id="loginName" name="loginName" type="text" class="form-control" minlength="1" maxlength="22"
+               placeholder="Login name" required autofocus>
+        <input id="password" name="password" type="password" class="form-control" minlength="1" maxlength="22"
+               placeholder="Password" required>
+
         <div class="checkbox">
             <label>
                 <input type="checkbox" value="remember-me"> Remember me
@@ -35,16 +39,24 @@
     </form>
 </div>
 </body>
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript" src="${basePath}/webapp/dependency/jsencrypt.min.js"></script>
 <script type="text/javascript" src="../webapp/asserts/js/login.js"></script>
 <script type="text/javascript">
+    $(document).ready(function () {
+        <#if url??>
+        history.pushState(new Object(), "淘妈咪控制台登录", "${basePath}${url!}");
+        </#if>
+    });
+
+
     function encrypt() {
-        let password = document.getElementById("password").value;
+        let password = $("#password").val();
         var encrypt = new JSEncrypt();
         var publicKey = "${publicKey}"
         encrypt.setPublicKey(publicKey);
         var encrypted = encrypt.encrypt(password);
-        document.getElementById("password").value = encrypted;
+        $("#password").val(encrypted);
     }
 </script>
 </html>
