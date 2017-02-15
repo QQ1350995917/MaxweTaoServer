@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h2 id="modifyResult" class="page-header">码量总览</h2>
+<#if errorInfo?exists>
+    <h2 class="page-header">${errorInfo!}</h2>
+</#if>
+<#if topAgents?exists>
+    <#list topAgents as agent>
+        <#if agent_index == 0>
+            <div class="panel panel-default" style="float: left; width: 30%;">
+                <#else>
+                    <div class="panel panel-default" style="float: left; width: 30%;margin-left: 5%">
+        </#if>
+        <div class="panel-heading">
+            <h3 class="panel-title">${agent.name}</h3>
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item">总码量：${agent.haveCodes}</li>
+            <li class="list-group-item">共消费：${agent.spendCodes}</li>
+            <li class="list-group-item">还剩余：${agent.leftCodes}</li>
+            <li class="list-group-item">
+                <form id="form_system_money${agent_index}" class="form" role="form" method="post">
+                    <div class="row">
+                        <div class="col-lg-6" style="width: 100%;">
+                            <div class="input-group">
+                                <input name="mark" value="${agent.mark}" hidden required>
+                                <input name="appendCodes" type="number" class="form-control" max="1000" min="1" placeholder="新添加码量" required>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="submit">增添</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </li>
+        </ul>
+        </div>
+    </#list>
+</#if>
+</body>
+</html>

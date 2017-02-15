@@ -48,4 +48,8 @@ public interface IAgentServices {
 
     LinkedList<AgentEntity> retrieveAll(int pageIndex,int pageSize);
     int retrieveAllSum();
+
+    LinkedList<AgentEntity> retrieveByTop();
+
+    boolean appendCodes(AgentEntity agentEntity,int haveCodes);
 }

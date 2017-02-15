@@ -159,4 +159,26 @@ public class AgentServices implements IAgentServices {
     public int retrieveAllSum() {
         return Db.find("SELECT * FROM agent ").size();
     }
+
+    @Override
+    public LinkedList<AgentEntity> retrieveByTop() {
+        List<Record> agentRecords = Db.find("SELECT * FROM agent WHERE id = pId ORDER BY createTime DESC ");
+        LinkedList<AgentEntity> agentEntities = new LinkedList<>();
+        for (Record agentRecord : agentRecords) {
+            Map<String, Object> accountMap = agentRecord.getColumns();
+            AgentEntity agentEntity = JSON.parseObject(JSON.toJSONString(accountMap), AgentEntity.class);
+            agentEntities.add(agentEntity);
+        }
+        return agentEntities;
+    }
+
+    @Override
+    public boolean appendCodes(AgentEntity agentEntity, int appendCodes) {
+        int count = Db.update("UPDATE agent SET haveCodes = haveCodes + ?,leftCodes = leftCodes + ? WHERE mark = ? ", appendCodes,appendCodes, agentEntity.getMark());
+        if (count == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

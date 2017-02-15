@@ -11,20 +11,3 @@ function signOut(){
         alert("登录超时");
     });
 }
-function onCreateManagerSubmit() {
-    var url = basePath + "/manager/create";
-    var data = {loginName: "DingPengwei",nickName:"丁朋伟",password:"123456",cellphone:"18511694468",access:"200,201"};
-    asyncRequestByGet(url,data,function(data){
-        $("#mainContainer").html(data.result);
-    },function(){
-        alert("错误");
-    },function(){
-        alert("登录超时");
-    });
-}
-
-
-
-
-
-

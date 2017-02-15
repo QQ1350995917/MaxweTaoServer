@@ -26,9 +26,9 @@ public interface IPageController {
 
     /**
      * short of Page Billing
-     * 跳转到支付页面
+     * 跳转到系统码量页面
      */
-    void pb();
+    void money();
 
     /**
      * short of Page Look

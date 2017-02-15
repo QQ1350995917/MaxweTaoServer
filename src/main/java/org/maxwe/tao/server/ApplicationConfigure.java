@@ -18,6 +18,7 @@ import org.maxwe.tao.server.controller.level.LevelController;
 import org.maxwe.tao.server.controller.mate.MateController;
 import org.maxwe.tao.server.controller.meta.MetaController;
 import org.maxwe.tao.server.controller.page.PageController;
+import org.maxwe.tao.server.controller.system.SystemController;
 import org.maxwe.tao.server.controller.trade.TradeController;
 import org.maxwe.tao.server.controller.version.VersionController;
 
@@ -110,6 +111,7 @@ public class ApplicationConfigure extends JFinalConfig {
         me.add("/goods", GoodsController.class);
         me.add("/view", PageController.class);
         me.add("/manager", ManagerController.class);
+        me.add("/system", SystemController.class);
 
     }
 

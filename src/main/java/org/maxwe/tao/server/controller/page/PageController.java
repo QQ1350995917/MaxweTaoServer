@@ -53,39 +53,10 @@ public class PageController extends Controller implements IPageController {
         ManagerEntity manager = this.getSessionAttr("manager");
         this.setAttr("manager",manager);
         this.render("/webapp/widgets/managerPassword.view.html");
-//        LinkedList<Map<String, String>> metas = new LinkedList<>();
-//        String typeId = this.getAttr("typeId");
-//        if (typeId != null) {
-//            LinkedHashMap<String, String> typeMap = new LinkedHashMap<>();
-//            typeMap.put("metaId", "typeId");
-//            typeMap.put("metaValue", typeId);
-//            metas.add(typeMap);
-//        }
-//        String formatId = this.getAttr("formatId");
-//        if (formatId != null) {
-//            LinkedHashMap<String, String> formatMap = new LinkedHashMap<>();
-//            formatMap.put("metaId", "formatId");
-//            formatMap.put("metaValue", formatId);
-//            metas.add(formatMap);
-//        }
-//        this.setAttr("metas", metas);
-//
-//        LinkedList<String> styleSheets = new LinkedList<>();
-//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.css\">");
-//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/detail.css\">");
-//        this.setAttr("styleSheets", styleSheets);
-//
-//        LinkedList<String> javaScripts = new LinkedList<>();
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/toast.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mask.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/detail.js\"></script>");
-//        this.setAttr("javaScripts", javaScripts);
-//        this.render("/webapp/widgets/index.html");
     }
 
     @Override
-    public void pb() {
+    public void money() {
 //        String params = this.getAttr("p");
 //        Map<String, Object> objectMap = JSON.parseObject(params, Map.class);
 //
