@@ -5,7 +5,7 @@
     <title></title>
 </head>
 <body>
-<form id="form_manager_create" class="form" role="form" method="post">
+<form id="form_manager_create" class="form" role="form" method="post" onsubmit="encrypt()">
     <h2 id="modifyResult" class="page-header">添加账号</h2>
 
     <div class="input-group marginV">
@@ -25,7 +25,7 @@
     </div>
     <div class="input-group marginV">
         <span class="input-group-addon"><span style="color:transparent">站位</span>密码</span>
-        <input id="newPassword" name="password" type="password" class="form-control"
+        <input id="password" name="password" type="password" class="form-control"
                placeholder="请输入您的密码"
                aria-describedby="basic-addon1" minlength="12" maxlength="22" required>
     </div>
@@ -64,4 +64,14 @@
     <button id="createManagerAction" class="btn btn-lg btn-primary btn-block" type="submit">保存</button>
 </form>
 </body>
+<script type="text/javascript">
+    function encrypt() {
+        let password = $("#password").val();
+        var encrypt = new JSEncrypt();
+        var publicKey = "${publicKey}"
+        encrypt.setPublicKey(publicKey);
+        var encrypted = encrypt.encrypt(password);
+        $("#password").val(encrypted);
+    }
+</script>
 </html>

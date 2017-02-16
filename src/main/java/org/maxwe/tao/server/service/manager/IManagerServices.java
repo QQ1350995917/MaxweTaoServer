@@ -37,12 +37,19 @@ public interface IManagerServices {
      */
     ManagerEntity update(ManagerEntity managerEntity);
     ManagerEntity updatePassword(ManagerEntity managerEntity);
+    boolean updateGrant(String loginName,String access);
 
     ManagerEntity delete(ManagerEntity managerEntity);
     ManagerEntity block(ManagerEntity managerEntity);
     ManagerEntity UnBlock(ManagerEntity managerEntity);
 
 
+    /**
+     * 通过登录名称查找电话号码
+     * @param loginName
+     * @return
+     */
+    ManagerEntity retrieveByLoginName(String loginName);
     /**
      * 管理员接口
      * 管理员登录

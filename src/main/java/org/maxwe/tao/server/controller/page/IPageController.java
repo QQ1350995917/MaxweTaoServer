@@ -34,7 +34,7 @@ public interface IPageController {
      * short of Page Look
      * 跳转到订单查询页面
      */
-    void pq();
+    void grant();
 
     /**
      * short of Page Mine

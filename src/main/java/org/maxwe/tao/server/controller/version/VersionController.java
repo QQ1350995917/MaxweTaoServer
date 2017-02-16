@@ -1,14 +1,14 @@
 package org.maxwe.tao.server.controller.version;
 
-import com.alibaba.druid.util.StringUtils;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.PropertyFilter;
+import com.jfinal.aop.Before;
 import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
+import org.maxwe.tao.server.interceptor.SessionInterceptor;
 import org.maxwe.tao.server.service.version.IVersionServices;
 import org.maxwe.tao.server.service.version.VersionEntity;
 import org.maxwe.tao.server.service.version.VersionServices;
@@ -37,32 +37,46 @@ public class VersionController extends Controller implements IVersionController 
     };
 
     @Override
-    @Clear({AppInterceptor.class})
+    @Before(SessionInterceptor.class)
     public void version() {
-        String params = this.getPara("p");
-        VersionEntity requestVersionEntity = JSON.parseObject(params, VersionEntity.class);
-        IResultSet iResultSet = new ResultSet();
-        if (requestVersionEntity == null || StringUtils.isEmpty(requestVersionEntity.getPlatform()) || requestVersionEntity.getType() == 0) {
-            this.logger.info("version : 参数错误 " + params);
-            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
-            iResultSet.setData(requestVersionEntity);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
-            String resultJson = JSON.toJSONString(iResultSet, commonPropertyFilter);
-            renderJson(resultJson);
-            return;
-        }
+        int pageIndex = this.getParaToInt("pageIndex");
+        int pageSize = this.getParaToInt("pageSize") == 0 ? 12 : this.getParaToInt("pageSize");
 
-        VersionEntity versionEntity = this.versionEntityConcurrentHashMap.get(requestVersionEntity.getPlatform() + requestVersionEntity.getType());
-        this.logger.info("version : 新版本信息如下: " + versionEntity);
-        if (versionEntity == null) {
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
-        } else {
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        }
-        iResultSet.setData(versionEntity);
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        String resultJson = JSON.toJSONString(iResultSet, commonPropertyFilter);
-        renderJson(resultJson);
+        List<VersionEntity> topVersionEntities = iVersionServices.retrieveTopVersion();
+        this.setAttr("topVersions",topVersionEntities);
+
+        int accountsSum = iVersionServices.retrieveCounter();
+
+        List<VersionEntity> historyVersionEntities = iVersionServices.retrieveAll(pageIndex, pageSize);
+        this.setAttr("historyVersions",historyVersionEntities);
+        this.setAttr("pages", accountsSum / pageSize + (accountsSum % pageSize == 0 ? 0 : 1));
+        this.setAttr("pageIndex", pageIndex);
+        render("/webapp/widgets/systemVersion.view.html");
+
+//        String params = this.getPara("p");
+//        VersionEntity requestVersionEntity = JSON.parseObject(params, VersionEntity.class);
+//        IResultSet iResultSet = new ResultSet();
+//        if (requestVersionEntity == null || StringUtils.isEmpty(requestVersionEntity.getPlatform()) || requestVersionEntity.getType() == 0) {
+//            this.logger.info("version : 参数错误 " + params);
+//            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
+//            iResultSet.setData(requestVersionEntity);
+//            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+//            String resultJson = JSON.toJSONString(iResultSet, commonPropertyFilter);
+//            renderJson(resultJson);
+//            return;
+//        }
+//
+//        VersionEntity versionEntity = this.versionEntityConcurrentHashMap.get(requestVersionEntity.getPlatform() + requestVersionEntity.getType());
+//        this.logger.info("version : 新版本信息如下: " + versionEntity);
+//        if (versionEntity == null) {
+//            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
+//        } else {
+//            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+//        }
+//        iResultSet.setData(versionEntity);
+//        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+//        String resultJson = JSON.toJSONString(iResultSet, commonPropertyFilter);
+//        renderJson(resultJson);
     }
 
     @Override

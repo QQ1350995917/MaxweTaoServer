@@ -117,12 +117,15 @@ public class PasswordUtils {
 
     public static void main(String[] args) {
         String cellphone = "18511694468";
-        String originPassword = " qazwsx";
-        for (int i=0;i<100;i++){
-            String enPassword = enPassword(cellphone, originPassword);
+        String originPassword = "admin";
+        String enPassword = enPassword(cellphone, originPassword);
+        String dePassword = dePassword(cellphone, "");
+
+        System.out.println(dePassword);
+//        for (int i=0;i<100;i++){
 //            System.out.println("加密后：" + enPassword);
 //            System.out.println("解密后：" + dePassword(cellphone,enPassword));
-        }
+//        }
 
     }
 }

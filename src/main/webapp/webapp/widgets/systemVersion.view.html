@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h2 id="topVersion" class="page-header">当前版本</h2>
+<#if topVersions?exists>
+    <#list topVersions as topVersion>
+        <div class="panel panel-default" style="float: left; width: 25%;">
+        <!--<#if topVersion_index == 0>-->
+            <!--<div class="panel panel-default" style="float: left; width: 25%;">-->
+                <!--<#else>-->
+                    <!--<div class="panel panel-default" style="float: left; width: 30%;margin-left: 5%">-->
+        <!--</#if>-->
+        <div class="panel-heading">
+            <h3 class="panel-title">${topVersion.appName}</h3>
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item">系统平台：${topVersion.platform}</li>
+            <li class="list-group-item">构建版本：${topVersion.versionCode}</li>
+            <li class="list-group-item">版本名称：${topVersion.versionName!}</li>
+            <li class="list-group-item" style="height: 150px;">版本信息：${topVersion.information!}</li>
+            <li class="list-group-item">强制升级：${topVersion.upgrade!}</li>
+            <li class="list-group-item">创建时间：${topVersion.createTime!}</li>
+            <li class="list-group-item">
+                <form id="form_system_topVersion${topVersion_index}" class="form" role="form" method="post">
+                    <div class="row">
+                        <div class="col-lg-6" style="width: 100%;">
+                            <div class="input-group">
+                                <input name="appendCodes" type="number" class="form-control" max="1000" min="1" placeholder="新添加码量" required>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="submit">增添</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </li>
+        </ul>
+        </div>
+    </#list>
+</#if>
+<h2 id="historyVersion" class="page-header">历史版本</h2>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>系统平台</th>
+            <th>软件名称</th>
+            <th>构建版本</th>
+            <th>版本名称</th>
+            <th>更新信息</th>
+            <th>强制升级</th>
+            <th>创建时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <#if historyVersions?exists>
+            <#list historyVersions as historyVersion>
+                <tr>
+                    <td>${historyVersion_index+1}</td>
+                    <td>${historyVersion.platform}</td>
+                    <td>${historyVersion.appName}</td>
+                    <td>${historyVersion.versionCode}</td>
+                    <td>${historyVersion.versionName}</td>
+                    <td style="max-width: 300px">${historyVersion.information}</td>
+                    <td>${historyVersion.upgrade}</td>
+                    <td>${historyVersion.createTime}</td>
+                </tr>
+            </#list>
+        </#if>
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <#if pageIndex gt 0>
+                <li>
+                    <a href="#" onclick="createSystemVersionView('${pageIndex - 1}',12);" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            </#if>
+            <#if pages?exists>
+                <#list 0..pages - 1 as page>
+                    <#if pageIndex == page>
+                        <li class="active"><a>${page + 1}</a></li>
+                        <#else>
+                            <li><a href="#" onclick="createSystemVersionView('${page}',12);">${page + 1}</a></li>
+                    </#if>
+                </#list>
+            </#if>
+            <#if pageIndex lt pages - 1>
+                <li>
+                    <a href="#" onclick="createSystemVersionView('${pageIndex + 1}',12);"  aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </#if>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>

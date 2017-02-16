@@ -25,6 +25,11 @@ public class VersionEntity {
         super();
     }
 
+    public VersionEntity(String platform,String appName) {
+        this.platform = platform;
+        this.appName = appName;
+    }
+
     public String getVersionId() {
         return versionId;
     }

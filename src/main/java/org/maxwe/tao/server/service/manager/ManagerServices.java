@@ -61,6 +61,15 @@ public class ManagerServices implements IManagerServices {
     }
 
     @Override
+    public boolean updateGrant(String loginName, String access) {
+        int update = Db.update("UPDATE manager SET access = ? WHERE loginName = ?", access, loginName);
+        if (update == 1){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public ManagerEntity delete(ManagerEntity managerEntity) {
         Record updateManagerRecord = new Record()
                 .set("id", managerEntity.getId()).set("status", -1);
@@ -91,6 +100,16 @@ public class ManagerServices implements IManagerServices {
         boolean updateManager = Db.update("manager", "id", updateManagerRecord);
         if (updateManager) {
             return managerEntity;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public ManagerEntity retrieveByLoginName(String loginName) {
+        List<Record> records = Db.find("SELECT * FROM manager WHERE loginName = ? AND status != -1", loginName);
+        if (records.size() > 0) {
+            return JSON.parseObject(JSON.toJSONString(records.get(0).getColumns()), ManagerEntity.class);
         } else {
             return null;
         }

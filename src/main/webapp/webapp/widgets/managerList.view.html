@@ -24,17 +24,19 @@
         <tbody>
         <#if accounts?exists>
             <#list accounts as account>
-                <tr>
+                <tr id="managerList${account_index}" >
                     <td>${account_index+1}</td>
                     <td>${account.loginName}</td>
                     <td>${account.nickName}</td>
                     <td>${account.cellphone}</td>
-                    <td>${account.access!"空权限"}</td>
+                    <td>${account.access!!"空权限"}</td>
                     <td>${account.status}</td>
                     <td>${account.createTime}</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="...">
-                            <button type="button" class="btn btn-default">编辑</button>
+                            <button type="button" class="btn btn-default" onclick="createEditManagerView('${account_index}','${account.loginName}')">禁用</button>
+                            <button type="button" class="btn btn-default" onclick="createEditManagerView('${account_index}','${account.loginName}')">删除</button>
+                            <button type="button" class="btn btn-default" onclick="createEditManagerView('${account_index}','${account.loginName}')">编辑</button>
                         </div>
                     </td>
                 </tr>

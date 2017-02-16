@@ -6,6 +6,7 @@ package org.maxwe.tao.server.controller.account.manager;
  * Description: @TODO
  */
 public interface IManagerController {
+
     /**
      * 到登录页面
      */

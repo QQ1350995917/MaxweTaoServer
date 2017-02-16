@@ -9,6 +9,17 @@ import java.util.List;
  */
 public interface IVersionServices {
 
+    /**
+     * 读取四个最新版本的app
+     * @return
+     */
+    List<VersionEntity> retrieveTopVersion();
+
+
+    List<VersionEntity> retrieveAll(int pageIndex,int pageSize);
+    int retrieveCounter();
+
+
     List<VersionEntity> reversion();
 
 }

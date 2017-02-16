@@ -1,5 +1,7 @@
 package org.maxwe.tao.server.controller.page;
 
+import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSON;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
@@ -8,8 +10,11 @@ import org.maxwe.tao.server.controller.account.manager.ManagerController;
 import org.maxwe.tao.server.interceptor.ManagerInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.manager.ManagerEntity;
+import org.maxwe.tao.server.service.manager.ManagerServices;
+import org.maxwe.tao.server.service.menu.MenuEntity;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -45,6 +50,7 @@ public class PageController extends Controller implements IPageController {
     public void addm() {
         this.setAttr("managerMenus", ManagerController.managerMenus);
         this.setAttr("workMenus", ManagerController.workMenus);
+        this.setAttr("publicKey",this.getSessionAttr("publicKey"));
         this.render("/webapp/widgets/managerCreate.view.html");
     }
 
@@ -52,113 +58,59 @@ public class PageController extends Controller implements IPageController {
     public void password() {
         ManagerEntity manager = this.getSessionAttr("manager");
         this.setAttr("manager",manager);
+        this.setAttr("publicKey",this.getSessionAttr("publicKey"));
         this.render("/webapp/widgets/managerPassword.view.html");
     }
 
     @Override
     public void money() {
-//        String params = this.getAttr("p");
-//        Map<String, Object> objectMap = JSON.parseObject(params, Map.class);
-//
-//        LinkedList<Map<String, String>> metas = new LinkedList<>();
-//        LinkedHashMap<String, String> mappingIdsMap = new LinkedHashMap<>();
-//        mappingIdsMap.put("metaId", "productIds");
-//        mappingIdsMap.put("metaValue", objectMap.get("productIds").toString());
-//        metas.add(mappingIdsMap);
-//
-//        this.setAttr("metas", metas);
-//
-//        this.setAttr("title", "食坊-支付");
-//        LinkedList<String> styleSheets = new LinkedList<>();
-//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.css\">");
-//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/billing.css\">");
-//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/receiver.css\">");
-//        this.setAttr("styleSheets", styleSheets);
-//
-//        LinkedList<String> javaScripts = new LinkedList<>();
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mask.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/toast.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/billing.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/billing_anonymous.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/billing_named.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/receiver.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/billing_payment.js\"></script>");
-//        this.setAttr("javaScripts", javaScripts);
-//        this.render("/webapp/widgets/index.html");
     }
 
 
     @Override
-    public void pq() {
-//        this.setAttr("title", "食坊-订单查询");
-//        String params = this.getAttr("p");
-//        Map<String,Object> requestEntity = JSON.parseObject(params, Map.class);
-//        LinkedList<Map<String, String>> metas = new LinkedList<>();
-//        if (requestEntity != null && requestEntity.get("orderId") != null){
-//            String orderId = requestEntity.get("orderId").toString();
-//            if (orderId != null) {
-//                LinkedHashMap<String, String> formatMap = new LinkedHashMap<>();
-//                formatMap.put("metaId", "orderId");
-//                formatMap.put("metaValue", orderId);
-//                metas.add(formatMap);
-//            }
-//        }
-//        this.setAttr("metas", metas);
-//
-//        LinkedList<String> styleSheets = new LinkedList<>();
-//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.css\">");
-//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/query.css\">");
-//        this.setAttr("styleSheets", styleSheets);
-//
-//        LinkedList<String> javaScripts = new LinkedList<>();
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mask.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/login.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/toast.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/query.js\"></script>");
-//        this.setAttr("javaScripts", javaScripts);
-//        this.render("/webapp/widgets/index.html");
+    public void grant() {
+        String loginName = this.getPara("loginName");
+        if (StringUtils.isEmpty(loginName)){
+            renderError(400);
+            return;
+        }
+        ManagerEntity managerEntity = new ManagerServices().retrieveByLoginName(loginName);
+        if (managerEntity == null){
+            renderError(500);
+            return;
+        }
+
+        String access = managerEntity.getAccess();
+        List<String> strings = new LinkedList<>();
+        if (access!= null){
+            strings = JSON.parseObject(access, List.class);
+        }
+        for (MenuEntity menuEntity : ManagerController.managerMenus){
+            if (strings.contains(menuEntity.getId())){
+                menuEntity.setGranted(true);
+            }else{
+                menuEntity.setGranted(false);
+            }
+        }
+
+        for (MenuEntity menuEntity : ManagerController.workMenus){
+            if (strings.contains(menuEntity.getId())){
+                menuEntity.setGranted(true);
+            }else{
+                menuEntity.setGranted(false);
+            }
+        }
+
+        this.setAttr("managerMenus", ManagerController.managerMenus);
+        this.setAttr("workMenus", ManagerController.workMenus);
+        this.setAttr("loginName", loginName);
+        this.render("/webapp/widgets/managerGrant.view.html");
     }
 
     @Before(TokenInterceptor.class)
     @Override
     public void pm() {
-//        String params = this.getAttr("p");
-//        VPageEntity vPageEntity = JSON.parseObject(params, VPageEntity.class);
-//        if (vPageEntity.getDir() == null) {
-//            vPageEntity.setDir("history");
-//        }
-//
-//        LinkedList<Map<String, String>> metas = new LinkedList<>();
-//
-//        LinkedHashMap<String, String> dirMap = new LinkedHashMap<>();
-//        dirMap.put("metaId", "dir");
-//        dirMap.put("metaValue", vPageEntity.getDir());
-//        metas.add(dirMap);
-//
-//        this.setAttr("metas", metas);
-//        this.setAttr("title", "食坊-我的");
-//
-//        LinkedList<String> styleSheets = new LinkedList<>();
-//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/receiver.css\">");
-//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine_cart.css\">");
-//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine_order.css\">");
-//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine_account.css\">");
-//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine_receiver.css\">");
-//        styleSheets.add("<level rel=\"stylesheet\" type=\"text/css\" href=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine.css\">");
-//        this.setAttr("styleSheets", styleSheets);
-//
-//        LinkedList<String> javaScripts = new LinkedList<>();
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/receiver.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/toast.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine_cart.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine_order.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine_account.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine_receiver.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/mine.js\"></script>");
-//        this.setAttr("javaScripts", javaScripts);
 
-//        this.render("/webapp/widgets/index.html");
     }
 
     @Override

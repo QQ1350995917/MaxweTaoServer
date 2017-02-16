@@ -54,12 +54,13 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
-            <ul class="nav nav-sidebar">
-                <li id="sys" class="active" onclick="onMenuClick(this.id)"><a href="#">系统总览</a></li>
-                <li id="sysData" onclick="onMenuClick(this.id)"><a href="#">数据报表</a></li>
-                <li id="sysMoney" onclick="onMenuClick(this.id)"><a href="#">码量管理</a></li>
-                <li id="sysExport" onclick="onMenuClick(this.id)"><a href="#">导出数据</a></li>
-            </ul>
+            <#if superMenus?exists>
+                <ul class="nav nav-sidebar">
+                    <#list superMenus as superMenu>
+                        <li id="${superMenu.id}" onclick="onMenuClick(this.id)"><a href="#">${superMenu.label}</a></li>
+                    </#list>
+                </ul>
+            </#if>
             <#if managerMenus?exists>
                 <ul class="nav nav-sidebar">
                     <#list managerMenus as managerMenu>
@@ -88,6 +89,7 @@
 <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="http://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.js"></script>
+<script type="text/javascript" src="${basePath}/webapp/dependency/jsencrypt.min.js"></script>
 <script src="../webapp/dependency/bootstrap/js/docs.min.js"></script>
 <script src="../webapp/dependency/jquery.form.min.js"></script>
 <script src="../webapp/asserts/js/network.js"></script>

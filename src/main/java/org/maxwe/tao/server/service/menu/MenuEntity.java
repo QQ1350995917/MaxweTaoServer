@@ -13,6 +13,7 @@ public class MenuEntity {
     private int category; //种类
     private int status; //-1删除状态，1，禁用状态，2正常状态，3该菜单除了超级管理员不可授予其他人
     private String actionKey;//使用,分割的动作名称
+    private boolean granted;
     private String createTime;
     private String updateTime;
 
@@ -82,6 +83,14 @@ public class MenuEntity {
 
     public void setActionKey(String actionKey) {
         this.actionKey = actionKey;
+    }
+
+    public boolean getGranted() {
+        return granted;
+    }
+
+    public void setGranted(boolean granted) {
+        this.granted = granted;
     }
 
     public String getCreateTime() {

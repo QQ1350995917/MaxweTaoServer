@@ -25,9 +25,9 @@
     <form id="form" class="form-signin" role="form" method="post" onsubmit="encrypt()"
           action="${basePath}/manager/access">
         <h2 class="form-signin-heading">${loginErrorMessage!"Please sign in"}</h2>
-        <input value="administrator" id="loginName" name="loginName" type="text" class="form-control" minlength="1" maxlength="22"
+        <input id="loginName" name="loginName" type="text" class="form-control" minlength="8" maxlength="22"
                placeholder="Login name" required autofocus>
-        <input id="password" name="password" type="password" class="form-control" minlength="1" maxlength="22"
+        <input id="password" name="password" type="password" class="form-control" minlength="12" maxlength="22"
                placeholder="Password" required>
 
         <div class="checkbox">
@@ -48,7 +48,6 @@
         history.pushState(new Object(), "淘妈咪控制台登录", "${basePath}${url!}");
         </#if>
     });
-
 
     function encrypt() {
         let password = $("#password").val();

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<form id="form_manager_editor" class="form" role="form" method="post">
+    <div class="row marginV">
+        <input name="loginName" hidden value="${loginName}">
+        <#if managerMenus?exists>
+            <#list managerMenus as managerMenu>
+                <div class="col-lg-6" style="width: 130px">
+                    <div class="input-group" style="width: 120px">
+                                <span class="input-group-addon">
+                                    <input name="access" value="${managerMenu.id}" type="checkbox" checked="${managerMenu.granted?string('true','false')}" aria-label="...">
+                                </span>
+                        <span type="text" class="form-control" aria-label="...">${managerMenu.label}</span>
+                    </div>
+                </div>
+            </#list>
+        </#if>
+        <#if workMenus?exists>
+            <#list workMenus as workMenu>
+                <div class="col-lg-6" style="width: 130px">
+                    <div class="input-group" style="width: 120px">
+                                <span class="input-group-addon">
+                                    <input name="access" value="${workMenu.id}" type="checkbox" checked="${workMenu.granted?string('true','false')}" aria-label="...">
+                                </span>
+                        <span type="text" class="form-control" aria-label="...">${workMenu.label}</span>
+                    </div>
+                </div>
+            </#list>
+        </#if>
+        <button class="btn btn-default" style="float: right ;margin-right: 10px" onclick="removeEditManagerView()">取消</button>
+        <button id="grantManagerAction" class="btn btn-default" type="submit" style="float: right ;margin-right: 10px">保存</button>
+    </div>
+</form>
+</body>
+</html>
