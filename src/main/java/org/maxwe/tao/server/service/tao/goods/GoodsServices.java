@@ -1,9 +1,9 @@
-package org.maxwe.tao.server.service.api.goods;
+package org.maxwe.tao.server.service.tao.goods;
 
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
-import org.maxwe.tao.server.controller.goods.GoodsRequestModel;
-import org.maxwe.tao.server.service.api.APIConstants;
+import org.maxwe.tao.server.ApplicationConfigure;
+import org.maxwe.tao.server.service.tao.APIConstants;
 
 /**
  * Created by Pengwei Ding on 2017-01-18 14:54.
@@ -22,7 +22,7 @@ public class GoodsServices {
         System.out.println(execute.getBody());
     }
 
-    public static void requestGoods(GoodsFilterEntity goodsFilterEntity) throws Exception {
+    public static void requestGoods() throws Exception {
         GoodsRequestModel goodsRequestModel = new GoodsRequestModel();
 //        goodsRequestModel.setMethodName("taobao.tbk.item.get");
 //        goodsRequestModel.setFields("nick");
@@ -39,12 +39,16 @@ public class GoodsServices {
 //        goodsRequestModel.setPlatform(2);
 //        goodsRequestModel.setPage_no(1);
 //        goodsRequestModel.setPage_size(20);
-        TaobaoClient taoBaoClient = new DefaultTaobaoClient(APIConstants.URL_FORMAL, "23595494", "6608da9c96be14e186ff485020892334");
+        TaobaoClient taoBaoClient = new DefaultTaobaoClient(APIConstants.URL_FORMAL, ApplicationConfigure.APP_KEY, ApplicationConfigure.APP_SECRET);
         GoodsResponseModel execute = taoBaoClient.execute(goodsRequestModel);
         System.out.println(execute.getBody());
     }
 
+    public static void requestTaoPwd() throws Exception {
+
+    }
+
     public static void main(String[] args) throws Exception {
-        requestGoods(null);
+        requestTaoPwd();
     }
 }

@@ -35,16 +35,16 @@ public class ManagerController extends Controller implements IManagerController 
 
     static {
         superMenus.add(new MenuEntity("100", "系统总览", "system", 0, 2, 2, ""));
-        superMenus.add(new MenuEntity("101", "数据报表", "analysis", 1, 2, 2, ""));
+        superMenus.add(new MenuEntity("101", "运营报表", "analysis", 1, 2, 2, ""));
         superMenus.add(new MenuEntity("102", "码量管理", "money", 2, 2, 2, ""));
-        superMenus.add(new MenuEntity("103", "导出数据", "export", 3, 2, 2, ""));
+        superMenus.add(new MenuEntity("103", "备份管理", "export", 3, 2, 2, ""));
         superMenus.add(new MenuEntity("104", "版本管理", "version", 4, 2, 2, ""));
 
         managerMenus.add(new MenuEntity("200", "账号管理", "accountManager", 0, 2, 2, "manager/block,manager/unBlock,manager/delete,manager/grant,,manager/reset"));
         managerMenus.add(new MenuEntity("201", "添加账号", "accountCreate", 1, 2, 2, "manager/create"));
         managerMenus.add(new MenuEntity("202", "代理总览", "agents", 2, 2, 2, "manager/agents"));
 
-        workMenus.add(new MenuEntity("300", "商品管理", "goods", 0, 3, 2, "manager/goods"));
+        workMenus.add(new MenuEntity("300", "商品管理", "tao", 0, 3, 2, "manager/tao"));
         workMenus.add(new MenuEntity("301", "站内发布", "publish", 1, 3, 2, "manager/publish"));
     }
 

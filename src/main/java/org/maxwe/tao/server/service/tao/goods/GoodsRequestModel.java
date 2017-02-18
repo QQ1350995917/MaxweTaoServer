@@ -1,9 +1,8 @@
-package org.maxwe.tao.server.controller.goods;
+package org.maxwe.tao.server.service.tao.goods;
 
 import com.taobao.api.ApiRuleException;
 import com.taobao.api.BaseTaobaoRequest;
-import org.maxwe.tao.server.service.api.APIConstants;
-import org.maxwe.tao.server.service.api.goods.GoodsResponseModel;
+import org.maxwe.tao.server.service.tao.APIConstants;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

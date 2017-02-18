@@ -79,6 +79,24 @@
         </div>
         <div id="mainContainer" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             没数据
+            <script type="text/javascript">
+                var data = [
+                    {
+                        value: 30,
+                        color:"#F38630"
+                    },
+                    {
+                        value : 50,
+                        color : "#E0E4CC"
+                    },
+                    {
+                        value : 100,
+                        color : "#69D2E7"
+                    }
+                ]
+                new Chart(ctx).Pie(data,options);
+            </script>
+
         </div>
     </div>
 </div>
@@ -89,6 +107,7 @@
 <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="http://cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.js"></script>
+<script src="http://cdn.bootcss.com/Chart.js/2.4.0/Chart.bundle.min.js"></script>
 <script type="text/javascript" src="${basePath}/webapp/dependency/jsencrypt.min.js"></script>
 <script src="../webapp/dependency/bootstrap/js/docs.min.js"></script>
 <script src="../webapp/dependency/jquery.form.min.js"></script>

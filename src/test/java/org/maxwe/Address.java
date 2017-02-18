@@ -12,7 +12,7 @@ import java.net.URLConnection;
  */
 public class Address {
     public static void main(String[] args) throws Exception{
-        URL realUrl = new URL("http://gw.goods.360buy.com/routerjson");
+        URL realUrl = new URL("http://gw.tao.360buy.com/routerjson");
         // 打开和URL之间的连接
         URLConnection connection = realUrl.openConnection();
         // 设置通用的请求属性

@@ -1,4 +1,4 @@
-package org.maxwe.tao.server.service.api;
+package org.maxwe.tao.server.service.tao;
 
 import java.io.Serializable;
 

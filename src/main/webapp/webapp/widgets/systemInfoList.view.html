@@ -7,26 +7,101 @@
 <body>
 <h2 class="page-header">Dashboard</h2>
 <div class="row placeholders">
-    <div class="col-xs-6 col-sm-3 placeholder">
-        <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
-        <h4>Label</h4>
-        <span class="text-muted">Something else</span>
+    <div class="col-xs-6 col-sm-3" style="width: 30%">
+        <canvas id="cpu" width="300" height="300"></canvas>
+        <h4>CPU</h4>
+        <span class="text-muted">70%</span>
     </div>
-    <div class="col-xs-6 col-sm-3 placeholder">
-        <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="Generic placeholder thumbnail">
-        <h4>Label</h4>
-        <span class="text-muted">Something else</span>
+    <div class="col-xs-6 col-sm-3" style="width: 30%;margin-left: 5%">
+        <canvas id="memory" width="300" height="300"></canvas>
+        <h4>Memory</h4>
+        <span class="text-muted">70%</span>
     </div>
-    <div class="col-xs-6 col-sm-3 placeholder">
-        <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
-        <h4>Label</h4>
-        <span class="text-muted">Something else</span>
-    </div>
-    <div class="col-xs-6 col-sm-3 placeholder">
-        <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="Generic placeholder thumbnail">
-        <h4>Label</h4>
-        <span class="text-muted">Something else</span>
+    <div class="col-xs-6 col-sm-3" style="width: 30%;margin-left: 5%">
+        <canvas id="disk" width="300" height="300"></canvas>
+        <h4>Disk</h4>
+        <span class="text-muted">70%</span>
     </div>
 </div>
+<table class="table table-striped">
+    <tr><td>操作系统的名称：</td><td>Ubuntu Server</td><td>操作系统的构架：</td><td>X86-64</td><td>操作系统的版本：</td><td>16.14</td><td>操作系统分隔符：</td><td>/</td></tr>
+    <tr><td>IP：</td><td>101.101.101.101</td><td>MAC：</td><td>12:23:34:45:56:67</td><td>CPU核数：</td><td>8</td><td>内存总量：</td><td>16G</td></tr>
+    <tr><td>运行环境：</td><td>Java</td><td>环境版本：</td><td>1.7</td><td>数据库名：</td><td>mySql</td><td>数据库版本：</td><td>6.5</td></tr>
+    <tr><td>服务器名：</td><td>tomcat</td><td>服务器版本：</td><td>8.0</td><td>服务器路径：</td><td>16.14</td><td>缓存文件路径：</td><td>/</td></tr>
+</table>
 </body>
+<script src="http://cdn.bootcss.com/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    var configCpu = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [
+                    60,
+                    40,
+                ],
+                backgroundColor: [
+                    'rgb(75, 192, 192)',
+                    'rgb(255, 159, 64)',
+                ]
+            }],
+            labels: [
+                "剩余",
+                "已用",
+            ]
+        },
+        options: {
+            responsive: true
+        }
+    };
+    var configMemory = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [
+                    20,
+                    80,
+                ],
+                backgroundColor: [
+                    'rgb(75, 192, 192)',
+                    'rgb(255, 99, 132)',
+                ]
+            }],
+            labels: [
+                "剩余",
+                "已用",
+            ]
+        },
+        options: {
+            responsive: true
+        }
+    };
+    var configDisk = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [
+                    80,
+                    20,
+                ],
+                backgroundColor: [
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                ]
+            }],
+            labels: [
+                "剩余",
+                "已用",
+            ]
+        },
+        options: {
+            responsive: true
+        }
+    };
+    new Chart(document.getElementById("cpu").getContext("2d"), configCpu);
+    new Chart(document.getElementById("memory").getContext("2d"), configMemory);
+    new Chart(document.getElementById("disk").getContext("2d"), configDisk);
+});
+</script>
 </html>

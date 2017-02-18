@@ -1,4 +1,4 @@
-package org.maxwe.tao.server.service.api;
+package org.maxwe.tao.server.service.tao;
 
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
@@ -22,6 +22,11 @@ public class APIConstants {
     // 获取商品的字段
     public static final String METHOD_NAME_GOODS_FIELDS = "num_iid,title,pict_url,small_images,reserve_price,zk_final_price,user_type,provcity,item_url,seller_id,volume,nick";
 
+    // 生成淘口令
+    public static final String METHOD_NAME_TAO_PWD_GET = "taobao.wireless.share.tpwd.create";
+    // 查询某个卖家的店铺优惠券领取活动
+    public static final String METHOD_NAME_TAO_TICKET_GET = "taobao.promotion.activity.get";
+    //
     public static TaobaoClient getTaoBaoClient() {
         return new DefaultTaobaoClient(URL_FORMAL, ApplicationConfigure.APP_KEY, ApplicationConfigure.APP_SECRET);
     }

@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SMSManager {
     private final static Logger logger = Logger.getLogger(SMSManager.class.getName());
-    private static final String url = "http://gw.goods.taobao.com/router/rest";
+    private static final String url = "http://gw.tao.taobao.com/router/rest";
     private static final String product = "测试";
     private static final int DELAYED_ADDRESS = 1000 * 60; // 同一个地址注册的时间间隔
     private static final int DELAYED_CELLPHONE = 1000 * 60 * 10;// 同一个手机号验证码的有效期

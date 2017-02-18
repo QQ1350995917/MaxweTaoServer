@@ -11,8 +11,7 @@ function onMenuClick(id, object) {
     } else if (id == "102") {
         createSystemMoneyListView();
     } else if (id == "103") {
-        emptyMainContainer();
-        $("#mainContainer").append("没数据");
+        createSystemBackupView();
     } else if(id == "104"){
         createSystemVersionView(0, 12);
     }else if (id == "200") {
@@ -230,6 +229,18 @@ function createSystemVersionView(pageIndex,pageSize){
     var url = basePath + "/version/version";
     var data = {pageIndex: pageIndex, pageSize: pageSize};
     asyncRequestByGet(url, data, function (data) {
+        $("#mainContainer").html(data);
+    }, function () {
+        alert("错误");
+    }, function () {
+        alert("登录超时");
+    });
+}
+
+function createSystemBackupView(){
+    emptyMainContainer();
+    var url = basePath + "/system/backups";
+    asyncRequestByGet(url, null, function (data) {
         $("#mainContainer").html(data);
     }, function () {
         alert("错误");

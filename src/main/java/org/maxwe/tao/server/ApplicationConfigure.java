@@ -12,7 +12,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.maxwe.tao.server.controller.account.agent.AgentController;
 import org.maxwe.tao.server.controller.account.manager.ManagerController;
 import org.maxwe.tao.server.controller.account.user.UserController;
-import org.maxwe.tao.server.controller.goods.GoodsController;
+import org.maxwe.tao.server.controller.tao.TaoController;
 import org.maxwe.tao.server.controller.history.HistoryController;
 import org.maxwe.tao.server.controller.level.LevelController;
 import org.maxwe.tao.server.controller.mate.MateController;
@@ -108,7 +108,7 @@ public class ApplicationConfigure extends JFinalConfig {
         me.add("/trade", TradeController.class);
         me.add("/level", LevelController.class);
         me.add("/version", VersionController.class);
-        me.add("/goods", GoodsController.class);
+        me.add("/tao", TaoController.class);
         me.add("/view", PageController.class);
         me.add("/manager", ManagerController.class);
         me.add("/system", SystemController.class);

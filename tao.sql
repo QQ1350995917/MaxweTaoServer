@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2017-01-14 06:56:13
+-- Generation Time: 2017-02-18 08:31:20
 -- 服务器版本： 5.6.22
 -- PHP Version: 5.5.20
 
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `tao`
 --
-CREATE DATABASE IF NOT EXISTS `tao` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `tao`;
 
 -- --------------------------------------------------------
 
@@ -28,7 +26,6 @@ USE `tao`;
 -- 表的结构 `agent`
 --
 
-DROP TABLE IF EXISTS `agent`;
 CREATE TABLE IF NOT EXISTS `agent` (
   `id` varchar(36) NOT NULL COMMENT '业务ID',
   `pId` varchar(36) DEFAULT NULL COMMENT '上级代理ID，为空则表示没有上级',
@@ -59,7 +56,6 @@ CREATE TABLE IF NOT EXISTS `agent` (
 -- 表的结构 `history`
 --
 
-DROP TABLE IF EXISTS `history`;
 CREATE TABLE IF NOT EXISTS `history` (
   `id` varchar(36) NOT NULL COMMENT '业务ID',
   `fromId` varchar(36) NOT NULL COMMENT '操作来源ID',
@@ -78,7 +74,6 @@ CREATE TABLE IF NOT EXISTS `history` (
 -- 表的结构 `level`
 --
 
-DROP TABLE IF EXISTS `level`;
 CREATE TABLE IF NOT EXISTS `level` (
   `id` varchar(36) NOT NULL COMMENT '业务ID',
   `name` varchar(36) NOT NULL COMMENT '名称',
@@ -89,13 +84,48 @@ CREATE TABLE IF NOT EXISTS `level` (
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- 转存表中的数据 `level`
+--
+
+INSERT INTO `level` (`id`, `name`, `description`, `minNum`, `price`, `createTime`, `updateTime`) VALUES
+('694d50b0-d96d-11e6-9335-5d7f657e4af7', '联合创始人', '联合创始人', 1000, 48, '2017-01-14 02:43:22', '2017-01-14 00:00:00'),
+('694dddfa-d96d-11e6-9335-5d7f657e4af7', '总代', '总代', 500, 55, '2017-01-14 02:43:26', '2017-01-05 00:00:00'),
+('8f2e8e0c-d96d-11e6-9335-5d7f657e4af7', '一级代理', '一级代理', 20, 65, '2017-01-14 02:43:30', '2017-01-05 00:00:00'),
+('8f2ea536-d96d-11e6-9335-5d7f657e4af7', '分销商', '分销商', 3, 78, '2017-01-14 02:43:35', '2017-01-18 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `manager`
+--
+
+CREATE TABLE IF NOT EXISTS `manager` (
+  `id` varchar(36) NOT NULL COMMENT '主键',
+  `loginName` varchar(22) NOT NULL COMMENT '登录名称',
+  `nickName` varchar(64) NOT NULL COMMENT '用户名称',
+  `cellphone` varchar(11) NOT NULL COMMENT '电话号码',
+  `password` varchar(128) NOT NULL COMMENT '登录密码',
+  `level` int(1) NOT NULL DEFAULT '2' COMMENT '用户级别',
+  `status` int(1) NOT NULL DEFAULT '2' COMMENT '-1删除，1禁用，2正常',
+  `access` varchar(256) DEFAULT NULL COMMENT '权限表,使用,分割',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `manager`
+--
+
+INSERT INTO `manager` (`id`, `loginName`, `nickName`, `cellphone`, `password`, `level`, `status`, `access`, `createTime`, `updateTime`) VALUES
+('9965aad0-f19c-11e6-87a2-adf5c4f88bd2', 'administrator110', 'admin', '18511694468', 'B9416C80E3045C9929C3AE9B7B352124', -99, -67, '["200","201","202"]', '2017-02-13 03:29:17', '2017-02-15 10:01:11');
+
 -- --------------------------------------------------------
 
 --
 -- 表的结构 `user`
 --
 
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id` varchar(36) NOT NULL COMMENT '业务ID，不能暴露给客户端',
   `mark` varchar(12) NOT NULL COMMENT '用户ID',
@@ -115,7 +145,6 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- 表的结构 `version`
 --
 
-DROP TABLE IF EXISTS `version`;
 CREATE TABLE IF NOT EXISTS `version` (
   `versionId` varchar(36) NOT NULL COMMENT 'ID',
   `platform` varchar(12) NOT NULL COMMENT '应用平台',
@@ -129,6 +158,14 @@ CREATE TABLE IF NOT EXISTS `version` (
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `version`
+--
+
+INSERT INTO `version` (`versionId`, `platform`, `type`, `versionCode`, `versionName`, `appName`, `information`, `url`, `upgrade`, `createTime`, `updateTime`) VALUES
+('7975f9dc-d48c-11e6-802a-6ef16e545ac5', 'Android', 2, 5, 'snapshot-1.0.3', 'Agent', '1:增加了什么功能；\r\n2:增加了什么特色；\r\n3:增加了什么玩意；\r\n4:修改了什么东西；\r\n5:优化了什么路径；', NULL, 3, '2017-01-07 03:50:47', '2017-01-14 07:00:06'),
+('ac6d1fbe-d4aa-11e6-802a-6ef16e545ac5', 'Android', 1, 4, 'snapshot-1.0.3', 'Seller', '1:故用兵之法，十则围之，五则攻之，倍则分之，敌则能战之，少则能逃之，不若则能避之。故小敌之坚，大敌之擒也。\r\n2:夫将者，国之辅也,辅周则国必强，辅隙则国必弱。', NULL, 1, '2017-01-07 07:26:58', '2017-02-16 02:49:13');
 
 --
 -- Indexes for dumped tables
@@ -152,6 +189,12 @@ ALTER TABLE `history`
 -- Indexes for table `level`
 --
 ALTER TABLE `level`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `manager`
+--
+ALTER TABLE `manager`
   ADD PRIMARY KEY (`id`);
 
 --

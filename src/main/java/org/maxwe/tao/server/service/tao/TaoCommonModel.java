@@ -1,4 +1,4 @@
-package org.maxwe.tao.server.service.api;
+package org.maxwe.tao.server.service.tao;
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;

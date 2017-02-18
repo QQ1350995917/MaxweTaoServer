@@ -1,4 +1,4 @@
-package org.maxwe.tao.server.service.api.goods;
+package org.maxwe.tao.server.service.tao.goods;
 
 /**
  * Created by Pengwei Ding on 2017-01-18 14:54.

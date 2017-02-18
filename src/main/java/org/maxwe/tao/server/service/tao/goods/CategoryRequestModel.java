@@ -1,4 +1,4 @@
-package org.maxwe.tao.server.service.api.goods;
+package org.maxwe.tao.server.service.tao.goods;
 
 import com.taobao.api.ApiRuleException;
 import com.taobao.api.BaseTaobaoRequest;

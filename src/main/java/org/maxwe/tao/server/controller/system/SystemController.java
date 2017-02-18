@@ -18,6 +18,7 @@ public class SystemController extends Controller implements ISystemController {
 
     @Override
     public void system() {
+
         render("/webapp/widgets/systemInfoList.view.html");
     }
 
@@ -44,5 +45,20 @@ public class SystemController extends Controller implements ISystemController {
                 this.setAttr("errorInfo","修改失败");
             }
         }
+    }
+
+    @Override
+    public void backups() {
+        render("/webapp/widgets/systemBackups.view.html");
+    }
+
+    @Override
+    public void backup() {
+
+    }
+
+    @Override
+    public void download() {
+
     }
 }

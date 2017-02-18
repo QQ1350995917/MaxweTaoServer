@@ -139,6 +139,6 @@ public class PageController extends Controller implements IPageController {
     }
 
     public void api() {
-        this.render("/webapp/widgets/goods.html");
+        this.render("/webapp/widgets/tao.html");
     }
 }
