@@ -6,4 +6,9 @@ package org.maxwe.tao.server.service.system;
  * Description: @TODO
  */
 public interface ISystemServices {
+
+    void backup(String filePath, String name, String password, String db) throws Exception;
+
+    void recover(String filePath, String name, String password, String db) throws Exception;
+
 }

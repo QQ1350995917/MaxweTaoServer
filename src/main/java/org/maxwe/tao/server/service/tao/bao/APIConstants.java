@@ -1,4 +1,4 @@
-package org.maxwe.tao.server.service.tao;
+package org.maxwe.tao.server.service.tao.bao;
 
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
@@ -15,17 +15,22 @@ public class APIConstants {
     public static final String URL_SANDBOX = "http://gw.api.tbsandbox.com/router/rest";
 
     // 获取类目
-    public static final String METHOD_NAME_ITEM = "taobao.itemcats.get"; // http://open.taobao.com/docs/api.htm?spm=a219a.7386793.0.0.owNYvV&apiId=122
+    public static final String METHOD_NAME_CATEGORY = "taobao.itemcats.get";
 
     // 获取商品
     public static final String METHOD_NAME_GOODS = "taobao.tbk.item.get";
     // 获取商品的字段
     public static final String METHOD_NAME_GOODS_FIELDS = "num_iid,title,pict_url,small_images,reserve_price,zk_final_price,user_type,provcity,item_url,seller_id,volume,nick";
-
+    // 淘宝客店铺关联推荐查询
+    public static final String METHOD_NAME_SHOP = "taobao.tbk.shop.recommend.get";
     // 生成淘口令
     public static final String METHOD_NAME_TAO_PWD_GET = "taobao.wireless.share.tpwd.create";
-    // 查询某个卖家的店铺优惠券领取活动
-    public static final String METHOD_NAME_TAO_TICKET_GET = "taobao.promotion.activity.get";
+    // 根据nid批量查询优惠券
+    public static final String METHOD_NAME_TAO_TICKET_GET = "taobao.tbk.itemid.coupon.get";
+    // 转链
+    public static final String METHOD_NAME_CONVERT = "taobao.tbk.item.convert";
+    // 物料传播方式获取
+    public static final String METHOD_NAME_SPREAD = "taobao.tbk.spread.get";
     //
     public static TaobaoClient getTaoBaoClient() {
         return new DefaultTaobaoClient(URL_FORMAL, ApplicationConfigure.APP_KEY, ApplicationConfigure.APP_SECRET);

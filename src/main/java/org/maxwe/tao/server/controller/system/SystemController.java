@@ -2,9 +2,11 @@ package org.maxwe.tao.server.controller.system;
 
 import com.alibaba.druid.util.StringUtils;
 import com.jfinal.core.Controller;
+import org.maxwe.tao.server.common.utils.DateTimeUtils;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 import org.maxwe.tao.server.service.account.agent.AgentServices;
 import org.maxwe.tao.server.service.account.agent.IAgentServices;
+import org.maxwe.tao.server.service.system.SystemServices;
 
 import java.util.LinkedList;
 
@@ -42,7 +44,7 @@ public class SystemController extends Controller implements ISystemController {
             if (appendResult) {
 
             } else {
-                this.setAttr("errorInfo","修改失败");
+                this.setAttr("errorInfo", "修改失败");
             }
         }
     }
@@ -54,7 +56,14 @@ public class SystemController extends Controller implements ISystemController {
 
     @Override
     public void backup() {
-
+        this.getResponse().setContentType("application/json; charset=utf-8");
+        try {
+            SystemServices.getInstance().backup("/Users/dingpengwei/tao" + DateTimeUtils.getCurrentTimestamp() + ".sql", "root", "root", "tao");
+            renderJson("{\"result\":\"ok\"}");
+        } catch (Exception e) {
+            e.printStackTrace();
+            renderError(500);
+        }
     }
 
     @Override

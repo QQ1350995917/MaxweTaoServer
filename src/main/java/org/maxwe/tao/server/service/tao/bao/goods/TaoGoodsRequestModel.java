@@ -1,8 +1,8 @@
-package org.maxwe.tao.server.service.tao.goods;
+package org.maxwe.tao.server.service.tao.bao.goods;
 
 import com.taobao.api.ApiRuleException;
 import com.taobao.api.BaseTaobaoRequest;
-import org.maxwe.tao.server.service.tao.APIConstants;
+import org.maxwe.tao.server.service.tao.bao.APIConstants;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.Map;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class GoodsRequestModel extends BaseTaobaoRequest<GoodsResponseModel> {
+public class TaoGoodsRequestModel extends BaseTaobaoRequest<TaoGoodsResponseModel> {
 
     // 需返回的字段列表
     private String fields = APIConstants.METHOD_NAME_GOODS_FIELDS; // 是
@@ -43,7 +43,6 @@ public class GoodsRequestModel extends BaseTaobaoRequest<GoodsResponseModel> {
 //    // 页大小，默认20，1~100
     private int page_size = 20;// 否
 
-    private String methodName = APIConstants.METHOD_NAME_GOODS;
 
     public String getFields() {
         return fields;
@@ -163,8 +162,8 @@ public class GoodsRequestModel extends BaseTaobaoRequest<GoodsResponseModel> {
     }
 
     @Override
-    public Class<GoodsResponseModel> getResponseClass() {
-        return GoodsResponseModel.class;
+    public Class<TaoGoodsResponseModel> getResponseClass() {
+        return TaoGoodsResponseModel.class;
     }
 
     @Override
@@ -189,11 +188,7 @@ public class GoodsRequestModel extends BaseTaobaoRequest<GoodsResponseModel> {
 
     @Override
     public String getApiMethodName() {
-        return methodName;
-    }
-
-    public void setMethodName(String methodName) {
-        this.methodName = methodName;
+        return APIConstants.METHOD_NAME_GOODS;
     }
 
     @Override

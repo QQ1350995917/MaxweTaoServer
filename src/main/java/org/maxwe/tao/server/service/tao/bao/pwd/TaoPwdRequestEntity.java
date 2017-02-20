@@ -1,4 +1,4 @@
-package org.maxwe.tao.server.service.tao.pwd;
+package org.maxwe.tao.server.service.tao.bao.pwd;
 
 /**
  * Created by Pengwei Ding on 2017-02-18 10:36.

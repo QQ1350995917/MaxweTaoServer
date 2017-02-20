@@ -12,12 +12,12 @@ import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
-import org.maxwe.tao.server.service.tao.APIConstants;
-import org.maxwe.tao.server.service.tao.goods.GoodsRequestModel;
-import org.maxwe.tao.server.service.tao.goods.GoodsResponseModel;
-import org.maxwe.tao.server.service.tao.pwd.GetTaoPwdRequestModel;
-import org.maxwe.tao.server.service.tao.pwd.GetTaoPwdResponseModel;
-import org.maxwe.tao.server.service.tao.pwd.TaoPwdRequestEntity;
+import org.maxwe.tao.server.service.tao.bao.APIConstants;
+import org.maxwe.tao.server.service.tao.bao.goods.TaoGoodsRequestModel;
+import org.maxwe.tao.server.service.tao.bao.goods.TaoGoodsResponseModel;
+import org.maxwe.tao.server.service.tao.bao.pwd.TaoPwdRequestModel;
+import org.maxwe.tao.server.service.tao.bao.pwd.TaoPwdResponseModel;
+import org.maxwe.tao.server.service.tao.bao.pwd.TaoPwdRequestEntity;
 
 import java.util.Map;
 
@@ -32,10 +32,10 @@ public class TaoController extends Controller implements ITaoController {
     @Before({AppInterceptor.class, TokenInterceptor.class})
     public void query() {
         String params = this.getAttr("p");
-        GoodsRequestModel requestModel = JSON.parseObject(params, GoodsRequestModel.class);
+        TaoGoodsRequestModel requestModel = JSON.parseObject(params, TaoGoodsRequestModel.class);
         IResultSet iResultSet = new ResultSet();
         try {
-            GoodsRequestModel goodsRequestModel = new GoodsRequestModel();
+            TaoGoodsRequestModel goodsRequestModel = new TaoGoodsRequestModel();
             if (requestModel != null) {
                 if (!StringUtils.isEmpty(requestModel.getQ())) {
                     goodsRequestModel.setQ(requestModel.getQ());
@@ -87,7 +87,7 @@ public class TaoController extends Controller implements ITaoController {
             }
 
             TaobaoClient taoBaoClient = APIConstants.getTaoBaoClient();
-            GoodsResponseModel execute = taoBaoClient.execute(goodsRequestModel);
+            TaoGoodsResponseModel execute = taoBaoClient.execute(goodsRequestModel);
             String body = execute.getBody();
             Map map = JSON.parseObject(body, Map.class);
 
@@ -110,10 +110,10 @@ public class TaoController extends Controller implements ITaoController {
         IResultSet iResultSet = new ResultSet();
         TaoPwdRequestEntity taoPwdRequestEntity = JSON.parseObject(params, TaoPwdRequestEntity.class);
         try {
-            GetTaoPwdRequestModel getTaoPwdRequestModel = new GetTaoPwdRequestModel();
+            TaoPwdRequestModel getTaoPwdRequestModel = new TaoPwdRequestModel();
             getTaoPwdRequestModel.setTpwd_param(taoPwdRequestEntity);
             TaobaoClient taoBaoClient = new DefaultTaobaoClient(APIConstants.URL_FORMAL, ApplicationConfigure.APP_KEY, ApplicationConfigure.APP_SECRET);
-            GetTaoPwdResponseModel rsp = taoBaoClient.execute(getTaoPwdRequestModel);
+            TaoPwdResponseModel rsp = taoBaoClient.execute(getTaoPwdRequestModel);
             Map<String, Object> resultMap = JSON.parseObject(rsp.getBody(), Map.class);
             if (resultMap.containsKey("wireless_share_tpwd_create_response")) {
                 Map<String, Object> modelMap = (Map<String, Object>) resultMap.get("wireless_share_tpwd_create_response");

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2017-02-18 08:31:20
+-- Generation Time: 2017-02-18 08:48:46
 -- 服务器版本： 5.6.22
 -- PHP Version: 5.5.20
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `tao`
 --
+CREATE DATABASE IF NOT EXISTS `tao` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `tao`;
 
 -- --------------------------------------------------------
 
@@ -26,6 +28,7 @@ SET time_zone = "+00:00";
 -- 表的结构 `agent`
 --
 
+DROP TABLE IF EXISTS `agent`;
 CREATE TABLE IF NOT EXISTS `agent` (
   `id` varchar(36) NOT NULL COMMENT '业务ID',
   `pId` varchar(36) DEFAULT NULL COMMENT '上级代理ID，为空则表示没有上级',
@@ -56,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `agent` (
 -- 表的结构 `history`
 --
 
+DROP TABLE IF EXISTS `history`;
 CREATE TABLE IF NOT EXISTS `history` (
   `id` varchar(36) NOT NULL COMMENT '业务ID',
   `fromId` varchar(36) NOT NULL COMMENT '操作来源ID',
@@ -74,6 +78,7 @@ CREATE TABLE IF NOT EXISTS `history` (
 -- 表的结构 `level`
 --
 
+DROP TABLE IF EXISTS `level`;
 CREATE TABLE IF NOT EXISTS `level` (
   `id` varchar(36) NOT NULL COMMENT '业务ID',
   `name` varchar(36) NOT NULL COMMENT '名称',
@@ -100,6 +105,7 @@ INSERT INTO `level` (`id`, `name`, `description`, `minNum`, `price`, `createTime
 -- 表的结构 `manager`
 --
 
+DROP TABLE IF EXISTS `manager`;
 CREATE TABLE IF NOT EXISTS `manager` (
   `id` varchar(36) NOT NULL COMMENT '主键',
   `loginName` varchar(22) NOT NULL COMMENT '登录名称',
@@ -126,6 +132,7 @@ INSERT INTO `manager` (`id`, `loginName`, `nickName`, `cellphone`, `password`, `
 -- 表的结构 `user`
 --
 
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id` varchar(36) NOT NULL COMMENT '业务ID，不能暴露给客户端',
   `mark` varchar(12) NOT NULL COMMENT '用户ID',
@@ -145,6 +152,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- 表的结构 `version`
 --
 
+DROP TABLE IF EXISTS `version`;
 CREATE TABLE IF NOT EXISTS `version` (
   `versionId` varchar(36) NOT NULL COMMENT 'ID',
   `platform` varchar(12) NOT NULL COMMENT '应用平台',

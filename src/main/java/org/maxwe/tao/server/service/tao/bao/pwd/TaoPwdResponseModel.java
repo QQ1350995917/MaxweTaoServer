@@ -1,4 +1,4 @@
-package org.maxwe.tao.server.service.tao.pwd;
+package org.maxwe.tao.server.service.tao.bao.pwd;
 
 import com.taobao.api.TaobaoResponse;
 
@@ -7,6 +7,6 @@ import com.taobao.api.TaobaoResponse;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class GetTaoPwdResponseModel extends TaobaoResponse {
+public class TaoPwdResponseModel extends TaobaoResponse {
 
 }

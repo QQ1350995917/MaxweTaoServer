@@ -1,31 +1,22 @@
-package org.maxwe.tao.server.service.tao.goods;
+package org.maxwe.tao.server.service.tao.bao.goods;
 
+import com.alibaba.fastjson.JSON;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
 import org.maxwe.tao.server.ApplicationConfigure;
-import org.maxwe.tao.server.service.tao.APIConstants;
+import org.maxwe.tao.server.service.tao.bao.APIConstants;
 
 /**
  * Created by Pengwei Ding on 2017-01-18 14:54.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class GoodsServices {
+public class TestGoods {
 
-    public static void requestCategory() throws Exception {
-        CategoryRequestModel categoryRequestModel = new CategoryRequestModel();
-        categoryRequestModel.setMethodName("taobao.itemcats.get");
-        categoryRequestModel.setFields("cid,parent_cid,name,is_parent");
-        categoryRequestModel.setParent_cid(0);
-        TaobaoClient taoBaoClient = APIConstants.getTaoBaoClient();
-        GoodsResponseModel execute = taoBaoClient.execute(categoryRequestModel);
-        System.out.println(execute.getBody());
-    }
-
-    public static void requestGoods() throws Exception {
-        GoodsRequestModel goodsRequestModel = new GoodsRequestModel();
+    public static void main(String[] args) throws Exception {
+        TaoGoodsRequestModel goodsRequestModel = new TaoGoodsRequestModel();
 //        goodsRequestModel.setMethodName("taobao.tbk.item.get");
-//        goodsRequestModel.setFields("nick");
+//        goodsRequestModel.setFields("num_iid");
 //        goodsRequestModel.setQ("女装");
 //        goodsRequestModel.setCat("16");
 //        goodsRequestModel.setItemloc("杭州");
@@ -40,15 +31,12 @@ public class GoodsServices {
 //        goodsRequestModel.setPage_no(1);
 //        goodsRequestModel.setPage_size(20);
         TaobaoClient taoBaoClient = new DefaultTaobaoClient(APIConstants.URL_FORMAL, ApplicationConfigure.APP_KEY, ApplicationConfigure.APP_SECRET);
-        GoodsResponseModel execute = taoBaoClient.execute(goodsRequestModel);
+        TaoGoodsResponseModel execute = taoBaoClient.execute(goodsRequestModel);
         System.out.println(execute.getBody());
-    }
+        TaoGoodsResponseModel taoGoodsResponseModel = JSON.parseObject(execute.getBody(), TaoGoodsResponseModel.class);
+        for (TaoGoodsResponseEntity taoGoodsResponseEntity : taoGoodsResponseModel.getTbk_item_get_response().getResults().getN_tbk_item()) {
 
-    public static void requestTaoPwd() throws Exception {
+        }
 
-    }
-
-    public static void main(String[] args) throws Exception {
-        requestTaoPwd();
     }
 }

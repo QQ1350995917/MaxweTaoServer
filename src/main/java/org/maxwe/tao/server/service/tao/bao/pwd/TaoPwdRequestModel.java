@@ -1,9 +1,9 @@
-package org.maxwe.tao.server.service.tao.pwd;
+package org.maxwe.tao.server.service.tao.bao.pwd;
 
 import com.alibaba.fastjson.JSON;
 import com.taobao.api.ApiRuleException;
 import com.taobao.api.BaseTaobaoRequest;
-import org.maxwe.tao.server.service.tao.APIConstants;
+import org.maxwe.tao.server.service.tao.bao.APIConstants;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -13,10 +13,10 @@ import java.util.Map;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 获取淘口令
  */
-public class GetTaoPwdRequestModel extends BaseTaobaoRequest<GetTaoPwdResponseModel> {
+public class TaoPwdRequestModel extends BaseTaobaoRequest<TaoPwdResponseModel> {
     private TaoPwdRequestEntity tpwd_param;
 
-    public GetTaoPwdRequestModel() {
+    public TaoPwdRequestModel() {
         super();
     }
 
@@ -46,7 +46,7 @@ public class GetTaoPwdRequestModel extends BaseTaobaoRequest<GetTaoPwdResponseMo
     }
 
     @Override
-    public Class<GetTaoPwdResponseModel> getResponseClass() {
-        return GetTaoPwdResponseModel.class;
+    public Class<TaoPwdResponseModel> getResponseClass() {
+        return TaoPwdResponseModel.class;
     }
 }
