@@ -1,11 +1,13 @@
 package org.maxwe.tao.server.service.tao.mami;
 
+import java.io.Serializable;
+
 /**
  * Created by Pengwei Ding on 2017-02-19 10:44.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 返回到移动端的商品数据信息
  */
-public class GoodsEntity {
+public class GoodsEntity implements Serializable {
     private long user_id;//卖家ID
     private String seller_nick;//卖家昵称
     private String shop_type;//店铺类型
