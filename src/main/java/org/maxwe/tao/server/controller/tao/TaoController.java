@@ -4,7 +4,6 @@ import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
-import com.taobao.api.ApiException;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
 import org.maxwe.tao.server.ApplicationConfigure;
@@ -14,11 +13,13 @@ import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.tao.bao.APIConstants;
 import org.maxwe.tao.server.service.tao.bao.goods.TaoGoodsRequestModel;
-import org.maxwe.tao.server.service.tao.bao.goods.TaoGoodsResponseModel;
+import org.maxwe.tao.server.service.tao.bao.pwd.TaoPwdRequestEntity;
 import org.maxwe.tao.server.service.tao.bao.pwd.TaoPwdRequestModel;
 import org.maxwe.tao.server.service.tao.bao.pwd.TaoPwdResponseModel;
-import org.maxwe.tao.server.service.tao.bao.pwd.TaoPwdRequestEntity;
+import org.maxwe.tao.server.service.tao.jidi.JiDiServices;
+import org.maxwe.tao.server.service.tao.mami.GoodsEntity;
 
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -85,16 +86,25 @@ public class TaoController extends Controller implements ITaoController {
                     goodsRequestModel.setPage_size(requestModel.getPage_size());
                 }
             }
+//            // 官方数据源
+//            TaobaoClient taoBaoClient = APIConstants.getTaoBaoClient();
+//            TaoGoodsResponseModel execute = taoBaoClient.execute(goodsRequestModel);
+//            String body = execute.getBody();
+//            Map map = JSON.parseObject(body, Map.class);
+//            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+//            iResultSet.setData(map);
 
-            TaobaoClient taoBaoClient = APIConstants.getTaoBaoClient();
-            TaoGoodsResponseModel execute = taoBaoClient.execute(goodsRequestModel);
-            String body = execute.getBody();
-            Map map = JSON.parseObject(body, Map.class);
-
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-            iResultSet.setData(map);
+            // 基地数据源
+            LinkedList<GoodsEntity> goods = JiDiServices.getInstance().getGoods(goodsRequestModel.getPage_no(), goodsRequestModel.getPage_size());
+            GoodsResponseModel goodsResponseModel = new GoodsResponseModel(goodsRequestModel.getPage_no(), goodsRequestModel.getPage_size(), JiDiServices.getInstance().getDataCounter(), goods);
+            if (goods.size() > 0){
+                iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            }else{
+                iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
+            }
+            iResultSet.setData(goodsResponseModel);
             renderJson(JSON.toJSONString(iResultSet));
-        } catch (ApiException e) {
+        } catch (Exception e) {
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet));

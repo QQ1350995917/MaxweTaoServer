@@ -26,7 +26,6 @@ public class JiDiServices implements IJiDiGoodsServices {
     public static synchronized JiDiServices getInstance() {
         if (instance == null) {
             instance = new JiDiServices();
-            instance.init();
         }
         return instance;
     }
@@ -42,133 +41,167 @@ public class JiDiServices implements IJiDiGoodsServices {
     private static final LinkedList<GoodsEntity> goodsDaPai = new LinkedList<>();
     private static final LinkedList<GoodsEntity> goodsMeiRiBiPai = new LinkedList<>();
 
+    private static volatile boolean isReadable = true;
+
     @Override
     public synchronized void init() {
-        allGoods.clear();
-        goodsTop100.clear();
-        goodsDaPai.clear();
-        goodsMeiRiBiPai.clear();
-
-        int pageIndex = 0;
+        if (!isReadable) {
+            return;
+        }
+        isReadable = false;
         boolean isGoing = true;
+        try {
+            //等待5秒，让所有的读操作完毕
+            Thread.sleep(5000);
 
-        while (isGoing) {
-            pageIndex++;
-            try {
-                LinkedList<GoodsEntity> goodsEntityFormServer = getGoodsEntityFormServer(allGoodsUrl, pageIndex);
-                if (goodsEntityFormServer.size() < 1) {
+            allGoods.clear();
+            goodsTop100.clear();
+            goodsDaPai.clear();
+            goodsMeiRiBiPai.clear();
+
+            int pageIndex = 0;
+
+            System.out.println("================正在获取全量数据===============");
+            while (isGoing) {
+                pageIndex++;
+                try {
+                    LinkedList<GoodsEntity> goodsEntityFormServer = getGoodsEntityFormServer(allGoodsUrl, pageIndex);
+                    if (goodsEntityFormServer.size() < 1) {
+                        isGoing = false;
+                    } else {
+                        allGoods.addAll(goodsEntityFormServer);
+                        System.out.println("第" + pageIndex + "页，数据量：" + goodsEntityFormServer.size() + "，总量：" + allGoods.size());
+                    }
+                } catch (Exception e) {
                     isGoing = false;
-                } else {
-                    allGoods.addAll(goodsEntityFormServer);
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                isGoing = false;
-                e.printStackTrace();
             }
-        }
 
-        pageIndex = 0;
-        isGoing = true;
+            pageIndex = 0;
+            isGoing = true;
 
-        while (isGoing) {
-            pageIndex++;
-            try {
-                LinkedList<GoodsEntity> goodsEntityFormServer = getGoodsEntityFormServer(goodsTop100Url, pageIndex);
-                if (goodsEntityFormServer.size() < 1) {
+            System.out.println("================正在获取Top100数据===============");
+            while (isGoing) {
+                pageIndex++;
+                try {
+                    LinkedList<GoodsEntity> goodsEntityFormServer = getGoodsEntityFormServer(goodsTop100Url, pageIndex);
+                    if (goodsEntityFormServer.size() < 1) {
+                        isGoing = false;
+                    } else {
+                        goodsTop100.addAll(goodsEntityFormServer);
+                        System.out.println("第" + pageIndex + "页，数据量：" + goodsEntityFormServer.size() + "，总量：" + goodsTop100.size());
+                    }
+                } catch (Exception e) {
                     isGoing = false;
-                } else {
-                    goodsTop100.addAll(goodsEntityFormServer);
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                isGoing = false;
-                e.printStackTrace();
             }
-        }
 
 
-        pageIndex = 0;
-        isGoing = true;
-
-        while (isGoing) {
-            pageIndex++;
-            try {
-                LinkedList<GoodsEntity> goodsEntityFormServer = getGoodsEntityFormServer(goodsDaPaiUrl, pageIndex);
-                if (goodsEntityFormServer.size() < 1) {
+            pageIndex = 0;
+            isGoing = true;
+            System.out.println("================正在获取大牌数据===============");
+            while (isGoing) {
+                pageIndex++;
+                try {
+                    LinkedList<GoodsEntity> goodsEntityFormServer = getGoodsEntityFormServer(goodsDaPaiUrl, pageIndex);
+                    if (goodsEntityFormServer.size() < 1) {
+                        isGoing = false;
+                    } else {
+                        goodsDaPai.addAll(goodsEntityFormServer);
+                        System.out.println("第" + pageIndex + "页，数据量：" + goodsEntityFormServer.size() + "，总量：" + goodsDaPai.size());
+                    }
+                } catch (Exception e) {
                     isGoing = false;
-                } else {
-                    goodsDaPai.addAll(goodsEntityFormServer);
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                isGoing = false;
-                e.printStackTrace();
             }
-        }
 
-        pageIndex = 0;
-        isGoing = true;
-
-        while (isGoing) {
-            pageIndex++;
-            try {
-                LinkedList<GoodsEntity> goodsEntityFormServer = getGoodsEntityFormServer(goodsMeiRiBiMaiUrl, pageIndex);
-                if (goodsEntityFormServer.size() < 1) {
+            pageIndex = 0;
+            isGoing = true;
+            System.out.println("================正在获取每日必买数据===============");
+            while (isGoing) {
+                pageIndex++;
+                try {
+                    LinkedList<GoodsEntity> goodsEntityFormServer = getGoodsEntityFormServer(goodsMeiRiBiMaiUrl, pageIndex);
+                    if (goodsEntityFormServer.size() < 1) {
+                        isGoing = false;
+                    } else {
+                        goodsMeiRiBiPai.addAll(goodsEntityFormServer);
+                        System.out.println("第" + pageIndex + "页，数据量：" + goodsEntityFormServer.size() + "，总量：" + goodsMeiRiBiPai.size());
+                    }
+                } catch (Exception e) {
                     isGoing = false;
-                } else {
-                    goodsMeiRiBiPai.addAll(goodsEntityFormServer);
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                isGoing = false;
-                e.printStackTrace();
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            isGoing = false;
+            isReadable = true;
         }
     }
 
     @Override
-    public synchronized LinkedList<GoodsEntity> getGoods(int pageIndex, int pageSize) {
+    public LinkedList<GoodsEntity> getGoods(int pageIndex, int pageSize) {
         LinkedList<GoodsEntity> result = new LinkedList<>();
-        int startIndex = pageIndex * pageSize;
-        int endIndex = (pageIndex + 1) * pageSize;
-        for (int index = startIndex; index < endIndex && index < allGoods.size(); index++) {
-            result.add(allGoods.get(index));
+        if (isReadable) {
+            int startIndex = pageIndex * pageSize;
+            int endIndex = (pageIndex + 1) * pageSize;
+            for (int index = startIndex; index < endIndex && index < allGoods.size(); index++) {
+                result.add(allGoods.get(index));
+            }
         }
         return result;
     }
 
     @Override
-    public synchronized LinkedList<GoodsEntity> getGoodsTop100(int pageIndex, int pageSize) {
+    public LinkedList<GoodsEntity> getGoodsTop100(int pageIndex, int pageSize) {
         LinkedList<GoodsEntity> result = new LinkedList<>();
-        int startIndex = pageIndex * pageSize;
-        int endIndex = (pageIndex + 1) * pageSize;
-        for (int index = startIndex; index < endIndex && index < goodsTop100.size(); index++) {
-            result.add(goodsTop100.get(index));
+        if (isReadable) {
+            int startIndex = pageIndex * pageSize;
+            int endIndex = (pageIndex + 1) * pageSize;
+            for (int index = startIndex; index < endIndex && index < goodsTop100.size(); index++) {
+                result.add(goodsTop100.get(index));
+            }
         }
         return result;
     }
 
     @Override
-    public synchronized LinkedList<GoodsEntity> getGoodsDaPai(int pageIndex, int pageSize) {
+    public LinkedList<GoodsEntity> getGoodsDaPai(int pageIndex, int pageSize) {
         LinkedList<GoodsEntity> result = new LinkedList<>();
-        int startIndex = pageIndex * pageSize;
-        int endIndex = (pageIndex + 1) * pageSize;
-        for (int index = startIndex; index < endIndex && index < goodsDaPai.size(); index++) {
-            result.add(goodsDaPai.get(index));
+        if (isReadable) {
+            int startIndex = pageIndex * pageSize;
+            int endIndex = (pageIndex + 1) * pageSize;
+            for (int index = startIndex; index < endIndex && index < goodsDaPai.size(); index++) {
+                result.add(goodsDaPai.get(index));
+            }
         }
         return result;
     }
 
     @Override
-    public synchronized LinkedList<GoodsEntity> getGoodsMeiRiBiPai(int pageIndex, int pageSize) {
+    public LinkedList<GoodsEntity> getGoodsMeiRiBiPai(int pageIndex, int pageSize) {
         LinkedList<GoodsEntity> result = new LinkedList<>();
-        int startIndex = pageIndex * pageSize;
-        int endIndex = (pageIndex + 1) * pageSize;
-        for (int index = startIndex; index < endIndex && index < goodsMeiRiBiPai.size(); index++) {
-            result.add(goodsMeiRiBiPai.get(index));
+        if (isReadable) {
+            int startIndex = pageIndex * pageSize;
+            int endIndex = (pageIndex + 1) * pageSize;
+            for (int index = startIndex; index < endIndex && index < goodsMeiRiBiPai.size(); index++) {
+                result.add(goodsMeiRiBiPai.get(index));
+            }
         }
         return result;
     }
 
+    public int getDataCounter() {
+        return allGoods.size();
+    }
 
-    private LinkedList<GoodsEntity> getGoodsEntityFormServer(String url, int pageIndex) throws Exception {
+    private synchronized LinkedList<GoodsEntity> getGoodsEntityFormServer(String url, int pageIndex) throws Exception {
         LinkedList<GoodsEntity> result = new LinkedList<>();
         DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
         HttpGet httpget = new HttpGet(url + pageIndex);
@@ -178,27 +211,30 @@ public class JiDiServices implements IJiDiGoodsServices {
             JiDiGoodsModel jiDiGoodsModel = JSONObject.parseObject(strResult, JiDiGoodsModel.class);
             List<JiDiGoodsEntity> data = jiDiGoodsModel.getData();
             for (JiDiGoodsEntity jiDiGoodsEntity : data) {
-                GoodsEntity goodsEntity = new GoodsEntity();
-                goodsEntity.setTitle(jiDiGoodsEntity.getGoods_name());
-                goodsEntity.setNum_iid(Long.parseLong(jiDiGoodsEntity.getGoods_id()));
-                goodsEntity.setCategory(jiDiGoodsEntity.getCate_name());
-                goodsEntity.setPict_url(jiDiGoodsEntity.getPic());
-                goodsEntity.setReserve_price(jiDiGoodsEntity.getPrice());
-                goodsEntity.setZk_final_price(jiDiGoodsEntity.getPrice_after_coupons());
-                goodsEntity.setCoupon_info(jiDiGoodsEntity.getPrice_coupons());
-                goodsEntity.setVolume(Long.parseLong(jiDiGoodsEntity.getSales()));
-                goodsEntity.setCommission_rate(jiDiGoodsEntity.getRate());
-                goodsEntity.setCoupon_click_url(jiDiGoodsEntity.getQuan_link());
-                goodsEntity.setCoupon_total_count(Long.parseLong(jiDiGoodsEntity.getQuan_zhong()));
-                goodsEntity.setCoupon_remain_cou(Long.parseLong(jiDiGoodsEntity.getQuan_shengyu()));
-                goodsEntity.setCoupon_end_time(jiDiGoodsEntity.getQuan_expired_time());
+                if (jiDiGoodsEntity != null){
+                    GoodsEntity goodsEntity = new GoodsEntity();
+                    goodsEntity.setTitle(jiDiGoodsEntity.getGoods_name());
+                    goodsEntity.setNum_iid(Long.parseLong(jiDiGoodsEntity.getGoods_id() == null ? "0" : jiDiGoodsEntity.getGoods_id()));
+                    goodsEntity.setCategory(jiDiGoodsEntity.getCate_name());
+                    goodsEntity.setPict_url(jiDiGoodsEntity.getPic());
+                    goodsEntity.setReserve_price(jiDiGoodsEntity.getPrice());
+                    goodsEntity.setZk_final_price(jiDiGoodsEntity.getPrice_after_coupons());
+                    goodsEntity.setCoupon_info(jiDiGoodsEntity.getPrice_coupons());
+                    goodsEntity.setVolume(Long.parseLong(jiDiGoodsEntity.getSales() == null ? "0" : jiDiGoodsEntity.getSales()));
+                    goodsEntity.setCommission_rate(jiDiGoodsEntity.getRate());
+                    goodsEntity.setCoupon_click_url(jiDiGoodsEntity.getQuan_link());
+                    goodsEntity.setCoupon_total_count(Long.parseLong(jiDiGoodsEntity.getQuan_zhong() == null ? "0" : jiDiGoodsEntity.getQuan_zhong()));
+                    goodsEntity.setCoupon_remain_cou(Long.parseLong(jiDiGoodsEntity.getQuan_shengyu() == null ? "0" : jiDiGoodsEntity.getQuan_shengyu()));
+                    goodsEntity.setCoupon_end_time(jiDiGoodsEntity.getQuan_expired_time());
+                    goodsEntity.setItem_url(jiDiGoodsEntity.getGoods_url());
 //                private String cate_id;// 1,/*分类id*/
 //                private String commission_type;// 3,/*佣金类型*/
 //                private String commission_type_name;// 鹊桥,/*佣金类型名称*/
 //                private String quan_note;// 单笔满69元可用，每人限领1 张,/*领券的备注*/
 //                private String quan_guid_content;// 儿童纯棉中厚款，贴身舒适，打底家居套装，必备保暖套装！/*领的导购文案*/
 //                private String quan_qq_img;// http://images.***.*******.jpg/*QQ群发时候用的图片*/
-                result.add(goodsEntity);
+                    result.add(goodsEntity);
+                }
             }
         } else {
             return result;

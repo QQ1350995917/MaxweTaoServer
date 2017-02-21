@@ -1,12 +1,15 @@
 package org.maxwe.tao.server.controller.system;
 
 import com.alibaba.druid.util.StringUtils;
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import org.maxwe.tao.server.common.utils.DateTimeUtils;
+import org.maxwe.tao.server.interceptor.SessionInterceptor;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 import org.maxwe.tao.server.service.account.agent.AgentServices;
 import org.maxwe.tao.server.service.account.agent.IAgentServices;
 import org.maxwe.tao.server.service.system.SystemServices;
+import org.maxwe.tao.server.service.tao.jidi.JiDiServices;
 
 import java.util.LinkedList;
 
@@ -19,12 +22,14 @@ public class SystemController extends Controller implements ISystemController {
     private IAgentServices iAgentServices = new AgentServices();
 
     @Override
+    @Before(SessionInterceptor.class)
     public void system() {
 
         render("/webapp/widgets/systemInfoList.view.html");
     }
 
     @Override
+    @Before(SessionInterceptor.class)
     public void money() {
         LinkedList<AgentEntity> agentEntities = iAgentServices.retrieveByTop();
         this.setAttr("topAgents", agentEntities);
@@ -32,6 +37,7 @@ public class SystemController extends Controller implements ISystemController {
     }
 
     @Override
+    @Before(SessionInterceptor.class)
     public void append() {
         String mark = this.getPara("mark");
         int appendCodes = this.getParaToInt("appendCodes");
@@ -50,11 +56,13 @@ public class SystemController extends Controller implements ISystemController {
     }
 
     @Override
+    @Before(SessionInterceptor.class)
     public void backups() {
         render("/webapp/widgets/systemBackups.view.html");
     }
 
     @Override
+    @Before(SessionInterceptor.class)
     public void backup() {
         this.getResponse().setContentType("application/json; charset=utf-8");
         try {
@@ -67,7 +75,24 @@ public class SystemController extends Controller implements ISystemController {
     }
 
     @Override
+    @Before(SessionInterceptor.class)
     public void download() {
 
+    }
+
+
+    @Override
+    @Before(SessionInterceptor.class)
+    public void initThird() {
+        JiDiServices.getInstance().init();
+        summaryThird();
+    }
+
+    @Override
+    @Before(SessionInterceptor.class)
+    public void summaryThird() {
+        int dataCounter = JiDiServices.getInstance().getDataCounter();
+        this.setAttr("dataCounter",dataCounter);
+        render("/webapp/widgets/systemThirdData.view.html");
     }
 }

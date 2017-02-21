@@ -7,8 +7,22 @@ package org.maxwe.tao.server.controller.version;
  */
 public interface IVersionController {
 
+    /**
+     * 客户端用接口
+     * 查询版本信息
+     */
     void version();
 
-    void reversion();
+    /**
+     * 管理端用接口
+     * 查询所有信息
+     */
+    void versions();
+
+    /**
+     * 管理端用接口
+     * 创建版本信息
+     */
+    void create();
 
 }

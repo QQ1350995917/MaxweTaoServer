@@ -19,7 +19,13 @@ public interface IVersionServices {
     List<VersionEntity> retrieveAll(int pageIndex,int pageSize);
     int retrieveCounter();
 
+    /**
+     * 上传新版本
+     * @return
+     */
+    VersionEntity create(VersionEntity versionEntity);
 
-    List<VersionEntity> reversion();
+
+    VersionEntity retrieveByPlatformAndType(String platform,int type);
 
 }

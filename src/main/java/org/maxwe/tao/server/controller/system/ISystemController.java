@@ -37,4 +37,13 @@ public interface ISystemController {
      */
     void download();
 
+    /**
+     * 初始化第三方数据
+     */
+    void initThird();
+    /**
+     * 第三方数据概要
+     */
+    void summaryThird();
+
 }

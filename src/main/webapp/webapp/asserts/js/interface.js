@@ -26,6 +26,8 @@ function onMenuClick(id, object) {
     } else if (id == "301") {
         emptyMainContainer();
         $("#mainContainer").append("没数据");
+    } else if (id == "302") {
+        createThirdDataView();
     }
 
 
@@ -226,10 +228,34 @@ function removeEditManagerView(){
 
 function createSystemVersionView(pageIndex,pageSize){
     $("#managerListEditor").remove();
-    var url = basePath + "/version/version";
+    var url = basePath + "/version/versions";
     var data = {pageIndex: pageIndex, pageSize: pageSize};
     asyncRequestByGet(url, data, function (data) {
         $("#mainContainer").html(data);
+        var object = {
+            url: basePath + "/version/create",//form提交数据的地址
+            type: "post",　　　  //form提交的方式(method:post/get)
+            target: "#mainContainer",　　//服务器返回的响应数据显示的元素(Id)号
+            beforeSerialize: function () {
+            }, //序列化提交数据之前的回调函数
+            beforeSubmit: function () {
+            },　　//提交前执行的回调函数
+            success: function () {
+                alert("创建成功");
+                createSystemVersionView(0,12);
+            },　　　　   //提交成功后执行的回调函数
+            error: function () {
+                alert("创建失败");
+            },             //提交失败执行的函数
+            dataType: "html",　　　　　　　//服务器返回数据类型
+            clearForm: true,　　　　　　 //提交成功后是否清空表单中的字段值
+            restForm: true,　　　　　　  //提交成功后是否重置表单中的字段值，即恢复到页面加载时的状态
+            timeout: 5000 　　　　　 　 //设置请求时间，超过该时间后，自动退出请求，单位(毫秒)。　　
+        };
+        $("#form_system_topVersion0").ajaxForm(object);
+        $("#form_system_topVersion1").ajaxForm(object);
+        $("#form_system_topVersion2").ajaxForm(object);
+        $("#form_system_topVersion3").ajaxForm(object);
     }, function () {
         alert("错误");
     }, function () {
@@ -268,3 +294,36 @@ function createSystemBackupView(){
         alert("登录超时");
     });
 }
+
+function createThirdDataView(){
+    emptyMainContainer();
+    var url = basePath + "/system/summaryThird";
+    asyncRequestByGet(url, null, function (data) {
+        $("#mainContainer").html(data);
+        var object = {
+            url: basePath + "/system/initThird",//form提交数据的地址
+            type: "post",　　　  //form提交的方式(method:post/get)
+            target: "#mainContainer",　　//服务器返回的响应数据显示的元素(Id)号
+            beforeSerialize: function () {
+            }, //序列化提交数据之前的回调函数
+            beforeSubmit: function () {
+            },　　//提交前执行的回调函数
+            success: function () {
+                alert("初始化成功");
+            },　　　　   //提交成功后执行的回调函数
+            error: function () {
+                alert("初始化失败");
+            },             //提交失败执行的函数
+            dataType: "json",　　　　　　　//服务器返回数据类型
+            clearForm: true,　　　　　　 //提交成功后是否清空表单中的字段值
+            restForm: true,　　　　　　  //提交成功后是否重置表单中的字段值，即恢复到页面加载时的状态
+            timeout: 5000 　　　　　 　 //设置请求时间，超过该时间后，自动退出请求，单位(毫秒)。　　
+        };
+        $("#form_system_initThird").ajaxForm(object);
+    }, function () {
+        alert("错误");
+    }, function () {
+        alert("登录超时");
+    });
+}
+

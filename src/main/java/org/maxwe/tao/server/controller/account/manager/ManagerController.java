@@ -46,6 +46,7 @@ public class ManagerController extends Controller implements IManagerController 
 
         workMenus.add(new MenuEntity("300", "商品管理", "tao", 0, 3, 2, "manager/tao"));
         workMenus.add(new MenuEntity("301", "站内发布", "publish", 1, 3, 2, "manager/publish"));
+        workMenus.add(new MenuEntity("302", "三方数据", "tao", 2, 3, 2, "manager/tao"));
     }
 
     @Override

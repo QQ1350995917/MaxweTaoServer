@@ -17,7 +17,7 @@ public class VersionEntity {
     private String appName;
     private String information;
     private String url;
-    private int upgrade; // 1强制升级 其他不强制
+    private int upgrade; // 0不强制升级 其他强制
     private String createTime;
     private String updateTime;
 
@@ -25,9 +25,11 @@ public class VersionEntity {
         super();
     }
 
-    public VersionEntity(String platform,String appName) {
+    public VersionEntity(String platform,String appName,int type,int versionCode) {
         this.platform = platform;
         this.appName = appName;
+        this.type = type;
+        this.versionCode = versionCode;
     }
 
     public String getVersionId() {
