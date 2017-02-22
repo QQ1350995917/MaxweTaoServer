@@ -6,6 +6,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 import org.maxwe.tao.server.service.tao.mami.GoodsEntity;
 
 import java.util.LinkedList;
@@ -17,6 +18,7 @@ import java.util.List;
  * Description: @TODO
  */
 public class JiDiServices implements IJiDiGoodsServices {
+    private final Logger logger = Logger.getLogger(JiDiServices.class.getName());
     private static JiDiServices instance;
 
     private JiDiServices() {
@@ -45,9 +47,12 @@ public class JiDiServices implements IJiDiGoodsServices {
 
     @Override
     public synchronized void init() {
+        this.logger.info("init : 将要执行初始化 ");
         if (!isReadable) {
+            this.logger.info("init : 执行初始化正在执行中... ");
             return;
         }
+        this.logger.info("init : 执行初始化开始 ");
         isReadable = false;
         boolean isGoing = true;
         try {
@@ -62,6 +67,7 @@ public class JiDiServices implements IJiDiGoodsServices {
             int pageIndex = 0;
 
             System.out.println("================正在获取全量数据===============");
+            this.logger.info("================正在获取全量数据===============");
             while (isGoing) {
                 pageIndex++;
                 try {
@@ -71,6 +77,7 @@ public class JiDiServices implements IJiDiGoodsServices {
                     } else {
                         allGoods.addAll(goodsEntityFormServer);
                         System.out.println("第" + pageIndex + "页，数据量：" + goodsEntityFormServer.size() + "，总量：" + allGoods.size());
+                        this.logger.info("第" + pageIndex + "页，数据量：" + goodsEntityFormServer.size() + "，总量：" + allGoods.size());
                     }
                 } catch (Exception e) {
                     isGoing = false;
@@ -82,6 +89,7 @@ public class JiDiServices implements IJiDiGoodsServices {
             isGoing = true;
 
             System.out.println("================正在获取Top100数据===============");
+            this.logger.info("================正在获取Top100数据===============");
             while (isGoing) {
                 pageIndex++;
                 try {
@@ -91,6 +99,7 @@ public class JiDiServices implements IJiDiGoodsServices {
                     } else {
                         goodsTop100.addAll(goodsEntityFormServer);
                         System.out.println("第" + pageIndex + "页，数据量：" + goodsEntityFormServer.size() + "，总量：" + goodsTop100.size());
+                        this.logger.info("第" + pageIndex + "页，数据量：" + goodsEntityFormServer.size() + "，总量：" + goodsTop100.size());
                     }
                 } catch (Exception e) {
                     isGoing = false;
@@ -102,6 +111,7 @@ public class JiDiServices implements IJiDiGoodsServices {
             pageIndex = 0;
             isGoing = true;
             System.out.println("================正在获取大牌数据===============");
+            this.logger.info("================正在获取大牌数据===============");
             while (isGoing) {
                 pageIndex++;
                 try {
@@ -111,6 +121,7 @@ public class JiDiServices implements IJiDiGoodsServices {
                     } else {
                         goodsDaPai.addAll(goodsEntityFormServer);
                         System.out.println("第" + pageIndex + "页，数据量：" + goodsEntityFormServer.size() + "，总量：" + goodsDaPai.size());
+                        this.logger.info("第" + pageIndex + "页，数据量：" + goodsEntityFormServer.size() + "，总量：" + goodsDaPai.size());
                     }
                 } catch (Exception e) {
                     isGoing = false;
@@ -121,6 +132,7 @@ public class JiDiServices implements IJiDiGoodsServices {
             pageIndex = 0;
             isGoing = true;
             System.out.println("================正在获取每日必买数据===============");
+            this.logger.info("================正在获取每日必买数据===============");
             while (isGoing) {
                 pageIndex++;
                 try {
@@ -130,6 +142,7 @@ public class JiDiServices implements IJiDiGoodsServices {
                     } else {
                         goodsMeiRiBiPai.addAll(goodsEntityFormServer);
                         System.out.println("第" + pageIndex + "页，数据量：" + goodsEntityFormServer.size() + "，总量：" + goodsMeiRiBiPai.size());
+                        this.logger.info("第" + pageIndex + "页，数据量：" + goodsEntityFormServer.size() + "，总量：" + goodsMeiRiBiPai.size());
                     }
                 } catch (Exception e) {
                     isGoing = false;
