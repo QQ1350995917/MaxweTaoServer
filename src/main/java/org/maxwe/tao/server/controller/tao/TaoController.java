@@ -12,12 +12,15 @@ import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.tao.bao.APIConstants;
+import org.maxwe.tao.server.service.tao.bao.convert.TaoTransRequestModel;
+import org.maxwe.tao.server.service.tao.bao.convert.TaoTransServices;
 import org.maxwe.tao.server.service.tao.bao.goods.TaoGoodsRequestModel;
 import org.maxwe.tao.server.service.tao.bao.pwd.TaoPwdRequestEntity;
 import org.maxwe.tao.server.service.tao.bao.pwd.TaoPwdRequestModel;
 import org.maxwe.tao.server.service.tao.bao.pwd.TaoPwdResponseModel;
 import org.maxwe.tao.server.service.tao.jidi.JiDiServices;
 import org.maxwe.tao.server.service.tao.mami.GoodsEntity;
+import org.maxwe.tao.server.service.tao.mami.URLTransEntity;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -146,5 +149,41 @@ public class TaoController extends Controller implements ITaoController {
             renderJson(JSON.toJSONString(iResultSet));
             e.printStackTrace();
         }
+    }
+
+    @Override
+    @Before({AppInterceptor.class, TokenInterceptor.class})
+    public void convert() {
+        String params = this.getAttr("p");
+        IResultSet iResultSet = new ResultSet();
+        TaoTransRequestModel taoTransRequestModel = JSON.parseObject(params, TaoTransRequestModel.class);
+        if (!taoTransRequestModel.isParamsOk()){
+            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
+            iResultSet.setData(taoTransRequestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+            renderJson(JSON.toJSONString(iResultSet));
+            return;
+        }
+
+        try {
+            URLTransEntity trans = TaoTransServices.trans(taoTransRequestModel);
+            if (trans == null){
+                iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
+                iResultSet.setData(taoTransRequestModel);
+                iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+                renderJson(JSON.toJSONString(iResultSet));
+                return;
+            }
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            iResultSet.setData(trans);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+            renderJson(JSON.toJSONString(iResultSet));
+        } catch (Exception e) {
+            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
+            iResultSet.setData(taoTransRequestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+            renderJson(JSON.toJSONString(iResultSet));
+        }
+
     }
 }

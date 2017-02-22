@@ -14,4 +14,8 @@ public interface ITaoController {
      * 后去淘口令
      */
     void pwd();
+    /**
+     * 转链
+     */
+    void convert();
 }

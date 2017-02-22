@@ -1,9 +1,10 @@
 package org.maxwe.tao.server.service.tao.bao.convert;
 
-import com.taobao.api.DefaultTaobaoClient;
-import com.taobao.api.TaobaoClient;
-import org.maxwe.tao.server.ApplicationConfigure;
-import org.maxwe.tao.server.service.tao.bao.APIConstants;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 
 /**
  * Created by Pengwei Ding on 2017-02-19 15:38.
@@ -12,14 +13,21 @@ import org.maxwe.tao.server.service.tao.bao.APIConstants;
  */
 public class TestConvert {
     public static void main(String[] args) throws Exception {
-        TaoConvertRequestModel req = new TaoConvertRequestModel();
-        req.setFields("num_iid,click_url");
-        req.setNum_iids("535933437297");
-        req.setAdzone_id(71254342);
-        req.setPlatform(1);
-        TaobaoClient taoBaoClient = new DefaultTaobaoClient(APIConstants.URL_FORMAL, ApplicationConfigure.APP_KEY, ApplicationConfigure.APP_SECRET);
-        TaoConvertResponseModel execute = taoBaoClient.execute(req);
-        System.out.println(execute.getBody());
-        System.out.println();
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        HttpGet method = new HttpGet("http://taobao.com");
+        StringEntity entity = new StringEntity("{}", "utf-8");
+        entity.setContentEncoding("UTF-8");
+//        method.setEntity(entity);
+        HttpResponse result = httpClient.execute(method);
+        /**请求发送成功，并得到响应**/
+        if (result.getStatusLine().getStatusCode() == 200) {
+            String str = "";
+            try {
+                /**读取服务器返回过来的json字符串数据**/
+                str = EntityUtils.toString(result.getEntity());
+                System.out.println(str);
+            } catch (Exception e) {
+            }
+        }
     }
 }
