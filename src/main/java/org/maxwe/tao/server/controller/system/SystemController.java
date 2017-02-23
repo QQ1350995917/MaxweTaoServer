@@ -85,7 +85,7 @@ public class SystemController extends Controller implements ISystemController {
     @Before(SessionInterceptor.class)
     public void initThird() {
         JiDiServices.getInstance().init();
-        summaryThird();
+        renderJson(new String[]{"ok"});
     }
 
     @Override
