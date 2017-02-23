@@ -61,4 +61,22 @@ public class TaoTransRequestModel implements Serializable {
         }
         return true;
     }
+
+    public String getGoodsId() {
+        String goodsId = null;
+        String[] split = this.promotionURL.split("\\?");
+        if (split.length > 1) {
+            String[] split1 = split[1].split("&");//id=535933437297
+            for (String sp : split1) {
+                if (sp.startsWith("id=")) {
+                    goodsId = sp.replace("id=", "");
+                    break;
+                }
+            }
+        }
+        if (goodsId == null){
+            goodsId = split[0].substring(split[0].lastIndexOf("/") + 1, split[0].lastIndexOf("."));
+        }
+        return goodsId;
+    }
 }

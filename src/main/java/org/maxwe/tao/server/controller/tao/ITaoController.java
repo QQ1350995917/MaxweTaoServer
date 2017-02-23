@@ -18,4 +18,9 @@ public interface ITaoController {
      * 转链
      */
     void convert();
+
+    /**
+     * 通过ID寻找商品详情
+     */
+    void find();
 }

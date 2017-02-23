@@ -8,6 +8,7 @@ package org.maxwe.tao.server.service.tao.bao.goods;
 public class TaoGoodsResponseItemEntity {
     private TaoGoodsResponseResult results;
     private long total_results;
+    private String request_id;
 
     public TaoGoodsResponseItemEntity() {
         super();
@@ -27,5 +28,13 @@ public class TaoGoodsResponseItemEntity {
 
     public void setTotal_results(long total_results) {
         this.total_results = total_results;
+    }
+
+    public String getRequest_id() {
+        return request_id;
+    }
+
+    public void setRequest_id(String request_id) {
+        this.request_id = request_id;
     }
 }

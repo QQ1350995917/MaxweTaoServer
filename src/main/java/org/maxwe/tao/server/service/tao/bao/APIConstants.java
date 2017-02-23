@@ -17,8 +17,11 @@ public class APIConstants {
     // 获取类目
     public static final String METHOD_NAME_CATEGORY = "taobao.itemcats.get";
 
-    // 获取商品
+    public static final String METHOD_NAME_GOODS_FAVOURITE = "taobao.tbk.uatm.favorites.get";
+    // 获取商品列表
     public static final String METHOD_NAME_GOODS = "taobao.tbk.item.get";
+    // 获取商品
+    public static final String METHOD_NAME_GOODS_ITEM = "taobao.tbk.item.info.get";
     // 获取商品的字段
     public static final String METHOD_NAME_GOODS_FIELDS = "num_iid,title,pict_url,small_images,reserve_price,zk_final_price,user_type,provcity,item_url,seller_id,volume,nick";
     // 淘宝客店铺关联推荐查询

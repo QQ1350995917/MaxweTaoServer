@@ -9,7 +9,7 @@ public class TaoGoodsResponseEntity {
     private long num_iid;// Number 123商品ID
     private String title;// String 连衣裙商品标题
     private String pict_url;// String http://gi4.md.alicdn.com/bao/uploaded/i4/xxx.jpg商品主图
-    private String small_images;// String [] http://gi4.md.alicdn.com/bao/uploaded/i4/xxx.jpg商品小图列表
+    private Object small_images;// String [] http://gi4.md.alicdn.com/bao/uploaded/i4/xxx.jpg商品小图列表
     private String reserve_price;// String 102.00商品一口价格
     private String zk_final_price;// String 88.00商品折扣价格
     private long user_type;// Number;// 1卖家类型，0表示集市，1表示商城
@@ -47,11 +47,11 @@ public class TaoGoodsResponseEntity {
         this.pict_url = pict_url;
     }
 
-    public String getSmall_images() {
+    public Object getSmall_images() {
         return small_images;
     }
 
-    public void setSmall_images(String small_images) {
+    public void setSmall_images(Object small_images) {
         this.small_images = small_images;
     }
 

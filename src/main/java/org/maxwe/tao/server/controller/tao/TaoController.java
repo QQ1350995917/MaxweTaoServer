@@ -15,11 +15,13 @@ import org.maxwe.tao.server.service.tao.bao.APIConstants;
 import org.maxwe.tao.server.service.tao.bao.convert.TaoTransRequestModel;
 import org.maxwe.tao.server.service.tao.bao.convert.TaoTransServices;
 import org.maxwe.tao.server.service.tao.bao.goods.TaoGoodsRequestModel;
+import org.maxwe.tao.server.service.tao.bao.goods.TaoGoodsServices;
 import org.maxwe.tao.server.service.tao.bao.pwd.TaoPwdRequestEntity;
 import org.maxwe.tao.server.service.tao.bao.pwd.TaoPwdRequestModel;
 import org.maxwe.tao.server.service.tao.bao.pwd.TaoPwdResponseModel;
 import org.maxwe.tao.server.service.tao.jidi.JiDiServices;
 import org.maxwe.tao.server.service.tao.mami.GoodsEntity;
+import org.maxwe.tao.server.service.tao.mami.GoodsTransEntity;
 import org.maxwe.tao.server.service.tao.mami.URLTransEntity;
 
 import java.util.LinkedList;
@@ -31,6 +33,7 @@ import java.util.Map;
  * Description: @TODO
  */
 public class TaoController extends Controller implements ITaoController {
+    private TaoGoodsServices taoGoodsServices = new TaoGoodsServices();
 
     @Override
     @Before({AppInterceptor.class, TokenInterceptor.class})
@@ -100,9 +103,9 @@ public class TaoController extends Controller implements ITaoController {
             // 基地数据源
             LinkedList<GoodsEntity> goods = JiDiServices.getInstance().getGoods(goodsRequestModel.getPage_no(), goodsRequestModel.getPage_size());
             GoodsResponseModel goodsResponseModel = new GoodsResponseModel(goodsRequestModel.getPage_no(), goodsRequestModel.getPage_size(), JiDiServices.getInstance().getDataCounter(), goods);
-            if (goods.size() > 0){
+            if (goods.size() > 0) {
                 iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-            }else{
+            } else {
                 iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
             }
             iResultSet.setData(goodsResponseModel);
@@ -157,7 +160,7 @@ public class TaoController extends Controller implements ITaoController {
         String params = this.getAttr("p");
         IResultSet iResultSet = new ResultSet();
         TaoTransRequestModel taoTransRequestModel = JSON.parseObject(params, TaoTransRequestModel.class);
-        if (!taoTransRequestModel.isParamsOk()){
+        if (!taoTransRequestModel.isParamsOk()) {
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(taoTransRequestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
@@ -167,23 +170,73 @@ public class TaoController extends Controller implements ITaoController {
 
         try {
             URLTransEntity trans = TaoTransServices.trans(taoTransRequestModel);
-            if (trans == null){
+            if (trans == null) {
                 iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
                 iResultSet.setData(taoTransRequestModel);
                 iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
                 renderJson(JSON.toJSONString(iResultSet));
                 return;
             }
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-            iResultSet.setData(trans);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-            renderJson(JSON.toJSONString(iResultSet));
+            LinkedList<GoodsEntity> byId = taoGoodsServices.findById(new String[]{taoTransRequestModel.getGoodsId()});
+            if (byId == null || byId.size() < 1) {
+                iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
+                iResultSet.setData(taoTransRequestModel);
+                iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+                renderJson(JSON.toJSONString(iResultSet));
+                return;
+            } else {
+                GoodsTransEntity goodsTransEntity = new GoodsTransEntity(trans, byId.get(0));
+                iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+                iResultSet.setData(goodsTransEntity);
+                iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+                renderJson(JSON.toJSONString(iResultSet));
+            }
+
         } catch (Exception e) {
+            e.printStackTrace();
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(taoTransRequestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet));
         }
 
+    }
+
+    @Override
+    public void find() {
+        String params = this.getAttr("p");
+        IResultSet iResultSet = new ResultSet();
+        if (StringUtils.isEmpty(params)) {
+            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+            renderJson(JSON.toJSONString(iResultSet));
+            return;
+        }
+        String[] ids = JSON.parseObject(params, String[].class);
+        if (ids == null || ids.length < 1) {
+            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+            renderJson(JSON.toJSONString(iResultSet));
+            return;
+        }
+        try {
+            LinkedList<GoodsEntity> byId = taoGoodsServices.findById(ids);
+            if (byId == null) {
+                iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
+                iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+                renderJson(JSON.toJSONString(iResultSet));
+                return;
+            }
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            iResultSet.setData(byId);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+            renderJson(JSON.toJSONString(iResultSet));
+        } catch (Exception e) {
+            e.printStackTrace();
+            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+            renderJson(JSON.toJSONString(iResultSet));
+            return;
+        }
     }
 }
