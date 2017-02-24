@@ -11,6 +11,12 @@ import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
+import org.maxwe.tao.server.service.tao.alimama.common.AliResponsePageEntity;
+import org.maxwe.tao.server.service.tao.alimama.convert.AliConvertEntity;
+import org.maxwe.tao.server.service.tao.alimama.convert.AliConvertRequestModel;
+import org.maxwe.tao.server.service.tao.alimama.convert.AliConvertServices;
+import org.maxwe.tao.server.service.tao.alimama.goods.AliGoodsRequestModel;
+import org.maxwe.tao.server.service.tao.alimama.goods.AliGoodsServices;
 import org.maxwe.tao.server.service.tao.bao.APIConstants;
 import org.maxwe.tao.server.service.tao.bao.convert.TaoTransRequestModel;
 import org.maxwe.tao.server.service.tao.bao.convert.TaoTransServices;
@@ -25,6 +31,7 @@ import org.maxwe.tao.server.service.tao.mami.GoodsTransEntity;
 import org.maxwe.tao.server.service.tao.mami.URLTransEntity;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -238,5 +245,78 @@ public class TaoController extends Controller implements ITaoController {
             renderJson(JSON.toJSONString(iResultSet));
             return;
         }
+    }
+
+
+    @Override
+    @Before({AppInterceptor.class, TokenInterceptor.class})
+    public void search() {
+        String params = this.getAttr("p");
+        IResultSet iResultSet = new ResultSet();
+        AliGoodsRequestModel aliGoodsRequestModel = JSON.parseObject(params, AliGoodsRequestModel.class);
+        if (!aliGoodsRequestModel.isParamsOk()) {
+            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
+            iResultSet.setData(aliGoodsRequestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+            renderJson(JSON.toJSONString(iResultSet));
+            return;
+        }
+
+        try {
+            List<AliResponsePageEntity> aliResponsePageEntities = AliGoodsServices.searchAlimamaForGoods(aliGoodsRequestModel);
+            if (aliResponsePageEntities == null){
+                iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
+                iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+                renderJson(JSON.toJSONString(iResultSet));
+                return;
+            }
+            if (aliResponsePageEntities.size() > 0) {
+                iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            } else {
+                iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
+            }
+            iResultSet.setData(aliResponsePageEntities);
+            renderJson(JSON.toJSONString(iResultSet));
+        } catch (Exception e) {
+            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+            renderJson(JSON.toJSONString(iResultSet));
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    @Before({AppInterceptor.class, TokenInterceptor.class})
+    public void auction() {
+        String params = this.getAttr("p");
+        IResultSet iResultSet = new ResultSet();
+        AliConvertRequestModel aliConvertRequestModel = JSON.parseObject(params, AliConvertRequestModel.class);
+        if (!aliConvertRequestModel.isParamsOk()) {
+            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
+            iResultSet.setData(aliConvertRequestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+            renderJson(JSON.toJSONString(iResultSet));
+            return;
+        }
+
+        try {
+            AliConvertEntity aliConvertEntity = AliConvertServices.convertAlimamaByGoodsId(aliConvertRequestModel);
+            if (aliConvertEntity == null){
+                iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
+                iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+                renderJson(JSON.toJSONString(iResultSet));
+                return;
+            }
+            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+            iResultSet.setData(aliConvertEntity);
+            renderJson(JSON.toJSONString(iResultSet));
+        } catch (Exception e) {
+            e.printStackTrace();
+            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
+            iResultSet.setData(aliConvertRequestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+            renderJson(JSON.toJSONString(iResultSet));
+        }
+
     }
 }

@@ -23,4 +23,17 @@ public interface ITaoController {
      * 通过ID寻找商品详情
      */
     void find();
+
+
+    /**
+     * 陶精灵使用的商品接口
+     * 阿里妈妈接口
+     */
+    void search();
+
+    /**
+     * 陶精灵使用的转链接口
+     * 阿里妈妈接口
+     */
+    void auction();
 }
