@@ -9,7 +9,7 @@ lib/
 bin/
 gen/
 
-* properties
+*.properties
 
 upload/
 # Created by OS.
