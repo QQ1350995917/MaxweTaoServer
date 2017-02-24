@@ -9,6 +9,8 @@ lib/
 bin/
 gen/
 
+*.properties
+
 upload/
 # Created by OS.
 .DS_Store
