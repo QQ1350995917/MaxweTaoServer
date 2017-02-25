@@ -10,16 +10,20 @@ import com.alibaba.druid.util.StringUtils;
  * cookie2=020ced2ee06335cb909b62b67432a9ec; _tb_token_=4I8mOHSE8Oq; t=ebacd4901230296718e49324fbef0fa2; v=0; cna=LuE1EdZ/MW4CAXYasAbrYIvg; cookie32=92564623f2a60c482fcf302df67f18d4; cookie31=MTIwMTM0NjIzLHd3d19kaW5nLHd3dy5kaW5ncGVuZ3dlaUBmb3htYWlsLmNvbSxUQg%3D%3D; alimamapwag=TW96aWxsYS81LjAgKExpbnV4OyBBbmRyb2lkIDcuMDsgTmV4dXMgNiBCdWlsZC9OQkQ5MFo7IHd2KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBWZXJzaW9uLzQuMCBDaHJvbWUvNTEuMC4yNzA0LjkwIE1vYmlsZSBTYWZhcmkvNTM3LjM2; login=UtASsssmOIJ0bQ%3D%3D; alimamapw=FhFHagFZWVAwB1dcVw5RVA5VA1MHDFdTUQdaBFULUFoBVAgDVVdUUAc%3D
  */
 public class AliGoodsRequestModel {
-    private static final String URL = "http://pub.alimama.com/items/search.json?";
-
+    private static final String URL0 = "http://pub.alimama.com/items/search.json?";
+    private static final String URL1 = "http://pub.alimama.com/items/channel/qqhd.json?";
+    private String URL = URL0;
     private long toPage = 1;
     private long perPageSize = 20;
     private String q;
     //    @JSONField(serialize=false)
 //    private transient long t = System.currentTimeMillis();
     private String _tb_token_;
-    private int queryType = 1;
+    private int queryType = 0;
     private String cookie;
+    private String channel = "qqhd";
+    private int sortType = 0;// 0:默认 1:佣金 2:优惠券 3:价格降低 4:价格升高 9:销量降序
+    private int urlType = 0;
 
     public AliGoodsRequestModel() {
         super();
@@ -82,16 +86,46 @@ public class AliGoodsRequestModel {
         this.cookie = cookie;
     }
 
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+    public int getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(int sortType) {
+        this.sortType = sortType;
+    }
+
+    public int getUrlType() {
+        return urlType;
+    }
+
+    public void setUrlType(int urlType) {
+        this.urlType = urlType;
+    }
+
     public String getUrl() {
-        if (StringUtils.isEmpty(this.getQ()) || !this.getQ().startsWith("http")) {
+        if (urlType == 0) {
+            URL = URL0;
+        } else if (urlType == 1) {
+            URL = URL1;
+        }
+        if (StringUtils.isEmpty(this.getQ())) {
             return URL + "toPage=" + getToPage() +
-                    "&perPageSize=" + getPerPageSize();
+                    "&perPageSize=" + getPerPageSize()+
+                    "&sortType=" + getSortType();
         } else {
             return URL + "toPage=" + getToPage() +
                     "&perPageSize=" + getPerPageSize() +
+                    "&sortType=" + getSortType() +
                     "&q=" + getQ();
         }
-
     }
 
     public boolean isParamsOk() {
