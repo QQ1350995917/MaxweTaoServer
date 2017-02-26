@@ -26,22 +26,18 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>1</td>
-            <td>2017-02-13:23:45:34</td>
-            <td>hello</td>
-            <td>
-                <button type="button" class="btn btn-default">下载</button>
-            </td>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>2017-02-13:23:45:34</td>
-            <td>hello</td>
-            <td>
-                <button type="button" class="btn btn-default">下载</button>
-            </td>
-        </tr>
+        <#if databaseBackups?exists>
+            <#list databaseBackups as databaseBackup>
+                <tr>
+                    <td>${databaseBackup_index}</td>
+                    <td>${databaseBackup.createTime}</td>
+                    <td>${databaseBackup.createTime}</td>
+                    <td>
+                        <button type="submit" class="btn btn-default" onclick="downloadDatabaseBackupFile(1,'${databaseBackup.id}')">下载</button>
+                    </td>
+                </tr>
+            </#list>
+        </#if>
         </tbody>
     </table>
 </div>
@@ -80,6 +76,23 @@
 </div>
 </body>
 <script type="text/javascript">
-
+    function downloadDatabaseBackupFile(type,id) {
+        var form=$("<form>");//定义一个form表单
+        form.attr("style","display:none");
+        form.attr("method","post");
+        form.attr("action","${basePath}/system/download");
+        var typeInput=$("<input>");
+        typeInput.attr("type","hidden");
+        typeInput.attr("name","type");
+        typeInput.attr("value",type);
+        var idInput=$("<input>");
+        idInput.attr("type","hidden");
+        idInput.attr("name","id");
+        idInput.attr("value",id);
+        form.append(typeInput);
+        form.append(idInput);
+        $("body").append(form);//将表单放置在web中
+        form.submit().remove();
+    }
 </script>
 </html>

@@ -3,15 +3,19 @@ package org.maxwe.tao.server.controller.system;
 import com.alibaba.druid.util.StringUtils;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
+import org.maxwe.tao.server.ApplicationConfigure;
 import org.maxwe.tao.server.common.utils.DateTimeUtils;
 import org.maxwe.tao.server.interceptor.SessionInterceptor;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 import org.maxwe.tao.server.service.account.agent.AgentServices;
 import org.maxwe.tao.server.service.account.agent.IAgentServices;
+import org.maxwe.tao.server.service.system.BackupEntity;
 import org.maxwe.tao.server.service.system.SystemServices;
 import org.maxwe.tao.server.service.tao.jidi.JiDiServices;
 
+import java.io.File;
 import java.util.LinkedList;
+import java.util.UUID;
 
 /**
  * Created by Pengwei Ding on 2017-02-14 21:48.
@@ -58,6 +62,10 @@ public class SystemController extends Controller implements ISystemController {
     @Override
     @Before(SessionInterceptor.class)
     public void backups() {
+        int pageIndex = this.getParaToInt("pageIndex") == null ? 0 : this.getParaToInt("pageIndex");
+        int pageSize = (this.getParaToInt("pageSize") == null || this.getParaToInt("pageSize") == 0) ? 12 : this.getParaToInt("pageSize");
+        LinkedList<BackupEntity> backupEntities = SystemServices.getInstance().retrieveAll(pageIndex, pageSize);
+        this.setAttr("databaseBackups", backupEntities);
         render("/webapp/widgets/systemBackups.view.html");
     }
 
@@ -66,8 +74,14 @@ public class SystemController extends Controller implements ISystemController {
     public void backup() {
         this.getResponse().setContentType("application/json; charset=utf-8");
         try {
-            SystemServices.getInstance().backup("/Users/dingpengwei/tao" + DateTimeUtils.getCurrentTimestamp() + ".sql", "root", "root", "tao");
-            renderJson("{\"result\":\"ok\"}");
+            String filePath = ApplicationConfigure.DATABASE_BACKUP_FILE_DIR + File.separator + DateTimeUtils.getCurrentTimestamp() + ".sql";
+            SystemServices.getInstance().backup(filePath, ApplicationConfigure.username, ApplicationConfigure.password, ApplicationConfigure.databaseName);
+            BackupEntity backupEntity = SystemServices.getInstance().createBackup(new BackupEntity(UUID.randomUUID().toString(), null, filePath, 1, 1, 0));
+            if (backupEntity == null) {
+                renderError(500);
+            } else {
+                renderJson("{\"result\":\"ok\"}");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             renderError(500);
@@ -77,7 +91,20 @@ public class SystemController extends Controller implements ISystemController {
     @Override
     @Before(SessionInterceptor.class)
     public void download() {
-
+        int type = this.getParaToInt("type") == null ? 0 : this.getParaToInt("type");
+        String id = this.getPara("id");
+        if (type == 0 || StringUtils.isEmpty(id)) {
+            renderError(400);
+        } else {
+            if (type == 1) {
+                BackupEntity backupEntity = SystemServices.getInstance().retrieveById(id);
+                renderFile(new File(backupEntity.getFilePath()));
+            } else if (type == 2) {
+                renderError(400);
+            } else {
+                renderError(400);
+            }
+        }
     }
 
 
@@ -92,7 +119,7 @@ public class SystemController extends Controller implements ISystemController {
     @Before(SessionInterceptor.class)
     public void summaryThird() {
         int dataCounter = JiDiServices.getInstance().getDataCounter();
-        this.setAttr("dataCounter",dataCounter);
+        this.setAttr("dataCounter", dataCounter);
         render("/webapp/widgets/systemThirdData.view.html");
     }
 }

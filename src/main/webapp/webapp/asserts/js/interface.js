@@ -278,6 +278,7 @@ function createSystemBackupView(){
             },　　//提交前执行的回调函数
             success: function () {
                 alert("备份成功");
+                createSystemBackupView();
             },　　　　   //提交成功后执行的回调函数
             error: function () {
                 alert("备份失败");

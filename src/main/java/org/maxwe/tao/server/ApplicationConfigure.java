@@ -22,6 +22,7 @@ import org.maxwe.tao.server.controller.system.SystemController;
 import org.maxwe.tao.server.controller.trade.TradeController;
 import org.maxwe.tao.server.controller.version.VersionController;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -36,10 +37,14 @@ public class ApplicationConfigure extends JFinalConfig {
     public static String APP_SMS_KEY = "";
     public static String APP_SMS_SECRET = "";
     public static String APP_SMS_MODEL = "";
+    public static String DATABASE_BACKUP_FILE_DIR = "/";
+
     private static String url;
-    private static String username;
-    private static String password;
+    public static String username;
+    public static String password;
     private static String driver;
+    public static String databaseName;
+
 
     static {
         try {
@@ -54,12 +59,15 @@ public class ApplicationConfigure extends JFinalConfig {
             APP_SMS_KEY = smsProperties.getProperty("APP_SMS_KEY");
             APP_SMS_SECRET = smsProperties.getProperty("APP_SMS_SECRET");
             APP_SMS_MODEL = smsProperties.getProperty("APP_SMS_MODEL");
+            DATABASE_BACKUP_FILE_DIR = smsProperties.getProperty("SYSTEM_DATABASE_BACKUP_FILE_DIR");
             Properties dbProperties = new Properties();
             dbProperties.load(ApplicationConfigure.class.getClassLoader().getResourceAsStream("db.properties"));
             url = dbProperties.getProperty("url");
             username = dbProperties.getProperty("username");
             password = dbProperties.getProperty("password");
             driver = dbProperties.getProperty("driver");
+            databaseName = dbProperties.getProperty("databaseName");
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -117,7 +125,7 @@ public class ApplicationConfigure extends JFinalConfig {
 
     @Override
     public void configPlugin(Plugins me) {
-        C3p0Plugin c3p0Plugin = new C3p0Plugin(url, username, password, driver);
+        C3p0Plugin c3p0Plugin = new C3p0Plugin(url + File.separator + databaseName, username, password, driver);
         me.add(c3p0Plugin);
         ActiveRecordPlugin activeRecordPlugin = new ActiveRecordPlugin(c3p0Plugin);
         activeRecordPlugin.setShowSql(true);
