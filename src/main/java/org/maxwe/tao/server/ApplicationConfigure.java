@@ -120,7 +120,6 @@ public class ApplicationConfigure extends JFinalConfig {
         me.add("/view", PageController.class);
         me.add("/manager", ManagerController.class);
         me.add("/system", SystemController.class);
-
     }
 
     @Override

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2017-02-18 08:48:46
+-- Generation Time: 2017-02-27 05:24:04
 -- 服务器版本： 5.6.22
 -- PHP Version: 5.5.20
 
@@ -49,6 +49,24 @@ CREATE TABLE IF NOT EXISTS `agent` (
   `zhifubao` varchar(36) DEFAULT NULL COMMENT '支付宝账户',
   `pIdTime` timestamp NULL DEFAULT NULL COMMENT '申请加入代理体系的时间',
   `reachTime` timestamp NULL DEFAULT NULL COMMENT '达成上下级代理的时间',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `backup`
+--
+
+DROP TABLE IF EXISTS `backup`;
+CREATE TABLE IF NOT EXISTS `backup` (
+  `id` varchar(36) NOT NULL,
+  `name` varchar(36) DEFAULT NULL COMMENT '名称',
+  `filePath` varchar(128) NOT NULL COMMENT '文件路径',
+  `type` int(1) NOT NULL DEFAULT '1' COMMENT '1数据库，2日志',
+  `auto` int(1) NOT NULL DEFAULT '1' COMMENT '1：自动备份，2：手动备份',
+  `counter` int(11) NOT NULL DEFAULT '0' COMMENT '下载次数',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -124,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `manager` (
 --
 
 INSERT INTO `manager` (`id`, `loginName`, `nickName`, `cellphone`, `password`, `level`, `status`, `access`, `createTime`, `updateTime`) VALUES
-('9965aad0-f19c-11e6-87a2-adf5c4f88bd2', 'administrator110', 'admin', '18511694468', 'B9416C80E3045C9929C3AE9B7B352124', -99, -67, '["200","201","202"]', '2017-02-13 03:29:17', '2017-02-15 10:01:11');
+('9965aad0-f19c-11e6-87a2-adf5c4f88bd2', 'administrator110', 'admin', '18511694468', 'B9416C80E3045C9929C3AE9B7B352124', -99, -67, '["200","201","202","300","301","302"]', '2017-02-13 03:29:17', '2017-02-21 01:46:41');
 
 -- --------------------------------------------------------
 
@@ -146,6 +164,13 @@ CREATE TABLE IF NOT EXISTS `user` (
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
+--
+-- 转存表中的数据 `user`
+--
+
+INSERT INTO `user` (`id`, `mark`, `cellphone`, `password`, `name`, `actCode`, `actTime`, `status`, `createTime`, `updateTime`) VALUES
+('ef30e9b4-b763-4761-a56c-af6dec517538', 'AFBUMRNCQWH', '18511694468', '3F070D4E90A4C6BD02E8979978DEF210', NULL, NULL, NULL, 1, '2017-02-20 08:50:18', '2017-02-20 08:50:18');
+
 -- --------------------------------------------------------
 
 --
@@ -162,18 +187,10 @@ CREATE TABLE IF NOT EXISTS `version` (
   `appName` varchar(36) DEFAULT NULL COMMENT '应用名称',
   `information` text COMMENT '备注信息',
   `url` varchar(256) DEFAULT NULL COMMENT '下载地址',
-  `upgrade` int(11) DEFAULT NULL COMMENT '是否强制升级',
+  `upgrade` int(1) DEFAULT NULL COMMENT '是否强制升级，0不强制升级 其他强制',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `version`
---
-
-INSERT INTO `version` (`versionId`, `platform`, `type`, `versionCode`, `versionName`, `appName`, `information`, `url`, `upgrade`, `createTime`, `updateTime`) VALUES
-('7975f9dc-d48c-11e6-802a-6ef16e545ac5', 'Android', 2, 5, 'snapshot-1.0.3', 'Agent', '1:增加了什么功能；\r\n2:增加了什么特色；\r\n3:增加了什么玩意；\r\n4:修改了什么东西；\r\n5:优化了什么路径；', NULL, 3, '2017-01-07 03:50:47', '2017-01-14 07:00:06'),
-('ac6d1fbe-d4aa-11e6-802a-6ef16e545ac5', 'Android', 1, 4, 'snapshot-1.0.3', 'Seller', '1:故用兵之法，十则围之，五则攻之，倍则分之，敌则能战之，少则能逃之，不若则能避之。故小敌之坚，大敌之擒也。\r\n2:夫将者，国之辅也,辅周则国必强，辅隙则国必弱。', NULL, 1, '2017-01-07 07:26:58', '2017-02-16 02:49:13');
 
 --
 -- Indexes for dumped tables
@@ -186,6 +203,12 @@ ALTER TABLE `agent`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `cellphone` (`cellphone`),
   ADD UNIQUE KEY `mark` (`mark`);
+
+--
+-- Indexes for table `backup`
+--
+ALTER TABLE `backup`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `history`
