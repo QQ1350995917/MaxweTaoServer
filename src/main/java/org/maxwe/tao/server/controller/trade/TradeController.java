@@ -50,7 +50,7 @@ public class TradeController extends Controller implements ITradeController {
             return;
         }
 
-        CSEntity agentCS = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
+        CSEntity agentCS = new CSEntity(0, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
         CSEntity csEntity = TokenContext.getCSEntity(agentCS);
 
         // 这里查询授权码的数量是否足够
@@ -135,7 +135,7 @@ public class TradeController extends Controller implements ITradeController {
             return;
         }
 
-        CSEntity agentCS = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
+        CSEntity agentCS = new CSEntity(0, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
         CSEntity csEntity = TokenContext.getCSEntity(agentCS);
 
         // 这里查询授权码的数量是否足够
@@ -160,7 +160,7 @@ public class TradeController extends Controller implements ITradeController {
         }
 
         // 检测流向账户信息
-        AgentEntity branchEntity = iAgentServices.retrieveByMark(requestModel.getTargetMark());
+        AgentEntity branchEntity = iAgentServices.retrieveById(requestModel.getTargetId());
         if (branchEntity == null) {
             this.logger.info("grant : 服务器内部错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
@@ -186,7 +186,6 @@ public class TradeController extends Controller implements ITradeController {
         historyEntity.setId(UUID.randomUUID().toString());
         historyEntity.setFromId(trunkEntity.getId());
         historyEntity.setToId(branchEntity.getId());
-        historyEntity.setToMark(branchEntity.getMark());
         historyEntity.setType(2);
         historyEntity.setCodeNum(requestModel.getCodeNum());
         boolean grant = iTradeServices.trade(trunkEntity, branchEntity, historyEntity);

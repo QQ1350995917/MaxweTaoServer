@@ -1,7 +1,6 @@
 package org.maxwe.tao.server.controller.history;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.PropertyFilter;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
@@ -39,7 +38,7 @@ public class HistoryController extends Controller implements IHistoryController 
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
             renderJson(JSON.toJSONString(iResultSet));
         } else {
-            CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
+            CSEntity csEntity = new CSEntity(0, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
             LinkedList<HistoryEntity> historyEntities = iHistoryServices.retrieveByFromId(TokenContext.getCSEntity(csEntity).getId(), requestModel.getPageIndex(), requestModel.getPageSize());
             if (historyEntities == null || historyEntities.size() == 0) {
                 iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
@@ -49,15 +48,7 @@ public class HistoryController extends Controller implements IHistoryController 
             requestModel.setHistoryEntities(historyEntities);
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-            String resultJson = JSON.toJSONString(iResultSet, new PropertyFilter() {
-                @Override
-                public boolean apply(Object object, String name, Object value) {
-                    if ("id".equals(name) || "fromId".equals(name)|| "toId".equals(name)) {
-                        return false;
-                    }
-                    return true;
-                }
-            });
+            String resultJson = JSON.toJSONString(iResultSet);
             renderJson(resultJson);
         }
     }

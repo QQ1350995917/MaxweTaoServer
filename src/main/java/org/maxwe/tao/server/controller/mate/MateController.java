@@ -1,6 +1,5 @@
 package org.maxwe.tao.server.controller.mate;
 
-import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.PropertyFilter;
 import com.jfinal.aop.Before;
@@ -23,7 +22,7 @@ import java.util.LinkedList;
 /**
  * Created by Pengwei Ding on 2017-01-09 18:52.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description: 代理之间的关系
  */
 public class MateController extends Controller implements IMateController {
     private final Logger logger = Logger.getLogger(MateController.class.getName());
@@ -45,7 +44,7 @@ public class MateController extends Controller implements IMateController {
         }
 
         // 通过mark查找上级
-        AgentEntity trunkEntity = this.iAgentServices.retrieveByMark(requestModel.getTargetMark());
+        AgentEntity trunkEntity = this.iAgentServices.retrieveById(requestModel.getTargetId());
         if (trunkEntity == null) {
             this.logger.info("beg : 没有找到 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
@@ -65,10 +64,10 @@ public class MateController extends Controller implements IMateController {
             return;
         }
 
-        CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
+        CSEntity csEntity = new CSEntity(0, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
         CSEntity existCSEntity = TokenContext.getCSEntity(csEntity);
         AgentEntity branchAgentEntity = this.iAgentServices.retrieveById(existCSEntity.getId());
-        if (!StringUtils.isEmpty(branchAgentEntity.getpId())){
+        if (branchAgentEntity.getpId() != 0){
             this.logger.info("beg : 已经处于等待授权确认 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_REPEAT.getCode());
             iResultSet.setData(requestModel);
@@ -79,7 +78,6 @@ public class MateController extends Controller implements IMateController {
 
         branchAgentEntity.setId(existCSEntity.getId());
         branchAgentEntity.setpId(trunkEntity.getId());
-        branchAgentEntity.setpMark(trunkEntity.getMark());
         boolean askForReach = iAgentServices.askForReach(branchAgentEntity);
         if (!askForReach) {
             this.logger.info("beg : 申请加入-服务器内部错误 " + requestModel.toString());
@@ -96,10 +94,8 @@ public class MateController extends Controller implements IMateController {
             String string = JSON.toJSONString(iResultSet, new PropertyFilter() {
                 @Override
                 public boolean apply(Object object, String name, Object value) {
-                    if ("id".equals(name)
-                            || "password".equals(name)
+                    if ("password".equals(name)
                             || "status".equals(name)
-                            || "pId".equals(name)
                             || "named".equals(name)
                             || "weight".equals(name)
                             ) {
@@ -128,7 +124,7 @@ public class MateController extends Controller implements IMateController {
         }
 
         // 通过mark查找下级
-        AgentEntity branchAgentEntity = this.iAgentServices.retrieveByMark(requestModel.getTargetMark());
+        AgentEntity branchAgentEntity = this.iAgentServices.retrieveById(requestModel.getTargetId());
         if (branchAgentEntity == null) {
             this.logger.info("grant : 服务器内部错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
@@ -171,7 +167,7 @@ public class MateController extends Controller implements IMateController {
         }
 
         // 通过mark查找下级
-        AgentEntity branchAgentEntity = this.iAgentServices.retrieveByMark(requestModel.getTargetMark());
+        AgentEntity branchAgentEntity = this.iAgentServices.retrieveById(requestModel.getTargetId());
         if (branchAgentEntity == null) {
             this.logger.info("reject : 服务器内部错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
@@ -181,8 +177,6 @@ public class MateController extends Controller implements IMateController {
             return;
         }
 
-        branchAgentEntity.setpId(null);
-        branchAgentEntity.setpMark(null);
         branchAgentEntity.setReach(0);
         boolean updateReach = iAgentServices.updateReach(branchAgentEntity);
         if (!updateReach) {
@@ -216,7 +210,7 @@ public class MateController extends Controller implements IMateController {
         }
 
         // 通过mark查找上级
-        AgentEntity trunkEntity = this.iAgentServices.retrieveByMark(requestModel.getTargetMark());
+        AgentEntity trunkEntity = this.iAgentServices.retrieveById(requestModel.getTargetId());
         if (trunkEntity == null) {
             this.logger.info("leader : 服务器内部错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
@@ -233,8 +227,7 @@ public class MateController extends Controller implements IMateController {
             String string = JSON.toJSONString(iResultSet, new PropertyFilter() {
                 @Override
                 public boolean apply(Object object, String name, Object value) {
-                    if ("id".equals(name)
-                            || "password".equals(name)
+                    if ("password".equals(name)
                             || "status".equals(name)
                             || "pId".equals(name)
                             || "named".equals(name)
@@ -262,7 +255,7 @@ public class MateController extends Controller implements IMateController {
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
             renderJson(JSON.toJSONString(iResultSet));
         } else {
-            CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
+            CSEntity csEntity = new CSEntity(0, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
             LinkedList<AgentEntity> agentEntities = iAgentServices.retrieveByPid(TokenContext.getCSEntity(csEntity).getId(), requestModel.getPageIndex(), requestModel.getPageSize());
 
             if (agentEntities == null || agentEntities.size() == 0) {
@@ -281,10 +274,8 @@ public class MateController extends Controller implements IMateController {
             String resultJson = JSON.toJSONString(iResultSet, new PropertyFilter() {
                 @Override
                 public boolean apply(Object object, String name, Object value) {
-                    if ("id".equals(name)
-                            || "password".equals(name)
+                    if ("password".equals(name)
                             || "status".equals(name)
-                            || "pId".equals(name)
                             || "named".equals(name)
                             || "weight".equals(name)
                             ) {

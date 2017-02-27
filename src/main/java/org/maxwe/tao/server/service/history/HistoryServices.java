@@ -15,18 +15,6 @@ import java.util.Map;
  */
 public class HistoryServices implements IHistoryServices {
 
-
-//    @Override
-//    public HistoryEntity updateToId(HistoryEntity historyEntity) {
-//        int count = Db.update("UPDATE history SET toId = ? , toMark = ? WHERE id = ? ",
-//                historyEntity.getToId(),historyEntity.getToMark(), historyEntity.getId());
-//        if (count == 1) {
-//            return historyEntity;
-//        } else {
-//            return null;
-//        }
-//    }
-
     @Override
     public HistoryEntity retrieveByActCode(String actCode) {
         List<Record> records = Db.find("SELECT * FROM history WHERE actCode = ? ", actCode);
@@ -39,7 +27,7 @@ public class HistoryServices implements IHistoryServices {
     }
 
     @Override
-    public LinkedList<HistoryEntity> retrieveByFromId(String fromId, int pageIndex, int pageSize) {
+    public LinkedList<HistoryEntity> retrieveByFromId(int fromId, int pageIndex, int pageSize) {
         List<Record> historyRecords = Db.find("SELECT * FROM history WHERE fromId = ? ORDER BY createTime DESC limit ? , ?",
                 fromId, pageIndex * pageSize, pageSize);
         LinkedList<HistoryEntity> historyEntities = new LinkedList<>();

@@ -9,9 +9,8 @@ import java.io.Serializable;
  */
 public class HistoryEntity implements Serializable {
     private String id; // 业务ID
-    private String fromId; // 操作来源ID
-    private String toId; // 操作流向ID，如果类型为1，则此ID为后来补充
-    private String toMark; // 操作流向的显示ID，如果类型为1，则此ID为后来补充
+    private int fromId; // 操作来源ID
+    private int toId; // 操作流向ID，如果类型为0，则此ID为后来补充
     private int type; // 1激活码，2批量激活码
     private String actCode; //如果类型为1，则是向单个用激活
     private int codeNum;//如果类型为2，则表示交易为数量
@@ -30,28 +29,20 @@ public class HistoryEntity implements Serializable {
         this.id = id;
     }
 
-    public String getFromId() {
+    public int getFromId() {
         return fromId;
     }
 
-    public void setFromId(String fromId) {
+    public void setFromId(int fromId) {
         this.fromId = fromId;
     }
 
-    public String getToId() {
+    public int getToId() {
         return toId;
     }
 
-    public void setToId(String toId) {
+    public void setToId(int toId) {
         this.toId = toId;
-    }
-
-    public String getToMark() {
-        return toMark;
-    }
-
-    public void setToMark(String toMark) {
-        this.toMark = toMark;
     }
 
     public int getType() {
@@ -103,7 +94,6 @@ public class HistoryEntity implements Serializable {
                 ", actCode='" + actCode + '\'' +
                 ", type=" + type +
                 ", toId='" + toId + '\'' +
-                ", toMark='" + toMark + '\'' +
                 ", fromId='" + fromId + '\'' +
                 ", id='" + id + '\'' +
                 '}';

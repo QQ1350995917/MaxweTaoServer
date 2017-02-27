@@ -8,7 +8,7 @@ import org.maxwe.tao.server.common.utils.DateTimeUtils;
  * Description: @TODO
  */
 public class CSEntity {
-    private String id;
+    private int id;
     private String cellphone;
     private String token;
     private int apt; // 登录类型
@@ -18,7 +18,7 @@ public class CSEntity {
         super();
     }
 
-    public CSEntity(String id,String cellphone,String token,int apt) {
+    public CSEntity(int id,String cellphone,String token,int apt) {
         super();
         this.id = id;
         this.cellphone = cellphone;
@@ -27,11 +27,11 @@ public class CSEntity {
         this.apt = apt;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

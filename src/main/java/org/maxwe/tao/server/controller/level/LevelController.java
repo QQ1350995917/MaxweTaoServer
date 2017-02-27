@@ -1,7 +1,6 @@
 package org.maxwe.tao.server.controller.level;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.PropertyFilter;
 import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
@@ -73,15 +72,7 @@ public class LevelController extends Controller implements ILevelController {
         }
         iResultSet.setData(levelEntities);
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        String resultJson = JSON.toJSONString(iResultSet, new PropertyFilter() {
-            @Override
-            public boolean apply(Object object, String name, Object value) {
-                if ("id".equals(name)) {
-                    return false;
-                }
-                return true;
-            }
-        });
+        String resultJson = JSON.toJSONString(iResultSet);
         renderJson(resultJson);
     }
 

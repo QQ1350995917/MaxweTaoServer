@@ -13,7 +13,7 @@ public interface IHistoryServices {
 
     HistoryEntity retrieveByActCode(String actCode);
 
-    LinkedList<HistoryEntity> retrieveByFromId(String fromId,int pageIndex,int pageSize);
+    LinkedList<HistoryEntity> retrieveByFromId(int fromId,int pageIndex,int pageSize);
 
     LinkedList<HistoryEntity> retrieveByTime(String fromId,long startTime,long endTime,int pageIndex,int pageSize);
 

@@ -33,8 +33,7 @@ public interface IAgentServices {
      * @return
      */
     AgentEntity updateBank(AgentEntity agentEntity);
-    AgentEntity retrieveById(String id);
-    AgentEntity retrieveByMark(String mark);
+    AgentEntity retrieveById(int id);
     AgentEntity retrieveByCellphone(String cellphone);
 
     /**
@@ -44,7 +43,7 @@ public interface IAgentServices {
      * @param pageSize
      * @return
      */
-    LinkedList<AgentEntity> retrieveByPid(String pId,int pageIndex,int pageSize);
+    LinkedList<AgentEntity> retrieveByPid(int pId,int pageIndex,int pageSize);
 
     LinkedList<AgentEntity> retrieveAll(int pageIndex,int pageSize);
     int retrieveAllSum();

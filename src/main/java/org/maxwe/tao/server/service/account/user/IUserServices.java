@@ -39,15 +39,7 @@ public interface IUserServices {
      * @param id 业务ID
      * @return
      */
-    UserEntity retrieveById(String id);
-
-    /**
-     * 通过代号（用户ID）查找
-     *
-     * @param mark 用户ID
-     * @return
-     */
-    UserEntity retrieveByMark(String mark);
+    UserEntity retrieveById(int id);
 
     /**
      * 通过手机号码查找

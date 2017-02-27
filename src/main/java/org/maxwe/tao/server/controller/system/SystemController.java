@@ -43,13 +43,13 @@ public class SystemController extends Controller implements ISystemController {
     @Override
     @Before(SessionInterceptor.class)
     public void append() {
-        String mark = this.getPara("mark");
+        int id = this.getParaToInt("id") == null ? 0 : this.getParaToInt("id");
         int appendCodes = this.getParaToInt("appendCodes");
-        if (StringUtils.isEmpty(mark) || appendCodes <= 0 || appendCodes > 1000) {
+        if (id == 0 || appendCodes <= 0 || appendCodes > 1000) {
             this.setAttr("errorInfo", "提交参数错误");
         } else {
             AgentEntity agentEntity = new AgentEntity();
-            agentEntity.setMark(mark);
+            agentEntity.setId(id);
             boolean appendResult = iAgentServices.appendCodes(agentEntity, appendCodes);
             if (appendResult) {
 
@@ -106,7 +106,6 @@ public class SystemController extends Controller implements ISystemController {
             }
         }
     }
-
 
     @Override
     @Before(SessionInterceptor.class)

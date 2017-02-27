@@ -9,8 +9,7 @@ import java.io.Serializable;
  * 细分账户都应该继承自该类
  */
 public class AccountEntity implements Serializable {
-    private String id; // 业务ID，不能暴露给客户端
-    private String mark; // 用户ID
+    private int id; // 业务ID，不能暴露给客户端
     private String cellphone; //手机号码 唯一
     private String password; // 登录密码
     private String name; // 用户备注名字 数据库可为空
@@ -22,20 +21,12 @@ public class AccountEntity implements Serializable {
         super();
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
-    }
-
-    public String getMark() {
-        return mark;
-    }
-
-    public void setMark(String mark) {
-        this.mark = mark;
     }
 
     public String getCellphone() {
@@ -90,7 +81,6 @@ public class AccountEntity implements Serializable {
     public String toString() {
         return "AccountEntity{" +
                 "id='" + id + '\'' +
-                ", mark='" + mark + '\'' +
                 ", cellphone='" + cellphone + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +

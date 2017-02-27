@@ -1,6 +1,5 @@
 package org.maxwe.tao.server.controller.mate;
 
-import com.alibaba.druid.util.StringUtils;
 import org.maxwe.tao.server.controller.account.model.SessionModel;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 import org.maxwe.tao.server.service.level.LevelEntity;
@@ -11,7 +10,7 @@ import org.maxwe.tao.server.service.level.LevelEntity;
  * Description: @TODO
  */
 public class TrunkModel extends SessionModel {
-    private String targetMark;
+    private int targetId;
     private AgentEntity agentEntity;
     private LevelEntity levelEntity;
 
@@ -19,12 +18,13 @@ public class TrunkModel extends SessionModel {
         super();
     }
 
-    public String getTargetMark() {
-        return targetMark;
+
+    public int getTargetId() {
+        return targetId;
     }
 
-    public void setTargetMark(String targetMark) {
-        this.targetMark = targetMark;
+    public void setTargetId(int targetId) {
+        this.targetId = targetId;
     }
 
     public AgentEntity getAgentEntity() {
@@ -46,13 +46,12 @@ public class TrunkModel extends SessionModel {
     @Override
     public String toString() {
         return super.toString() + "TrunkModel{" +
-                "targetMark='" + targetMark + '\'' +
                 ", agentEntity=" + agentEntity +
                 '}';
     }
 
     @Override
     public boolean isParamsOk() {
-        return super.isParamsOk() && !StringUtils.isEmpty(this.getTargetMark());
+        return super.isParamsOk() && this.getTargetId() != 0;
     }
 }

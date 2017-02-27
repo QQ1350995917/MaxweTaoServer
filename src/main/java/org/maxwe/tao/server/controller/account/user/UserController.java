@@ -10,7 +10,6 @@ import org.maxwe.tao.server.common.cache.TokenContext;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.common.sms.SMSManager;
-import org.maxwe.tao.server.common.utils.MarkUtils;
 import org.maxwe.tao.server.common.utils.PasswordUtils;
 import org.maxwe.tao.server.common.utils.TokenUtils;
 import org.maxwe.tao.server.controller.account.model.*;
@@ -23,8 +22,6 @@ import org.maxwe.tao.server.service.account.user.UserServices;
 import org.maxwe.tao.server.service.history.HistoryEntity;
 import org.maxwe.tao.server.service.history.HistoryServices;
 import org.maxwe.tao.server.service.history.IHistoryServices;
-
-import java.util.UUID;
 
 /**
  * Created by Pengwei Ding on 2017-01-09 18:11.
@@ -53,7 +50,7 @@ public class UserController extends Controller implements IUserController {
 
         HistoryEntity historyEntity = iHistoryServices.retrieveByActCode(requestModel.getActCode());
         if (historyEntity == null
-                || !StringUtils.isEmpty(historyEntity.getToId())
+                || historyEntity.getFromId() == 0
                 || historyEntity.getType() != 1) {
             this.logger.info("active : 请求参数错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
@@ -64,7 +61,7 @@ public class UserController extends Controller implements IUserController {
         }
 
 
-        CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
+        CSEntity csEntity = new CSEntity(0, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
         UserEntity userEntity = iUserServices.retrieveById(TokenContext.getCSEntity(csEntity).getId());
         if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getCellphone(),requestModel.getVerification()), userEntity.getPassword())) {
             this.logger.info("grant : 认证密码错误 " + requestModel.toString());
@@ -77,7 +74,6 @@ public class UserController extends Controller implements IUserController {
         }
         userEntity.setActCode(requestModel.getActCode());
         historyEntity.setToId(userEntity.getId());
-        historyEntity.setToMark(userEntity.getMark());
         boolean updateActiveStatus = iUserServices.updateActiveStatus(userEntity,historyEntity);
         if (!updateActiveStatus) {
             this.logger.info("active : 激活失败-服务器内部错误 " + requestModel.toString());
@@ -162,8 +158,6 @@ public class UserController extends Controller implements IUserController {
         }
 
         UserEntity userEntity = new UserEntity();
-        userEntity.setId(UUID.randomUUID().toString());
-        userEntity.setMark(MarkUtils.enMark(requestModel.getCellphone()));
         userEntity.setCellphone(requestModel.getCellphone());
         userEntity.setPassword(PasswordUtils.enPassword(requestModel.getCellphone(),requestModel.getPassword()));
 
@@ -180,7 +174,7 @@ public class UserController extends Controller implements IUserController {
             this.logger.info("create : 注册成功 " + requestModel.toString());
 
             //创建
-            SessionModel sessionModel = new SessionModel(csEntity.getToken(), saveUserEntity.getMark(), saveUserEntity.getCellphone());
+            SessionModel sessionModel = new SessionModel(csEntity.getToken(), saveUserEntity.getId(), saveUserEntity.getCellphone());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             iResultSet.setData(sessionModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
@@ -239,7 +233,7 @@ public class UserController extends Controller implements IUserController {
             TokenContext.addCSEntity(csEntity);
             this.logger.info("lost : 找回密码成功 " + requestModel.toString());
             //创建
-            SessionModel sessionModel = new SessionModel(csEntity.getToken(), updateUser.getMark(), updateUser.getCellphone());
+            SessionModel sessionModel = new SessionModel(csEntity.getToken(), updateUser.getId(), updateUser.getCellphone());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             iResultSet.setData(sessionModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
@@ -275,7 +269,7 @@ public class UserController extends Controller implements IUserController {
             TokenContext.addCSEntity(csEntity);
             this.logger.info("login : 登录成功 " + requestModel.toString());
 
-            SessionModel sessionModel = new SessionModel(csEntity.getToken(), userEntity.getMark(), userEntity.getCellphone());
+            SessionModel sessionModel = new SessionModel(csEntity.getToken(), userEntity.getId(), userEntity.getCellphone());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             iResultSet.setData(sessionModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_LOGIN_SUCCESS);
@@ -289,7 +283,7 @@ public class UserController extends Controller implements IUserController {
         String params = this.getAttr("p");
         ModifyModel requestModel = JSON.parseObject(params, ModifyModel.class);
         IResultSet iResultSet = new ResultSet();
-        CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
+        CSEntity csEntity = new CSEntity(0, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
         CSEntity existCSEntity = TokenContext.getCSEntity(csEntity);
 
         UserEntity existUserEntity = iUserServices.retrieveById(existCSEntity.getId());
@@ -324,7 +318,7 @@ public class UserController extends Controller implements IUserController {
             TokenContext.addCSEntity(newCSEntity);
             this.logger.info("password : 修改密码成功 " + requestModel.toString());
 
-            SessionModel sessionModel = new SessionModel(newCSEntity.getToken(), updateUserEntity.getMark(), updateUserEntity.getCellphone());
+            SessionModel sessionModel = new SessionModel(newCSEntity.getToken(), updateUserEntity.getId(), updateUserEntity.getCellphone());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             iResultSet.setData(sessionModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
@@ -338,7 +332,7 @@ public class UserController extends Controller implements IUserController {
         String params = this.getAttr("p");
         SessionModel requestModel = JSON.parseObject(params, SessionModel.class);
         IResultSet iResultSet = new ResultSet();
-        CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
+        CSEntity csEntity = new CSEntity(0, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
         TokenContext.delCSEntity(csEntity);
         this.logger.info("logout : 退出成功 " + requestModel.toString());
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
@@ -352,7 +346,7 @@ public class UserController extends Controller implements IUserController {
         String params = this.getAttr("p");
         SessionModel requestModel = JSON.parseObject(params, SessionModel.class);
         IResultSet iResultSet = new ResultSet();
-        CSEntity csEntity = new CSEntity(null, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
+        CSEntity csEntity = new CSEntity(0, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
         UserEntity userEntity = iUserServices.retrieveById(TokenContext.getCSEntity(csEntity).getId());
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(userEntity);
@@ -360,10 +354,8 @@ public class UserController extends Controller implements IUserController {
         String resultJson = JSON.toJSONString(iResultSet, new PropertyFilter() {
             @Override
             public boolean apply(Object object, String name, Object value) {
-                if ("id".equals(name)
-                        || "password".equals(name)
+                if ("password".equals(name)
                         || "status".equals(name)
-                        || "pId".equals(name)
                         || "named".equals(name)
                         || "weight".equals(name)
                         ) {

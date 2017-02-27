@@ -1,6 +1,5 @@
 package org.maxwe.tao.server.controller.trade;
 
-import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.maxwe.tao.server.controller.account.model.SessionModel;
 
@@ -10,7 +9,7 @@ import org.maxwe.tao.server.controller.account.model.SessionModel;
  * Description: @TODO
  */
 public class TradeModel extends SessionModel {
-    private String targetMark;
+    private int targetId;
     private int type;
     private String actCode;
     private int codeNum;
@@ -19,12 +18,12 @@ public class TradeModel extends SessionModel {
         super();
     }
 
-    public String getTargetMark() {
-        return targetMark;
+    public int getTargetId() {
+        return targetId;
     }
 
-    public void setTargetMark(String targetMark) {
-        this.targetMark = targetMark;
+    public void setTargetId(int targetId) {
+        this.targetId = targetId;
     }
 
     public int getType() {
@@ -54,7 +53,6 @@ public class TradeModel extends SessionModel {
     @Override
     public String toString() {
         return "TradeModel{" +
-                "targetMark='" + targetMark + '\'' +
                 ", type=" + type +
                 ", actCode='" + actCode + '\'' +
                 ", codeNum=" + codeNum +
@@ -72,7 +70,7 @@ public class TradeModel extends SessionModel {
             return false;
         }
 
-        if (this.getType() == 2 && StringUtils.isEmpty(this.getTargetMark())){
+        if (this.getType() == 2 && this.getTargetId() == 0){
             return false;
         }
 

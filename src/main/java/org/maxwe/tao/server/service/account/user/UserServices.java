@@ -22,8 +22,6 @@ public class UserServices implements IUserServices {
     @Override
     public UserEntity create(UserEntity userEntity) {
         Record agentRecord = new Record()
-                .set("id", userEntity.getId())
-                .set("mark", userEntity.getMark())
                 .set("cellphone", userEntity.getCellphone())
                 .set("password", userEntity.getPassword());
         boolean isSave = Db.save("user", agentRecord);
@@ -50,8 +48,8 @@ public class UserServices implements IUserServices {
             public boolean run() throws SQLException {
                 int updateUser = Db.update("UPDATE user SET actCode = ? ,actTime = ?  WHERE id = ? ",
                         userEntity.getActCode(), new Timestamp(System.currentTimeMillis()), userEntity.getId());
-                int updateHistory = Db.update("UPDATE history SET toId = ? , toMark = ?  WHERE id = ?",
-                        historyEntity.getToId(),historyEntity.getToMark(), historyEntity.getId());
+                int updateHistory = Db.update("UPDATE history SET toId = ? WHERE id = ?",
+                        historyEntity.getToId(), historyEntity.getId());
                 return updateUser == 1 && updateHistory == 1;
             }
         });
@@ -59,20 +57,8 @@ public class UserServices implements IUserServices {
     }
 
     @Override
-    public UserEntity retrieveById(String id) {
+    public UserEntity retrieveById(int id) {
         List<Record> userRecords = Db.find("SELECT * FROM user WHERE id = ? ", id);
-        if (userRecords != null && userRecords.size() > 0 && userRecords.get(0) != null) {
-            Map<String, Object> accountMap = userRecords.get(0).getColumns();
-            UserEntity userEntity = JSON.parseObject(JSON.toJSONString(accountMap), UserEntity.class);
-            return userEntity;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public UserEntity retrieveByMark(String mark) {
-        List<Record> userRecords = Db.find("SELECT * FROM user WHERE mark = ? ", mark);
         if (userRecords != null && userRecords.size() > 0 && userRecords.get(0) != null) {
             Map<String, Object> accountMap = userRecords.get(0).getColumns();
             UserEntity userEntity = JSON.parseObject(JSON.toJSONString(accountMap), UserEntity.class);

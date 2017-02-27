@@ -41,16 +41,16 @@ public class TradeServices implements ITradeServices {
     public boolean trade(AgentEntity fromAgentEntity, AgentEntity toAgentEntity, HistoryEntity historyEntity) {
         boolean succeed = Db.tx(new IAtom() {
             public boolean run() throws SQLException {
-                int fromAgent = Db.update("UPDATE agent SET spendCodes = spendCodes + ?, leftCodes = leftCodes - ? " +
-                        "where id = ? ", historyEntity.getCodeNum(), historyEntity.getCodeNum(), fromAgentEntity.getId());
                 int toAgent = Db.update("UPDATE agent SET haveCodes = haveCodes + ?, leftCodes = leftCodes + ? " +
                         "where id = ? ", historyEntity.getCodeNum(), historyEntity.getCodeNum(), toAgentEntity.getId());
+
+                int fromAgent = Db.update("UPDATE agent SET spendCodes = spendCodes + ?, leftCodes = leftCodes - ? " +
+                        "where id = ? ", historyEntity.getCodeNum(), historyEntity.getCodeNum(), fromAgentEntity.getId());
 
                 Record historyRecord = new Record()
                         .set("id", historyEntity.getId())
                         .set("fromId", historyEntity.getFromId())
                         .set("toId", historyEntity.getToId())
-                        .set("toMark", historyEntity.getToMark())
                         .set("type", historyEntity.getType())
                         .set("actCode", historyEntity.getActCode())
                         .set("codeNum", historyEntity.getCodeNum());
