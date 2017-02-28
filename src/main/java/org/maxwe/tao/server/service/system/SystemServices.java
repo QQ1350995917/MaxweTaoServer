@@ -3,6 +3,7 @@ package org.maxwe.tao.server.service.system;
 import com.alibaba.fastjson.JSON;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
+import org.maxwe.tao.server.ApplicationConfigure;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -43,7 +44,7 @@ public class SystemServices implements ISystemServices {
     @Override
     public synchronized void backup(String filePath, String name, String password, String db) throws Exception {
         Runtime runtime = Runtime.getRuntime();
-        Process process = runtime.exec("/usr/local/bin/mysqldump -u" + name + " -p" + password + " " + db + " --lock-all-tables=true");
+        Process process = runtime.exec(ApplicationConfigure.DATABASE_BACKUP_COMMAND + " -u" + name + " -p" + password + " " + db + " --lock-all-tables=true");
         InputStream inputStream = process.getInputStream();
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -74,7 +75,7 @@ public class SystemServices implements ISystemServices {
     @Override
     public synchronized void recover(String filePath, String name, String password, String db) throws Exception {
         Runtime runtime = Runtime.getRuntime();
-        Process process = runtime.exec("mysql -u" + name + " -p" + password + " --default-character-set=utf8 " + db);
+        Process process = runtime.exec(ApplicationConfigure.DATABASE_MYSQL_COMMAND + " -u" + name + " -p" + password + " --default-character-set=utf8 " + db);
         OutputStream outputStream = process.getOutputStream();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
         String line;

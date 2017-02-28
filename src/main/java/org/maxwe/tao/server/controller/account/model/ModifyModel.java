@@ -9,7 +9,7 @@ import com.alibaba.fastjson.serializer.PropertyFilter;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class ModifyModel extends SessionModel {
+public class ModifyModel extends TokenModel {
 
     public static final PropertyFilter propertyFilter = new PropertyFilter() {
         @Override
@@ -45,9 +45,16 @@ public class ModifyModel extends SessionModel {
     }
 
     @Override
+    public String toString() {
+        return "ModifyModel{" +
+                "oldPassword='" + "******" + '\'' +
+                ", newPassword='" + "******" + '\'' +
+                '}';
+    }
+
     @JSONField(serialize=false)
     public boolean isParamsOk() {
-        boolean paramsOk = super.isParamsOk();
+        boolean paramsOk = super.isTokenParamsOk();
         if (!StringUtils.isEmpty(this.getOldPassword())
                 && !StringUtils.isEmpty(this.getNewPassword())
                 && this.getNewPassword().length() >= 6

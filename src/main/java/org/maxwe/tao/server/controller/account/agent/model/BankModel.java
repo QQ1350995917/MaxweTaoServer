@@ -1,14 +1,14 @@
 package org.maxwe.tao.server.controller.account.agent.model;
 
 import com.alibaba.druid.util.StringUtils;
-import org.maxwe.tao.server.controller.account.model.SessionModel;
+import org.maxwe.tao.server.controller.account.model.TokenModel;
 
 /**
  * Created by Pengwei Ding on 2017-01-09 18:38.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class BankModel extends SessionModel {
+public class BankModel extends TokenModel {
     private String trueName;
     private String zhifubao;
     private long timestamp;// 响应字段
@@ -50,7 +50,6 @@ public class BankModel extends SessionModel {
                 '}';
     }
 
-    @Override
     public boolean isParamsOk() {
         if (StringUtils.isEmpty(this.getTrueName())
                 || StringUtils.isEmpty(this.getZhifubao())
@@ -59,6 +58,6 @@ public class BankModel extends SessionModel {
                 || this.getVerification().length() > 12) {
             return false;
         }
-        return super.isParamsOk();
+        return super.isTokenParamsOk();
     }
 }

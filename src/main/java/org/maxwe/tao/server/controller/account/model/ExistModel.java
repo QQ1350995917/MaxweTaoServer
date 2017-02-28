@@ -8,7 +8,7 @@ import com.alibaba.fastjson.annotation.JSONField;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class ExistModel extends SessionModel {
+public class ExistModel extends TokenModel {
     private String cellphone;
 
     public ExistModel() {
@@ -25,6 +25,13 @@ public class ExistModel extends SessionModel {
 
     public void setCellphone(String cellphone) {
         this.cellphone = cellphone;
+    }
+
+    @Override
+    public String toString() {
+        return "ExistModel{" +
+                "cellphone='" + cellphone + '\'' +
+                '}';
     }
 
     @JSONField(serialize = false)

@@ -13,7 +13,7 @@ import java.io.Serializable;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class SessionModel implements Serializable {
+public class TokenModel implements Serializable {
     private String t;
     private int id;
     private String cellphone;
@@ -22,11 +22,11 @@ public class SessionModel implements Serializable {
     @JSONField(serialize = false)
     private String sign;
 
-    public SessionModel() {
+    public TokenModel() {
         super();
     }
 
-    public SessionModel(String t, int id, String cellphone) {
+    public TokenModel(String t, int id, String cellphone) {
         this.t = t;
         this.id = id;
         this.cellphone = cellphone;
@@ -83,10 +83,9 @@ public class SessionModel implements Serializable {
     @Override
     public String toString() {
         return "SessionModel{" +
-                "t='" + t + '\'' +
                 ", id='" + id + '\'' +
                 ", cellphone='" + cellphone + '\'' +
-                ", verification='" + verification + '\'' +
+                ", verification='" + "******" + '\'' +
                 ", apt=" + apt +
                 '}';
     }
@@ -124,7 +123,7 @@ public class SessionModel implements Serializable {
     }
 
     @JSONField(serialize = false)
-    private boolean isSessionParamsOk() {
+    public boolean isTokenParamsOk() {
         if (!StringUtils.isEmpty(this.getT())
                 && !StringUtils.isEmpty(this.getId() + "")
                 && CellPhoneUtils.isCellphone(this.getCellphone())
@@ -135,11 +134,4 @@ public class SessionModel implements Serializable {
             return false;
         }
     }
-
-    @JSONField(serialize = false)
-    public boolean isParamsOk() {
-        return isSessionParamsOk();
-    }
-
-
 }

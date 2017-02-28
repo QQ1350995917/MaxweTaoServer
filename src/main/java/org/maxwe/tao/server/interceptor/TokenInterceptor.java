@@ -6,7 +6,7 @@ import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.cache.TokenContext;
-import org.maxwe.tao.server.controller.account.model.SessionModel;
+import org.maxwe.tao.server.controller.account.model.TokenModel;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.service.account.CSEntity;
@@ -33,8 +33,8 @@ public class TokenInterceptor implements Interceptor {
             return;
         }
 
-        SessionModel requestModel = JSON.parseObject(params, SessionModel.class);
-        if (requestModel == null || !requestModel.isParamsOk()) {
+        TokenModel requestModel = JSON.parseObject(params, TokenModel.class);
+        if (requestModel == null || !requestModel.isTokenParamsOk()) {
             this.logger.error("TokenInterceptor ->  " + inv.getActionKey() + ": 请求参数不符合要求 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestModel);

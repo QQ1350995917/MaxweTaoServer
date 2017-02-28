@@ -38,6 +38,8 @@ public class ApplicationConfigure extends JFinalConfig {
     public static String APP_SMS_SECRET = "";
     public static String APP_SMS_MODEL = "";
     public static String DATABASE_BACKUP_FILE_DIR = "/";
+    public static String DATABASE_BACKUP_COMMAND = "";
+    public static String DATABASE_MYSQL_COMMAND = "";
 
     private static String url;
     public static String username;
@@ -60,6 +62,8 @@ public class ApplicationConfigure extends JFinalConfig {
             APP_SMS_SECRET = smsProperties.getProperty("APP_SMS_SECRET");
             APP_SMS_MODEL = smsProperties.getProperty("APP_SMS_MODEL");
             DATABASE_BACKUP_FILE_DIR = smsProperties.getProperty("SYSTEM_DATABASE_BACKUP_FILE_DIR");
+            DATABASE_BACKUP_COMMAND = smsProperties.getProperty("SYSTEM_DATABASE_BACKUP_COMMAND");
+            DATABASE_MYSQL_COMMAND = smsProperties.getProperty("SYSTEM_DATABASE_MYSQL_COMMAND");
             Properties dbProperties = new Properties();
             dbProperties.load(ApplicationConfigure.class.getClassLoader().getResourceAsStream("db.properties"));
             url = dbProperties.getProperty("url");

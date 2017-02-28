@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2017-02-27 05:24:04
+-- Generation Time: 2017-02-27 12:41:30
 -- 服务器版本： 5.6.22
 -- PHP Version: 5.5.20
 
@@ -30,11 +30,9 @@ USE `tao`;
 
 DROP TABLE IF EXISTS `agent`;
 CREATE TABLE IF NOT EXISTS `agent` (
-  `id` varchar(36) NOT NULL COMMENT '业务ID',
-  `pId` varchar(36) DEFAULT NULL COMMENT '上级代理ID，为空则表示没有上级',
+  `id` int(11) NOT NULL COMMENT '代理的ID，从100000起始',
+  `pId` int(11) DEFAULT NULL COMMENT '上级代理ID，为空则表示没有上级',
   `reach` int(1) DEFAULT '0' COMMENT '是否就代理达成一致意见，1达成，其他不达成',
-  `mark` varchar(12) NOT NULL COMMENT '显示ID',
-  `pMark` varchar(12) DEFAULT NULL COMMENT '上级的显示ID',
   `cellphone` varchar(11) NOT NULL COMMENT '手机号码',
   `password` varchar(64) NOT NULL COMMENT '登录密码',
   `name` varchar(36) DEFAULT NULL COMMENT '姓名',
@@ -51,7 +49,15 @@ CREATE TABLE IF NOT EXISTS `agent` (
   `reachTime` timestamp NULL DEFAULT NULL COMMENT '达成上下级代理的时间',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=100002 DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `agent`
+--
+
+INSERT INTO `agent` (`id`, `pId`, `reach`, `cellphone`, `password`, `name`, `named`, `levelId`, `weight`, `status`, `haveCodes`, `spendCodes`, `leftCodes`, `trueName`, `zhifubao`, `pIdTime`, `reachTime`, `createTime`, `updateTime`) VALUES
+(100000, 100000, 1, '18511694468', '0CE018668103ACE0F1066A490FA9A1C4', NULL, NULL, '0', 0, 1, 100, 6, 94, '丁朋伟', '18511694468', NULL, NULL, '2017-02-27 07:24:47', '2017-02-27 09:15:16'),
+(100001, 100000, 1, '15321136779', '319EE605B9A627C3422EBBBA98AB0DAD', NULL, NULL, '0', 0, 1, 5, 0, 5, NULL, NULL, NULL, '2017-02-27 09:03:55', '2017-02-27 07:48:47', '2017-02-27 09:08:03');
 
 -- --------------------------------------------------------
 
@@ -81,14 +87,21 @@ DROP TABLE IF EXISTS `history`;
 CREATE TABLE IF NOT EXISTS `history` (
   `id` varchar(36) NOT NULL COMMENT '业务ID',
   `fromId` varchar(36) NOT NULL COMMENT '操作来源ID',
-  `toId` varchar(36) DEFAULT NULL COMMENT '操作流向ID，如果类型为1，则此ID为后来补充',
-  `toMark` varchar(12) DEFAULT NULL COMMENT '流向的显示ID',
+  `toId` varchar(36) DEFAULT NULL COMMENT '操作流向ID，如果类型为空，则此ID为后来补充',
   `type` int(11) NOT NULL COMMENT '1激活码，2批量激活码',
   `actCode` varchar(12) DEFAULT NULL COMMENT '如果类型为1，则是向单个用激活；如果类型为2，则表示交易为数量',
   `codeNum` int(11) NOT NULL COMMENT '如果类型为2，则是代理之间交易，记录数量',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `history`
+--
+
+INSERT INTO `history` (`id`, `fromId`, `toId`, `type`, `actCode`, `codeNum`, `createTime`, `updateTime`) VALUES
+('5c834a82-ca57-4f55-a816-1ed137a0e1da', '100000', '100001', 2, NULL, 5, '2017-02-27 09:08:03', '2017-02-27 09:08:03'),
+('bea01163-7401-491b-8a8a-97cbd2220261', '100000', '10000000', 1, 'WMYYAQEK', 1, '2017-02-27 09:15:16', '2017-02-27 09:53:31');
 
 -- --------------------------------------------------------
 
@@ -152,8 +165,7 @@ INSERT INTO `manager` (`id`, `loginName`, `nickName`, `cellphone`, `password`, `
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
-  `id` varchar(36) NOT NULL COMMENT '业务ID，不能暴露给客户端',
-  `mark` varchar(12) NOT NULL COMMENT '用户ID',
+  `id` int(11) NOT NULL,
   `cellphone` varchar(15) NOT NULL COMMENT '手机号码',
   `password` varchar(64) NOT NULL COMMENT '登录密码',
   `name` varchar(36) DEFAULT NULL COMMENT '备注姓名',
@@ -162,14 +174,14 @@ CREATE TABLE IF NOT EXISTS `user` (
   `status` int(11) NOT NULL DEFAULT '1' COMMENT '0禁用，1正常',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=10000001 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 --
 -- 转存表中的数据 `user`
 --
 
-INSERT INTO `user` (`id`, `mark`, `cellphone`, `password`, `name`, `actCode`, `actTime`, `status`, `createTime`, `updateTime`) VALUES
-('ef30e9b4-b763-4761-a56c-af6dec517538', 'AFBUMRNCQWH', '18511694468', '3F070D4E90A4C6BD02E8979978DEF210', NULL, NULL, NULL, 1, '2017-02-20 08:50:18', '2017-02-20 08:50:18');
+INSERT INTO `user` (`id`, `cellphone`, `password`, `name`, `actCode`, `actTime`, `status`, `createTime`, `updateTime`) VALUES
+(10000000, '18511694468', '3F070D4E90A4C6BD02E8979978DEF210', NULL, 'WMYYAQEK', '2017-02-27 09:53:31', 1, '2017-02-27 09:26:04', '2017-02-27 09:53:31');
 
 -- --------------------------------------------------------
 
@@ -201,8 +213,7 @@ CREATE TABLE IF NOT EXISTS `version` (
 --
 ALTER TABLE `agent`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `cellphone` (`cellphone`),
-  ADD UNIQUE KEY `mark` (`mark`);
+  ADD UNIQUE KEY `cellphone` (`cellphone`);
 
 --
 -- Indexes for table `backup`
@@ -232,8 +243,7 @@ ALTER TABLE `manager`
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `mark` (`mark`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `version`
@@ -241,6 +251,20 @@ ALTER TABLE `user`
 ALTER TABLE `version`
   ADD PRIMARY KEY (`versionId`);
 
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `agent`
+--
+ALTER TABLE `agent`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '代理的ID，从100000起始',AUTO_INCREMENT=100002;
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10000001;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -1,7 +1,7 @@
 package org.maxwe.tao.server.controller.mate;
 
 import org.maxwe.tao.server.controller.account.agent.model.AgentModel;
-import org.maxwe.tao.server.controller.account.model.SessionModel;
+import org.maxwe.tao.server.controller.account.model.TokenModel;
 
 import java.util.LinkedList;
 
@@ -10,7 +10,7 @@ import java.util.LinkedList;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class BranchModel extends SessionModel {
+public class BranchModel extends TokenModel {
     private int total;
     private int pageIndex;
     private int pageSize;
@@ -52,8 +52,7 @@ public class BranchModel extends SessionModel {
         this.agentEntities = agentEntities;
     }
 
-    @Override
     public boolean isParamsOk() {
-        return this.getPageIndex() >= 0 && this.getPageSize() > 0 && super.isParamsOk();
+        return this.getPageIndex() >= 0 && this.getPageSize() > 0 && super.isTokenParamsOk();
     }
 }

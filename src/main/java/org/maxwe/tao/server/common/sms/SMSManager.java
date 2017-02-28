@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SMSManager {
     private final static Logger logger = Logger.getLogger(SMSManager.class.getName());
     private static final String url = "http://gw.api.taobao.com/router/rest";
-    private static final String product = "测试";
     private static final int DELAYED_ADDRESS = 1000 * 60; // 同一个地址注册的时间间隔
     private static final int DELAYED_CELLPHONE = 1000 * 60 * 10;// 同一个手机号验证码的有效期
 
@@ -120,28 +119,27 @@ public class SMSManager {
         } else {
             code = cacheCellphone.getCode();
         }
-        logger.info("sendSMS : cellphone = " + cellphone + " ; code = " + code);
         TaobaoClient client = new DefaultTaobaoClient(url, ApplicationConfigure.APP_SMS_KEY, ApplicationConfigure.APP_SMS_SECRET);
         AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
         req.setSmsType("normal");
-        req.setSmsFreeSignName("测试");
-        req.setSmsParamString("{\"code\":\"" + code + "\",\"product\":\"" + product + "\"}");
+        req.setSmsFreeSignName("淘妈咪验证码");
+        req.setSmsParamString("{\"code\":\"" + code + "\"}");
         req.setRecNum(cellphone);
         req.setSmsTemplateCode(ApplicationConfigure.APP_SMS_MODEL);
         AlibabaAliqinFcSmsNumSendResponse rsp = client.execute(req);
-        logger.info("sendSMS : 发送结果 = " + rsp.getBody());
         Map map = JSON.parseObject(rsp.getBody(), Map.class);
-//        if (Boolean.parseBoolean(((Map) ((Map) map.get("alibaba_aliqin_fc_sms_num_send_response")).get("result")).get("success").toString())) {
-//
-//        } else {
-//
-//        }
-//        System.out.println(rsp.getBody());
         //{"alibaba_aliqin_fc_sms_num_send_response":{"result":{"err_code":"0","model":"105243374211^1107192054051","success":true},"request_id":"s75ccxbqypop"}}
+        if (Boolean.parseBoolean(((Map) ((Map) map.get("alibaba_aliqin_fc_sms_num_send_response")).get("result")).get("success").toString())) {
+            logger.debug("sendSMS : " + cellphone + "发送结果成功");
+        } else {
+            logger.error("sendSMS : 发送结果 = " + rsp.getBody());
+        }
+//        System.out.println(rsp.getBody());
+
     }
 
-    public static String getSMSCode(String cellphone){
-        return SMS_CACHE_CELLPHONE.get(cellphone) == null ? null :SMS_CACHE_CELLPHONE.get(cellphone).getCode();
+    public static String getSMSCode(String cellphone) {
+        return SMS_CACHE_CELLPHONE.get(cellphone) == null ? null : SMS_CACHE_CELLPHONE.get(cellphone).getCode();
     }
 
     public static void main(String[] args) throws Exception {

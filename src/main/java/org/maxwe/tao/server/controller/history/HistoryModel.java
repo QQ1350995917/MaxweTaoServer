@@ -1,6 +1,6 @@
 package org.maxwe.tao.server.controller.history;
 
-import org.maxwe.tao.server.controller.account.model.SessionModel;
+import org.maxwe.tao.server.controller.account.model.TokenModel;
 import org.maxwe.tao.server.service.history.HistoryEntity;
 
 import java.util.LinkedList;
@@ -10,7 +10,7 @@ import java.util.LinkedList;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class HistoryModel extends SessionModel {
+public class HistoryModel extends TokenModel {
 
     private int total; // 响应字段
     private int pageIndex; // 请求字段
@@ -60,8 +60,7 @@ public class HistoryModel extends SessionModel {
                 '}';
     }
 
-    @Override
     public boolean isParamsOk() {
-        return super.isParamsOk() && this.getPageIndex() >= 0 && this.getPageSize() >= 1;
+        return super.isTokenParamsOk() && this.getPageIndex() >= 0 && this.getPageSize() >= 1;
     }
 }

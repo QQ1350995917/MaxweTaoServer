@@ -1,6 +1,6 @@
 package org.maxwe.tao.server.controller.mate;
 
-import org.maxwe.tao.server.controller.account.model.SessionModel;
+import org.maxwe.tao.server.controller.account.model.TokenModel;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 import org.maxwe.tao.server.service.level.LevelEntity;
 
@@ -9,7 +9,7 @@ import org.maxwe.tao.server.service.level.LevelEntity;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class TrunkModel extends SessionModel {
+public class TrunkModel extends TokenModel {
     private int targetId;
     private AgentEntity agentEntity;
     private LevelEntity levelEntity;
@@ -50,8 +50,7 @@ public class TrunkModel extends SessionModel {
                 '}';
     }
 
-    @Override
     public boolean isParamsOk() {
-        return super.isParamsOk() && this.getTargetId() != 0;
+        return super.isTokenParamsOk() && this.getTargetId() != 0;
     }
 }

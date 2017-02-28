@@ -10,7 +10,7 @@ import org.maxwe.tao.server.common.utils.CellPhoneUtils;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class LoginModel extends SessionModel{
+public class LoginModel extends TokenModel {
 
     public static final PropertyFilter propertyFilter = new PropertyFilter() {
         @Override
@@ -43,6 +43,14 @@ public class LoginModel extends SessionModel{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginModel{" +
+                "cellphone='" + cellphone + '\'' +
+                "password='" + "******" + '\'' +
+                '}';
     }
 
     @JSONField(serialize=false)

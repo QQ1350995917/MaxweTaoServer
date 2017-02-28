@@ -3,6 +3,7 @@ package org.maxwe.tao.server.controller.system;
 import com.alibaba.druid.util.StringUtils;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
+import org.apache.log4j.Logger;
 import org.maxwe.tao.server.ApplicationConfigure;
 import org.maxwe.tao.server.common.utils.DateTimeUtils;
 import org.maxwe.tao.server.interceptor.SessionInterceptor;
@@ -23,6 +24,7 @@ import java.util.UUID;
  * Description: @TODO
  */
 public class SystemController extends Controller implements ISystemController {
+    private final Logger logger = Logger.getLogger(SystemController.class.getName());
     private IAgentServices iAgentServices = new AgentServices();
 
     @Override
@@ -75,14 +77,18 @@ public class SystemController extends Controller implements ISystemController {
         this.getResponse().setContentType("application/json; charset=utf-8");
         try {
             String filePath = ApplicationConfigure.DATABASE_BACKUP_FILE_DIR + File.separator + DateTimeUtils.getCurrentTimestamp() + ".sql";
+            this.logger.info("backup : 路径 " + filePath);
             SystemServices.getInstance().backup(filePath, ApplicationConfigure.username, ApplicationConfigure.password, ApplicationConfigure.databaseName);
             BackupEntity backupEntity = SystemServices.getInstance().createBackup(new BackupEntity(UUID.randomUUID().toString(), null, filePath, 1, 1, 0));
             if (backupEntity == null) {
                 renderError(500);
+                this.logger.info("backup : 备份失败 ");
             } else {
+                this.logger.info("backup : 备份成功 ");
                 renderJson("{\"result\":\"ok\"}");
             }
         } catch (Exception e) {
+            this.logger.info("backup : 备份错误 " + e.getMessage());
             e.printStackTrace();
             renderError(500);
         }

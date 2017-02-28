@@ -1,14 +1,14 @@
 package org.maxwe.tao.server.controller.trade;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import org.maxwe.tao.server.controller.account.model.SessionModel;
+import org.maxwe.tao.server.controller.account.model.TokenModel;
 
 /**
  * Created by Pengwei Ding on 2017-01-10 10:24.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class TradeModel extends SessionModel {
+public class TradeModel extends TokenModel {
     private int targetId;
     private int type;
     private String actCode;
@@ -59,7 +59,6 @@ public class TradeModel extends SessionModel {
                 '}';
     }
 
-    @Override
     @JSONField(serialize=false)
     public boolean isParamsOk() {
         if (this.getType() != 1 && this.getType() != 2) {
@@ -82,6 +81,6 @@ public class TradeModel extends SessionModel {
             return false;
         }
 
-        return super.isParamsOk();
+        return super.isTokenParamsOk();
     }
 }

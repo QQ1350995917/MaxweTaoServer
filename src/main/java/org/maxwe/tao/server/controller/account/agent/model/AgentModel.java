@@ -1,6 +1,6 @@
 package org.maxwe.tao.server.controller.account.agent.model;
 
-import org.maxwe.tao.server.controller.account.model.SessionModel;
+import org.maxwe.tao.server.controller.account.model.TokenModel;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 import org.maxwe.tao.server.service.level.LevelEntity;
 
@@ -9,7 +9,7 @@ import org.maxwe.tao.server.service.level.LevelEntity;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class AgentModel extends SessionModel {
+public class AgentModel extends TokenModel {
     private AgentEntity agentEntity; // 响应字段
     private LevelEntity levelEntity; // 响应字段
 
