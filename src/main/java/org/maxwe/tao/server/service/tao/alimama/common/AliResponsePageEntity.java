@@ -435,4 +435,11 @@ public class AliResponsePageEntity {
     public void setUserTypeName(String userTypeName) {
         this.userTypeName = userTypeName;
     }
+
+    @Override
+    public String toString() {
+        return "AliResponsePageEntity{" +
+                "title='" + title + '\'' +
+                '}';
+    }
 }

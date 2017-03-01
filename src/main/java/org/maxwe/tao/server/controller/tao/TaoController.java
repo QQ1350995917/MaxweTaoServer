@@ -6,6 +6,7 @@ import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
+import org.apache.log4j.Logger;
 import org.maxwe.tao.server.ApplicationConfigure;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
@@ -40,6 +41,7 @@ import java.util.Map;
  * Description: @TODO
  */
 public class TaoController extends Controller implements ITaoController {
+    private final Logger logger = Logger.getLogger(TaoController.class.getName());
     private TaoGoodsServices taoGoodsServices = new TaoGoodsServices();
 
     @Override
@@ -252,9 +254,11 @@ public class TaoController extends Controller implements ITaoController {
     @Before({AppInterceptor.class, TokenInterceptor.class})
     public void search() {
         String params = this.getAttr("p");
+        logger.info("search : params = " + params);
         IResultSet iResultSet = new ResultSet();
         AliGoodsRequestModel aliGoodsRequestModel = JSON.parseObject(params, AliGoodsRequestModel.class);
         if (!aliGoodsRequestModel.isParamsOk()) {
+            logger.info("search : 参数错误 params = " + params);
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(aliGoodsRequestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
@@ -264,7 +268,8 @@ public class TaoController extends Controller implements ITaoController {
 
         try {
             List<AliResponsePageEntity> aliResponsePageEntities = AliGoodsServices.searchAlimamaForGoods(aliGoodsRequestModel);
-            if (aliResponsePageEntities == null){
+            if (aliResponsePageEntities == null) {
+                logger.info("search : 查询结果 null ");
                 iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
                 iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
                 renderJson(JSON.toJSONString(iResultSet));
@@ -275,9 +280,12 @@ public class TaoController extends Controller implements ITaoController {
             } else {
                 iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
             }
+            logger.info("search : 查询结果总量 " + aliResponsePageEntities.size());
+            logger.debug("search : 查询结果信息 " + aliResponsePageEntities.toString());
             iResultSet.setData(aliResponsePageEntities);
             renderJson(JSON.toJSONString(iResultSet));
         } catch (Exception e) {
+            logger.info("search : 查询结果异常");
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet));
@@ -301,7 +309,7 @@ public class TaoController extends Controller implements ITaoController {
 
         try {
             AliConvertEntity aliConvertEntity = AliConvertServices.convertAlimamaByGoodsId(aliConvertRequestModel);
-            if (aliConvertEntity == null){
+            if (aliConvertEntity == null) {
                 iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
                 iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
                 renderJson(JSON.toJSONString(iResultSet));
