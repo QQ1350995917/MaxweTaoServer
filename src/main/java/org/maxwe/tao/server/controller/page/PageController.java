@@ -4,8 +4,6 @@ import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
-import com.jfinal.plugin.activerecord.Db;
-import com.jfinal.plugin.activerecord.Record;
 import org.maxwe.tao.server.controller.account.manager.ManagerController;
 import org.maxwe.tao.server.interceptor.ManagerInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
@@ -15,7 +13,6 @@ import org.maxwe.tao.server.service.menu.MenuEntity;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Pengwei Ding on 2016-08-19 16:32.
@@ -26,20 +23,21 @@ public class PageController extends Controller implements IPageController {
 
     @Override
     public void index() {
-        if ("initdata".equals(this.getAttr("key"))) {
-            int times = Integer.parseInt(this.getAttr("times").toString());
-            LinkedList<Record> records = new LinkedList<>();
-            for (int i = 0; i < times; i++) {
-                Record agentRecord = new Record()
-                        .set("agentId", UUID.randomUUID().toString())
-                        .set("cellphone", "185" + String.format("%08d", i))
-                        .set("password1", "111111")
-                        .set("code", "185" + String.format("%08d", i));
-                records.add(agentRecord);
-            }
-            Db.batchSave("mate", records, 100);
-        }
-        this.renderJson("OK");
+//        if ("initdata".equals(this.getAttr("key"))) {
+//            int times = Integer.parseInt(this.getAttr("times").toString());
+//            LinkedList<Record> records = new LinkedList<>();
+//            for (int i = 0; i < times; i++) {
+//                Record agentRecord = new Record()
+//                        .set("agentId", UUID.randomUUID().toString())
+//                        .set("cellphone", "185" + String.format("%08d", i))
+//                        .set("password1", "111111")
+//                        .set("code", "185" + String.format("%08d", i));
+//                records.add(agentRecord);
+//            }
+//            Db.batchSave("mate", records, 100);
+//        }
+//        this.renderJson("OK");
+        this.render("/webapp/widgets/index.html");
     }
 
     public static void main() {
@@ -120,7 +118,7 @@ public class PageController extends Controller implements IPageController {
 //        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/toast.js\"></script>");
 //        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/index.js\"></script>");
 //        this.setAttr("javaScripts", javaScripts);
-        this.render("/webapp/widgets/index.html");
+        this.render("/webapp/widgets/index_backup.html");
     }
 
     @Override

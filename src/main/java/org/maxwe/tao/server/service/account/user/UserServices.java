@@ -26,7 +26,7 @@ public class UserServices implements IUserServices {
                 .set("password", userEntity.getPassword());
         boolean isSave = Db.save("user", agentRecord);
         if (isSave) {
-            return userEntity;
+            return retrieveByCellphone(userEntity.getCellphone());
         } else {
             return null;
         }

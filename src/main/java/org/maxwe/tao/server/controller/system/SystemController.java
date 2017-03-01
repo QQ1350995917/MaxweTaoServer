@@ -45,18 +45,19 @@ public class SystemController extends Controller implements ISystemController {
     @Override
     @Before(SessionInterceptor.class)
     public void append() {
+        this.getResponse().setContentType("application/json; charset=utf-8");
         int id = this.getParaToInt("id") == null ? 0 : this.getParaToInt("id");
         int appendCodes = this.getParaToInt("appendCodes");
         if (id == 0 || appendCodes <= 0 || appendCodes > 1000) {
-            this.setAttr("errorInfo", "提交参数错误");
+            renderError(400);
         } else {
             AgentEntity agentEntity = new AgentEntity();
             agentEntity.setId(id);
             boolean appendResult = iAgentServices.appendCodes(agentEntity, appendCodes);
             if (appendResult) {
-
+                renderJson("{\"result\":\"ok\"}");
             } else {
-                this.setAttr("errorInfo", "修改失败");
+                renderError(500);
             }
         }
     }
@@ -104,6 +105,7 @@ public class SystemController extends Controller implements ISystemController {
         } else {
             if (type == 1) {
                 BackupEntity backupEntity = SystemServices.getInstance().retrieveById(id);
+                this.logger.info("download : 文件路径 " + backupEntity.getFilePath());
                 renderFile(new File(backupEntity.getFilePath()));
             } else if (type == 2) {
                 renderError(400);

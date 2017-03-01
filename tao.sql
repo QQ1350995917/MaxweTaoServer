@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2017-02-27 12:41:30
+-- Generation Time: 2017-03-01 08:48:39
 -- 服务器版本： 5.6.22
 -- PHP Version: 5.5.20
 
@@ -56,8 +56,7 @@ CREATE TABLE IF NOT EXISTS `agent` (
 --
 
 INSERT INTO `agent` (`id`, `pId`, `reach`, `cellphone`, `password`, `name`, `named`, `levelId`, `weight`, `status`, `haveCodes`, `spendCodes`, `leftCodes`, `trueName`, `zhifubao`, `pIdTime`, `reachTime`, `createTime`, `updateTime`) VALUES
-(100000, 100000, 1, '18511694468', '0CE018668103ACE0F1066A490FA9A1C4', NULL, NULL, '0', 0, 1, 100, 6, 94, '丁朋伟', '18511694468', NULL, NULL, '2017-02-27 07:24:47', '2017-02-27 09:15:16'),
-(100001, 100000, 1, '15321136779', '319EE605B9A627C3422EBBBA98AB0DAD', NULL, NULL, '0', 0, 1, 5, 0, 5, NULL, NULL, NULL, '2017-02-27 09:03:55', '2017-02-27 07:48:47', '2017-02-27 09:08:03');
+(100000, 100000, 1, '18511694468', '0CE018668103ACE0F1066A490FA9A1C4', NULL, NULL, '0', 0, 1, 100, 0, 100, '丁朋伟', '18511694468', NULL, '2017-02-28 00:00:00', '2017-02-27 07:24:47', '2017-03-01 08:47:47');
 
 -- --------------------------------------------------------
 
@@ -94,14 +93,6 @@ CREATE TABLE IF NOT EXISTS `history` (
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `history`
---
-
-INSERT INTO `history` (`id`, `fromId`, `toId`, `type`, `actCode`, `codeNum`, `createTime`, `updateTime`) VALUES
-('5c834a82-ca57-4f55-a816-1ed137a0e1da', '100000', '100001', 2, NULL, 5, '2017-02-27 09:08:03', '2017-02-27 09:08:03'),
-('bea01163-7401-491b-8a8a-97cbd2220261', '100000', '10000000', 1, 'WMYYAQEK', 1, '2017-02-27 09:15:16', '2017-02-27 09:53:31');
 
 -- --------------------------------------------------------
 
@@ -175,13 +166,6 @@ CREATE TABLE IF NOT EXISTS `user` (
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
 ) ENGINE=InnoDB AUTO_INCREMENT=10000001 DEFAULT CHARSET=utf8 COMMENT='用户表';
-
---
--- 转存表中的数据 `user`
---
-
-INSERT INTO `user` (`id`, `cellphone`, `password`, `name`, `actCode`, `actTime`, `status`, `createTime`, `updateTime`) VALUES
-(10000000, '18511694468', '3F070D4E90A4C6BD02E8979978DEF210', NULL, 'WMYYAQEK', '2017-02-27 09:53:31', 1, '2017-02-27 09:26:04', '2017-02-27 09:53:31');
 
 -- --------------------------------------------------------
 

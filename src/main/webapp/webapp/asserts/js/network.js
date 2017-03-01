@@ -11,8 +11,10 @@ const RC_TO_MANY = 429;//访问频率造成的拒绝服务
 const RC_SEVER_ERROR = 500;//服务器内部异常导致的失败
 
 
-const basePath = "http://101.200.56.221:8080/tao";
+//const basePath = "http://58.218.207.186:8080/tao";
+//const basePath = "http://101.200.56.221:8080/tao";
 //const basePath = "http://localhost:8080/tao";
+const basePath = "http://taomami.net";
 
 function asyncRequestByGet(url, data,onDataCallback, onErrorCallback, onTimeoutCallback) {
     $.ajax({

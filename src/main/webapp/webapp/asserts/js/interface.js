@@ -157,7 +157,7 @@ function createSystemMoneyListView() {
             error: function () {
                 alert("追加授权码失败");
             },             //提交失败执行的函数
-            dataType: "html",　　　　　　　//服务器返回数据类型
+            dataType: "json",　　　　　　　//服务器返回数据类型
             clearForm: true,　　　　　　 //提交成功后是否清空表单中的字段值
             restForm: true,　　　　　　  //提交成功后是否重置表单中的字段值，即恢复到页面加载时的状态
             timeout: 5000 　　　　　 　 //设置请求时间，超过该时间后，自动退出请求，单位(毫秒)。　　

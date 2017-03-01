@@ -22,7 +22,7 @@ public class AgentServices implements IAgentServices {
                 .set("password", agentEntity.getPassword());
         boolean isSave = Db.save("agent", agentRecord);
         if (isSave) {
-            return agentEntity;
+            return retrieveByCellphone(agentEntity.getCellphone());
         } else {
             return null;
         }

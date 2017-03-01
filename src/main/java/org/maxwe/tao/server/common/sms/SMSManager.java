@@ -122,20 +122,33 @@ public class SMSManager {
         TaobaoClient client = new DefaultTaobaoClient(url, ApplicationConfigure.APP_SMS_KEY, ApplicationConfigure.APP_SMS_SECRET);
         AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
         req.setSmsType("normal");
-        req.setSmsFreeSignName("淘妈咪验证码");
+        req.setSmsFreeSignName("淘妈咪");
         req.setSmsParamString("{\"code\":\"" + code + "\"}");
         req.setRecNum(cellphone);
         req.setSmsTemplateCode(ApplicationConfigure.APP_SMS_MODEL);
         AlibabaAliqinFcSmsNumSendResponse rsp = client.execute(req);
         Map map = JSON.parseObject(rsp.getBody(), Map.class);
         //{"alibaba_aliqin_fc_sms_num_send_response":{"result":{"err_code":"0","model":"105243374211^1107192054051","success":true},"request_id":"s75ccxbqypop"}}
-        if (Boolean.parseBoolean(((Map) ((Map) map.get("alibaba_aliqin_fc_sms_num_send_response")).get("result")).get("success").toString())) {
-            logger.debug("sendSMS : " + cellphone + "发送结果成功");
+        Map alibaba_aliqin_fc_sms_num_send_response = (Map) map.get("alibaba_aliqin_fc_sms_num_send_response");
+        if (alibaba_aliqin_fc_sms_num_send_response != null) {
+            Map result = (Map) alibaba_aliqin_fc_sms_num_send_response.get("result");
+            if (result != null) {
+                Object success = result.get("success");
+                if (success != null) {
+                    if (Boolean.parseBoolean(success.toString())) {
+                        logger.debug("sendSMS : " + cellphone + "发送结果成功");
+                    } else {
+                        logger.error("sendSMS : 发送结果 = " + rsp.getBody());
+                    }
+                } else {
+                    logger.error("sendSMS : 发送结果 = " + rsp.getBody());
+                }
+            } else {
+                logger.error("sendSMS : 发送结果 = " + rsp.getBody());
+            }
         } else {
             logger.error("sendSMS : 发送结果 = " + rsp.getBody());
         }
-//        System.out.println(rsp.getBody());
-
     }
 
     public static String getSMSCode(String cellphone) {
