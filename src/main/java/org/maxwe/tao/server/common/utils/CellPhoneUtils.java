@@ -7,7 +7,7 @@ import java.util.regex.PatternSyntaxException;
 /**
  * Created by Pengwei Ding on 2016-12-31 15:45.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class CellPhoneUtils {
     /**

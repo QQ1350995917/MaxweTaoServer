@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by Pengwei Ding on 2017-01-10 18:42.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class SMSModel implements Serializable {
     private String cellphone;

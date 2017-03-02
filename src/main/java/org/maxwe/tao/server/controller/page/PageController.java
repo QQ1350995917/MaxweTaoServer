@@ -62,6 +62,7 @@ public class PageController extends Controller implements IPageController {
 
     @Override
     public void money() {
+
     }
 
 
@@ -105,20 +106,19 @@ public class PageController extends Controller implements IPageController {
         this.render("/webapp/widgets/managerGrant.view.html");
     }
 
-    @Before(TokenInterceptor.class)
     @Override
-    public void pm() {
+    public void level() {
 
     }
 
     @Override
-    public void pp() {
+    public void users() {
 //        this.setAttr("title", "食坊-协议");
 //        LinkedList<String> javaScripts = new LinkedList<>();
 //        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/toast.js\"></script>");
 //        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/index.js\"></script>");
 //        this.setAttr("javaScripts", javaScripts);
-        this.render("/webapp/widgets/index_backup.html");
+        this.render("/webapp/widgets/systemUserList.html");
     }
 
     @Override

@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 /**
  * Created by Pengwei Ding on 2017-01-04 11:14.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class LogTest {
 

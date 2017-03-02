@@ -38,15 +38,15 @@ public interface IPageController {
 
     /**
      * short of Page Mine
-     * 跳转到用户信息页面
+     * 跳转到级别界面
      */
-    void pm();
+    void level();
 
     /**
      * short of Page Protocol
-     * 跳转到网站协议页面
+     *
      */
-    void pp();
+    void users();
 
     /**
      * 管理员登录界面

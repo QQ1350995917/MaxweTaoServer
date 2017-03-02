@@ -12,13 +12,13 @@ import org.apache.log4j.PropertyConfigurator;
 import org.maxwe.tao.server.controller.account.agent.AgentController;
 import org.maxwe.tao.server.controller.account.manager.ManagerController;
 import org.maxwe.tao.server.controller.account.user.UserController;
-import org.maxwe.tao.server.controller.tao.TaoController;
 import org.maxwe.tao.server.controller.history.HistoryController;
 import org.maxwe.tao.server.controller.level.LevelController;
 import org.maxwe.tao.server.controller.mate.MateController;
 import org.maxwe.tao.server.controller.meta.MetaController;
 import org.maxwe.tao.server.controller.page.PageController;
 import org.maxwe.tao.server.controller.system.SystemController;
+import org.maxwe.tao.server.controller.tao.TaoController;
 import org.maxwe.tao.server.controller.trade.TradeController;
 import org.maxwe.tao.server.controller.version.VersionController;
 

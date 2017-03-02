@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by Pengwei Ding on 2016-10-17 14:55.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class TokenContext {
     private final static Logger logger = Logger.getLogger(TokenContext.class.getName());

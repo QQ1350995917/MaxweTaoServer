@@ -56,4 +56,13 @@ public interface IUserServices {
      * @return
      */
     LinkedList<UserEntity> retrieveByMaster(String masterId);
+
+    /**
+     * 供管理端查询所有
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    LinkedList<UserEntity> retrieveAll(int pageIndex,int pageSize);
+    int retrieveAllSum();
 }

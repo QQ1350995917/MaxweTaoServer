@@ -3,7 +3,7 @@ package org.maxwe.tao.server.controller.account.manager;
 /**
  * Created by Pengwei Ding on 2017-02-09 20:23.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public interface IManagerController {
 
@@ -62,6 +62,11 @@ public interface IManagerController {
      * 代理列表
      */
     void agents();
+
+    /**
+     * 用户列表
+     */
+    void users();
 
     /**
      * 商品列表

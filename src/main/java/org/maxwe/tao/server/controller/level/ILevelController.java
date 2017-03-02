@@ -3,15 +3,28 @@ package org.maxwe.tao.server.controller.level;
 /**
  * Created by Pengwei Ding on 2017-01-14 10:02.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public interface ILevelController {
 
-    void update();
+    /**
+     * 创建一个等级
+     */
+    void create();
 
-    void refresh();
+    /**
+     * 罗列所有历史等级
+     */
+    void levels();
 
-    void list();
+    /**
+     * 罗列所有顶级等级
+     */
+    void tops();
 
+    /**
+     * 根据码量定级别
+     */
+    void score();
 
 }

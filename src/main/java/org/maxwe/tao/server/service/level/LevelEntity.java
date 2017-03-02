@@ -10,7 +10,9 @@ public class LevelEntity {
     private String name;
     private String description;
     private int minNum;
-    private int price;
+    private float price;
+    private int level;
+    private int weight;
     private long createTime;
     private long updateTime;
 
@@ -22,6 +24,14 @@ public class LevelEntity {
     public LevelEntity(String name,int minNum){
         this.name = name;
         this.minNum = minNum;
+    }
+
+    public LevelEntity(String name,int minNum,float price,int level,int weight){
+        this.name = name;
+        this.minNum = minNum;
+        this.price = price;
+        this.level = level;
+        this.weight = weight;
     }
 
     public String getId() {
@@ -56,12 +66,28 @@ public class LevelEntity {
         this.minNum = minNum;
     }
 
-    public int getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(float price) {
         this.price = price;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
     }
 
     public long getCreateTime() {

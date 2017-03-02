@@ -6,7 +6,7 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  * Created by Pengwei Ding on 2017-01-10 13:26.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class CryptionUtils {
     private static final String password = "PollKingTueJan10";

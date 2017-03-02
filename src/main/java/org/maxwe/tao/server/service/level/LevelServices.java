@@ -2,8 +2,10 @@ package org.maxwe.tao.server.service.level;
 
 import com.alibaba.fastjson.JSON;
 import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Record;
 
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -16,167 +18,106 @@ import java.util.Map;
 public class LevelServices implements ILevelServices {
 
     @Override
-    public LinkedList<LevelEntity> retrieve() {
-        LinkedList<LevelEntity> result = new LinkedList<>();
-        List<Record> records = Db.find("SELECT * FROM level ORDER BY minNum ASC");
+    public LevelEntity create(LevelEntity levelEntity) {
+
+        boolean succeed = Db.tx(new IAtom() {
+            public boolean run() throws SQLException {
+                Db.update("UPDATE level SET weight = weight + 1 WHERE level = ?", levelEntity.getLevel());
+                Record record = new Record()
+                        .set("id", levelEntity.getId())
+                        .set("name", levelEntity.getName())
+                        .set("description", levelEntity.getDescription())
+                        .set("minNum", levelEntity.getMinNum())
+                        .set("price", levelEntity.getPrice())
+                        .set("level", levelEntity.getLevel())
+                        .set("weight", levelEntity.getWeight());
+                return Db.save("level", "id", record);
+            }
+        });
+
+        if (succeed) {
+            return levelEntity;
+        } else {
+            return null;
+        }
+
+    }
+
+    @Override
+    public LinkedList<LevelEntity> retrieveAll(int pageIndex, int pageSize) {
+        LinkedList<LevelEntity> levelEntities = new LinkedList<>();
+        List<Record> records = Db.find("SELECT * FROM level ORDER BY createTime DESC limit ? , ?", pageIndex * pageSize, pageSize);
         for (Record record : records) {
-            Map<String, Object> columns = record.getColumns();
-            LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(columns), LevelEntity.class);
-            result.add(levelEntity);
+            levelEntities.add(JSON.parseObject(JSON.toJSONString(record.getColumns()), LevelEntity.class));
+        }
+        return levelEntities;
+    }
+
+    @Override
+    public int retrieveAllNumber() {
+        return Db.find("SELECT * FROM level").size();
+    }
+
+    @Override
+    public LinkedList<LevelEntity> retrieveTop() {
+        LinkedList<LevelEntity> topLevels = new LinkedList<>();
+        List<Record> level1s = Db.find("SELECT * FROM level WHERE level = ? ORDER BY weight ASC LIMIT 0,1", 1);
+        if (level1s != null && level1s.size() > 0) {
+            Map<String, Object> levelMap = level1s.get(0).getColumns();
+            LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
+            topLevels.add(levelEntity);
+        } else {
+            topLevels.add(new LevelEntity("联合创始人", 0, 0f, 1, 0));
+        }
+
+
+        List<Record> level2s = Db.find("SELECT * FROM level WHERE level = ? ORDER BY weight ASC LIMIT 0,1", 2);
+        if (level2s != null && level2s.size() > 0) {
+            Map<String, Object> levelMap = level2s.get(0).getColumns();
+            LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
+            topLevels.add(levelEntity);
+        } else {
+            topLevels.add(new LevelEntity("总代", 0, 0f, 1, 0));
+        }
+
+
+        List<Record> level3s = Db.find("SELECT * FROM level WHERE level = ? ORDER BY weight ASC LIMIT 0,1", 3);
+        if (level3s != null && level3s.size() > 0) {
+            Map<String, Object> levelMap = level3s.get(0).getColumns();
+            LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
+            topLevels.add(levelEntity);
+        } else {
+            topLevels.add(new LevelEntity("一级代理", 0, 0f, 1, 0));
+        }
+
+
+        List<Record> level4s = Db.find("SELECT * FROM level WHERE level = ? ORDER BY weight ASC LIMIT 0,1", 4);
+        if (level4s != null && level4s.size() > 0) {
+            Map<String, Object> levelMap = level4s.get(0).getColumns();
+            LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
+            topLevels.add(levelEntity);
+        } else {
+            topLevels.add(new LevelEntity("分销商", 0, 0f, 1, 0));
+        }
+
+        return topLevels;
+    }
+
+    @Override
+    public LevelEntity retrieveByNum(int codeNum) {
+        LevelEntity result = null;
+        LinkedList<LevelEntity> levelEntities = this.retrieveTop();
+        for (LevelEntity levelEntity : levelEntities) {
+            int currentOffset = codeNum - levelEntity.getMinNum();
+            if (currentOffset >= 0) {
+                result = levelEntity;
+            } else if (currentOffset < 0) {
+                break;
+            }
+        }
+        if (result == null) {
+            result = levelEntities.getFirst();
         }
         return result;
     }
-
-
-    //    @Override
-//    public LinkedList<LevelEntity> retrieves() {
-//        LinkedList<LevelEntity> result = new LinkedList<>();
-//        List<Record> records = Db.find("SELECT * FROM level WHERE pid = linkId AND status = 2 ORDER BY weight DESC");
-//        for (Record record : records) {
-//            Map<String, Object> columns = record.getColumns();
-//            LevelEntity linkEntity = JSON.parseObject(JSON.toJSONString(columns), LevelEntity.class);
-//            result.add(linkEntity);
-//        }
-//        return result;
-//    }
-//
-//    @Override
-//    public LinkedList<LevelEntity> retrievesByPid(String pid) {
-//        LinkedList<LevelEntity> result = new LinkedList<>();
-//        List<Record> records = Db.find("SELECT * FROM level WHERE pid = ? AND linkId != pid AND status = 2 ORDER BY weight DESC", pid);
-//        for (Record record : records) {
-//            Map<String, Object> columns = record.getColumns();
-//            LevelEntity linkEntity = JSON.parseObject(JSON.toJSONString(columns), LevelEntity.class);
-//            result.add(linkEntity);
-//        }
-//        return result;
-//    }
-//
-//    @Override
-//    public boolean mExist(LevelEntity linkEntity) {
-//        if (linkEntity.getLinkId().equals(linkEntity.getPid())) {
-//            List<Record> records = Db.find("SELECT * FROM level WHERE linkId = pid AND label = ? AND status != -1", linkEntity.getLabel());
-//            if (records.size() == 1) {
-//                return true;
-//            } else {
-//                return false;
-//            }
-//        } else {
-//            List<Record> records = Db.find("SELECT * FROM level WHERE pid = ? AND label = ? AND href = ? AND status != -1", linkEntity.getPid(), linkEntity.getLabel(), linkEntity.getHref());
-//            if (records.size() == 1) {
-//                return true;
-//            } else {
-//                return false;
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public LevelEntity mCreate(LevelEntity linkEntity) {
-//        boolean succeed = Db.tx(new IAtom() {
-//            public boolean run() throws SQLException {
-//                Db.update("UPDATE level SET weight = weight + 1");
-//                Record record = new Record()
-//                        .set("linkId", linkEntity.getLinkId())
-//                        .set("label", linkEntity.getLabel())
-//                        .set("href", linkEntity.getHref())
-//                        .set("pid", linkEntity.getPid())
-//                        .set("weight", linkEntity.getWeight())
-//                        .set("status", linkEntity.getStatus());
-//                return Db.save("level", "linkId", record);
-//            }
-//        });
-//
-//        if (succeed) {
-//            return linkEntity;
-//        } else {
-//            return null;
-//        }
-//    }
-//
-//    @Override
-//    public LevelEntity mUpdate(LevelEntity linkEntity) {
-//        int update = Db.update("UPDATE level SET label = ?, href = ? WHERE linkId = ? AND status != -1", linkEntity.getLabel(), linkEntity.getHref(), linkEntity.getLinkId());
-//        if (update == 1) {
-//            return linkEntity;
-//        } else {
-//            return null;
-//        }
-//    }
-//
-//    @Override
-//    public LevelEntity mBlock(LevelEntity linkEntity) {
-//        int update = Db.update("UPDATE level SET status = 1 WHERE linkId = ?", linkEntity.getLinkId());
-//        if (update == 1) {
-//            return linkEntity;
-//        } else {
-//            return null;
-//        }
-//    }
-//
-//    @Override
-//    public LevelEntity mUnBlock(LevelEntity linkEntity) {
-//        int update = Db.update("UPDATE level SET status = 2 WHERE linkId = ?", linkEntity.getLinkId());
-//        if (update == 1) {
-//            return linkEntity;
-//        } else {
-//            return null;
-//        }
-//    }
-//
-//    @Override
-//    public LevelEntity mDelete(LevelEntity linkEntity) {
-//        int update = Db.update("UPDATE level SET status = -1 WHERE linkId = ?", linkEntity.getLinkId());
-//        if (update == 1) {
-//            return linkEntity;
-//        } else {
-//            return null;
-//        }
-//    }
-//
-//    @Override
-//    public LevelEntity[] mSwap(LevelEntity linkEntity1, LevelEntity linkEntity2) {
-//        boolean succeed = Db.tx(new IAtom() {
-//            public boolean run() throws SQLException {
-//                int update1 = Db.update("UPDATE level SET weight = ? WHERE linkId = ? AND status != -1", linkEntity1.getWeight(), linkEntity2.getLinkId());
-//                int update2 = Db.update("UPDATE level SET weight = ? WHERE linkId = ? AND status != -1", linkEntity2.getWeight(), linkEntity1.getLinkId());
-//                return update1 == 1 && update2 == 1;
-//            }
-//        });
-//        if (succeed) {
-//            LevelEntity[] formatEntities = new LevelEntity[2];
-//            int weight = linkEntity1.getWeight();
-//            linkEntity1.setWeight(linkEntity2.getWeight());
-//            linkEntity2.setWeight(weight);
-//            formatEntities[0] = linkEntity1;
-//            formatEntities[1] = linkEntity2;
-//            return formatEntities;
-//        } else {
-//            return null;
-//        }
-//    }
-//
-//    @Override
-//    public LinkedList<LevelEntity> mRetrieves() {
-//        LinkedList<LevelEntity> result = new LinkedList<>();
-//        List<Record> records = Db.find("SELECT * FROM level WHERE pid = linkId AND status != -1 ORDER BY weight DESC, createTime ASC ");
-//        for (Record record : records) {
-//            Map<String, Object> columns = record.getColumns();
-//            LevelEntity linkEntity = JSON.parseObject(JSON.toJSONString(columns), LevelEntity.class);
-//            result.add(linkEntity);
-//        }
-//        return result;
-//    }
-//
-//    @Override
-//    public LinkedList<LevelEntity> mRetrievesByPid(String pid) {
-//        LinkedList<LevelEntity> result = new LinkedList<>();
-//        List<Record> records = Db.find("SELECT * FROM level WHERE pid = ? AND linkId != pid AND status != -1 ORDER BY weight DESC, createTime DESC ", pid);
-//        for (Record record : records) {
-//            Map<String, Object> columns = record.getColumns();
-//            LevelEntity linkEntity = JSON.parseObject(JSON.toJSONString(columns), LevelEntity.class);
-//            result.add(linkEntity);
-//        }
-//        return result;
-//    }
 }

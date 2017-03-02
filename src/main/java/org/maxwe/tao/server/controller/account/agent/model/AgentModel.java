@@ -7,7 +7,7 @@ import org.maxwe.tao.server.service.level.LevelEntity;
 /**
  * Created by Pengwei Ding on 2017-01-09 18:37.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class AgentModel extends TokenModel {
     private AgentEntity agentEntity; // 响应字段

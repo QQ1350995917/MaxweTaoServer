@@ -7,7 +7,7 @@ import org.maxwe.tao.server.service.level.LevelEntity;
 /**
  * Created by Pengwei Ding on 2017-01-12 16:12.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class TrunkModel extends TokenModel {
     private int targetId;

@@ -11,7 +11,7 @@ import java.io.Serializable;
 /**
  * Created by Pengwei Ding on 2017-01-09 18:26.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class TokenModel implements Serializable {
     private String t;

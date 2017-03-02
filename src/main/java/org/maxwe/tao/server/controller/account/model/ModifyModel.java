@@ -7,7 +7,7 @@ import com.alibaba.fastjson.serializer.PropertyFilter;
 /**
  * Created by Pengwei Ding on 2017-01-09 14:15.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class ModifyModel extends TokenModel {
 

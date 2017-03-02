@@ -19,7 +19,7 @@ import java.util.UUID;
 /**
  * Created by Pengwei Ding on 2017-01-06 18:06.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class VersionController extends Controller implements IVersionController {
     private final Logger logger = Logger.getLogger(VersionController.class.getName());

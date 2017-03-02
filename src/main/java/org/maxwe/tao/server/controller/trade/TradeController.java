@@ -10,7 +10,6 @@ import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.common.utils.GrantCodeUtils;
 import org.maxwe.tao.server.common.utils.PasswordUtils;
-import org.maxwe.tao.server.controller.level.LevelController;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.account.CSEntity;
@@ -19,6 +18,7 @@ import org.maxwe.tao.server.service.account.agent.AgentServices;
 import org.maxwe.tao.server.service.account.agent.IAgentServices;
 import org.maxwe.tao.server.service.history.HistoryEntity;
 import org.maxwe.tao.server.service.level.LevelEntity;
+import org.maxwe.tao.server.service.level.LevelServices;
 import org.maxwe.tao.server.service.trade.ITradeServices;
 import org.maxwe.tao.server.service.trade.TradeServices;
 
@@ -27,7 +27,7 @@ import java.util.UUID;
 /**
  * Created by Pengwei Ding on 2017-01-09 18:54.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class TradeController extends Controller implements ITradeController {
     private final Logger logger = Logger.getLogger(TradeController.class.getName());
@@ -64,7 +64,7 @@ public class TradeController extends Controller implements ITradeController {
             return;
         }
 
-        if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getCellphone(),requestModel.getVerification()), agentEntity.getPassword())) {
+        if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getCellphone(), requestModel.getVerification()), agentEntity.getPassword())) {
             this.logger.info("grant : 认证密码错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestModel);
@@ -170,7 +170,7 @@ public class TradeController extends Controller implements ITradeController {
             return;
         }
 
-        LevelEntity levelEntity = LevelController.levelByMinNumber(branchEntity.getHaveCodes());
+        LevelEntity levelEntity = new LevelServices().retrieveByNum(branchEntity.getHaveCodes());
         // 查询级别ID下对应的数量
         if (requestModel.getCodeNum() < levelEntity.getMinNum()) {
             this.logger.info("grant : 当前转让数量小于最小转让数量 " + requestModel.toString());

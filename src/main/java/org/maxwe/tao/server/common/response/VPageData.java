@@ -3,7 +3,7 @@ package org.maxwe.tao.server.common.response;
 /**
  * Created by Pengwei Ding on 2016-11-11 14:46.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class VPageData {
     private int totalPageNumber;

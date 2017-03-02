@@ -16,7 +16,7 @@ import org.maxwe.tao.server.service.account.agent.AgentEntity;
 /**
  * Created by Pengwei Ding on 2017-01-09 22:12.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class MetaController extends Controller implements IMetaController {
     private final Logger logger = Logger.getLogger(MetaController.class.getName());

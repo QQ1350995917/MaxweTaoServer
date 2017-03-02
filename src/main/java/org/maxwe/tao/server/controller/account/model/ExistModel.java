@@ -6,7 +6,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 /**
  * Created by Pengwei Ding on 2017-01-09 19:08.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class ExistModel extends TokenModel {
     private String cellphone;

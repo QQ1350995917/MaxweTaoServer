@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Created by Pengwei Ding on 2016-12-26 21:53.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  * http://blog.csdn.net/songylwq/article/details/7701718
  */
 public class IPUtils {

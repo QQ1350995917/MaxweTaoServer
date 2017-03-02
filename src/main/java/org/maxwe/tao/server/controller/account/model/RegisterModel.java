@@ -8,7 +8,7 @@ import org.maxwe.tao.server.common.utils.CellPhoneUtils;
 /**
  * Created by Pengwei Ding on 2017-01-09 18:12.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class RegisterModel extends TokenModel {
     public static final PropertyFilter propertyFilter = new PropertyFilter() {

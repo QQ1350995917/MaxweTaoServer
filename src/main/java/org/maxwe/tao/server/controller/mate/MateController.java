@@ -9,13 +9,13 @@ import org.maxwe.tao.server.common.cache.TokenContext;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.controller.account.agent.model.AgentModel;
-import org.maxwe.tao.server.controller.level.LevelController;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.account.CSEntity;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 import org.maxwe.tao.server.service.account.agent.AgentServices;
 import org.maxwe.tao.server.service.account.agent.IAgentServices;
+import org.maxwe.tao.server.service.level.LevelServices;
 
 import java.util.LinkedList;
 
@@ -221,7 +221,7 @@ public class MateController extends Controller implements IMateController {
             this.logger.info("leader : 查找成功 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
             requestModel.setAgentEntity(trunkEntity);
-            requestModel.setLevelEntity(LevelController.levelByMinNumber(trunkEntity.getHaveCodes()));
+            requestModel.setLevelEntity(new LevelServices().retrieveByNum(trunkEntity.getHaveCodes()));
             iResultSet.setData(requestModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
             String string = JSON.toJSONString(iResultSet, new PropertyFilter() {
@@ -265,7 +265,7 @@ public class MateController extends Controller implements IMateController {
             }
             LinkedList<AgentModel> agentModels = new LinkedList<>();
             for (AgentEntity agentEntity:agentEntities){
-                AgentModel agentModel = new AgentModel(agentEntity, LevelController.levelByMinNumber(agentEntity.getHaveCodes()));
+                AgentModel agentModel = new AgentModel(agentEntity, new LevelServices().retrieveByNum(agentEntity.getHaveCodes()));
                 agentModels.add(agentModel);
             }
             requestModel.setAgentEntities(agentModels);

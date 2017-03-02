@@ -4,8 +4,10 @@ apply plugin: 'idea'
 apply plugin: 'com.bmuschko.tomcat'
 
 version = '1.0-SNAPSHOT'
-war.baseName = 'www.maxwe.org'
+war.baseName = 'localhost'
 war.archiveName = "tao.war"
+
+sourceCompatibility = 1.8
 
 tomcat {
     httpPort = 8080
@@ -54,10 +56,12 @@ dependencies {
     compile 'commons-codec:commons-codec:1.10'
     compile 'log4j:log4j:1.2.17'
 
+    providedCompile 'javax.servlet:javax.servlet-api:4.0.0-b02'
+
     def tomcatVersion = '7.0.59'
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
             "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
             "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
-    providedCompile 'org.apache.tomcat:tomcat-servlet-api:8.0.41'
+
 
 }

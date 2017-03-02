@@ -19,7 +19,7 @@ import java.util.LinkedList;
 /**
  * Created by Pengwei Ding on 2017-01-09 18:56.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class HistoryController extends Controller implements IHistoryController {
     private final Logger logger = Logger.getLogger(HistoryController.class.getName());

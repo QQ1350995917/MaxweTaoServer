@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by Pengwei Ding on 2016-12-28 17:57.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  * https://api.alidayu.com/doc2/apiDetail?spm=a3142.8062825.3.1.UIigWc&apiId=25450
  */
 public class SMSManager {

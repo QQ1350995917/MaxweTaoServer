@@ -8,7 +8,7 @@ import java.util.LinkedList;
 /**
  * Created by Pengwei Ding on 2017-01-09 18:39.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class BranchModel extends TokenModel {
     private int total;

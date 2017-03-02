@@ -26,7 +26,7 @@ import org.maxwe.tao.server.service.history.IHistoryServices;
 /**
  * Created by Pengwei Ding on 2017-01-09 18:11.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class UserController extends Controller implements IUserController {
     private final Logger logger = Logger.getLogger(UserController.class.getName());

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 /**
  * Created by Pengwei Ding on 2016-07-30 13:20.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class ResultSet implements IResultSet {
     private Object data;

@@ -6,7 +6,7 @@ import org.maxwe.tao.server.controller.account.model.TokenModel;
 /**
  * Created by Pengwei Ding on 2017-01-10 10:24.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class TradeModel extends TokenModel {
     private int targetId;

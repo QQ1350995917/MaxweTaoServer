@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h2 id="topLevel" class="page-header">当前级别</h2>
+<#if topLevels?exists>
+    <#list topLevels as topLevel>
+        <form id="form_system_topLevel${topLevel_index}" class="form" role="form" method="post">
+            <div class="panel panel-default" style="float: left; width: 25%;">
+                <div class="panel-heading">
+                    <h3 class="panel-title">${topLevel.name}</h3>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon">最小码量</span>
+                            <input name="minNum" type="number" class="form-control" placeholder="${topLevel.minNum}" aria-describedby="sizing-addon3"
+                                   value="${topLevel.minNum}">
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon">每码价格</span>
+                            <input name="price" type="number" min="0" max="1000"
+                                   class="form-control" placeholder="请输入单码价格" aria-describedby="sizing-addon3"
+                                   value="${topLevel.price}" required>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon">更新时间</span>
+                            <input type="number" max="1" min="0" class="form-control" placeholder="更新时间" aria-describedby="sizing-addon3"
+                                   value="${topLevel.createTime!}" disabled required>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <button class="btn btn-primary" type="submit" style="width: 100%">保存修改</button>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </#list>
+</#if>
+<h2 id="historyVersion" class="page-header">历史记录</h2>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>系统平台</th>
+            <th>软件名称</th>
+            <th>构建版本</th>
+            <th>版本名称</th>
+            <th>更新信息</th>
+            <th>强制升级</th>
+            <th>创建时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <#if historyVersions?exists>
+            <#list historyVersions as historyVersion>
+                <tr>
+                    <td>${historyVersion_index+1}</td>
+                    <td>${historyVersion.platform}</td>
+                    <td>${historyVersion.appName}</td>
+                    <td>${historyVersion.versionCode}</td>
+                    <td>${historyVersion.versionName}</td>
+                    <td style="max-width: 300px">${historyVersion.information}</td>
+                    <td>${historyVersion.upgrade}</td>
+                    <td>${historyVersion.createTime}</td>
+                </tr>
+            </#list>
+        </#if>
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <#if pageIndex gt 0>
+                <li>
+                    <a href="#" onclick="createSystemVersionView('${pageIndex - 1}',12);" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            </#if>
+            <#if pages?exists>
+                <#list 0..pages - 1 as page>
+                    <#if pageIndex == page>
+                        <li class="active"><a>${page + 1}</a></li>
+                        <#else>
+                            <li><a href="#" onclick="createSystemVersionView('${page}',12);">${page + 1}</a></li>
+                    </#if>
+                </#list>
+            </#if>
+            <#if pageIndex lt pages - 1>
+                <li>
+                    <a href="#" onclick="createSystemVersionView('${pageIndex + 1}',12);" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </#if>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>

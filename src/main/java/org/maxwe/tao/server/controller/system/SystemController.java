@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * Created by Pengwei Ding on 2017-02-14 21:48.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class SystemController extends Controller implements ISystemController {
     private final Logger logger = Logger.getLogger(SystemController.class.getName());

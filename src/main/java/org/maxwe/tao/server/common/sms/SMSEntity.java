@@ -3,7 +3,7 @@ package org.maxwe.tao.server.common.sms;
 /**
  * Created by Pengwei Ding on 2016-12-28 17:57.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class SMSEntity {
     private String cellphone;

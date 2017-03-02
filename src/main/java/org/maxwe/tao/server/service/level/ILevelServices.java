@@ -9,6 +9,15 @@ import java.util.LinkedList;
  */
 public interface ILevelServices {
 
-    LinkedList<LevelEntity> retrieve();
+    LevelEntity create(LevelEntity levelEntity);
+
+    LinkedList<LevelEntity> retrieveAll(int pageIndex,int pageSize);
+
+    int retrieveAllNumber();
+
+    LinkedList<LevelEntity> retrieveTop();
+
+    LevelEntity retrieveByNum(int codeNum);
+
 
 }

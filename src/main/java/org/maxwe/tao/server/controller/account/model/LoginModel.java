@@ -8,7 +8,7 @@ import org.maxwe.tao.server.common.utils.CellPhoneUtils;
 /**
  * Created by Pengwei Ding on 2017-01-09 14:14.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class LoginModel extends TokenModel {
 

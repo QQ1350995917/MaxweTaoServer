@@ -5,7 +5,7 @@ import com.jfinal.plugin.activerecord.Model;
 /**
  * Created by Pengwei Ding on 2017-02-13 17:37.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class CreateManagerModel extends Model<CreateManagerModel> {
     public static final CreateManagerModel me = new CreateManagerModel();

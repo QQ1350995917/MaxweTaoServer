@@ -5,7 +5,7 @@ import org.maxwe.tao.server.service.version.VersionEntity;
 /**
  * Created by Pengwei Ding on 2017-02-21 16:31.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class VersionModel extends VersionEntity {
     private int oldVersionCode;

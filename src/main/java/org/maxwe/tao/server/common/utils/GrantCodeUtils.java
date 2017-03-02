@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * Created by Pengwei Ding on 2017-01-10 14:34.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class GrantCodeUtils {
     private static final String[] string0 = {"V", "9", "Z", "N"};

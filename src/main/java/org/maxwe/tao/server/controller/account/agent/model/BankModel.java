@@ -6,7 +6,7 @@ import org.maxwe.tao.server.controller.account.model.TokenModel;
 /**
  * Created by Pengwei Ding on 2017-01-09 18:38.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description:
  */
 public class BankModel extends TokenModel {
     private String trueName;

@@ -15,7 +15,6 @@ import org.maxwe.tao.server.common.utils.TokenUtils;
 import org.maxwe.tao.server.controller.account.agent.model.AgentModel;
 import org.maxwe.tao.server.controller.account.agent.model.BankModel;
 import org.maxwe.tao.server.controller.account.model.*;
-import org.maxwe.tao.server.controller.level.LevelController;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.account.CSEntity;
@@ -357,7 +356,7 @@ public class AgentController extends Controller implements IAgentController {
         CSEntity csEntity = new CSEntity(0, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
         AgentEntity agentEntity = iAgentServices.retrieveById(TokenContext.getCSEntity(csEntity).getId());
         requestModel.setAgentEntity(agentEntity);
-        requestModel.setLevelEntity(LevelController.levelByMinNumber(agentEntity.getHaveCodes()));
+//        requestModel.setLevelEntity(LevelController.levelByMinNumber(agentEntity.getHaveCodes()));
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(requestModel);
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);

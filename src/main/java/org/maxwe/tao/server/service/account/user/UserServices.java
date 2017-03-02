@@ -93,4 +93,21 @@ public class UserServices implements IUserServices {
         }
         return userEntities;
     }
+
+    @Override
+    public LinkedList<UserEntity> retrieveAll(int pageIndex, int pageSize) {
+        List<Record> agentRecords = Db.find("SELECT * FROM user ORDER BY createTime DESC limit ? , ?", pageIndex * pageSize, pageSize);
+        LinkedList<UserEntity> agentEntities = new LinkedList<>();
+        for (Record agentRecord : agentRecords) {
+            Map<String, Object> accountMap = agentRecord.getColumns();
+            UserEntity userEntity = JSON.parseObject(JSON.toJSONString(accountMap), UserEntity.class);
+            agentEntities.add(userEntity);
+        }
+        return agentEntities;
+    }
+
+    @Override
+    public int retrieveAllSum() {
+        return Db.find("SELECT * FROM user ").size();
+    }
 }
