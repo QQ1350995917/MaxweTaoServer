@@ -11,13 +11,13 @@ import java.io.Serializable;
 /**
  * Created by Pengwei Ding on 2017-01-09 18:26.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description:
+ * Description: token模型
  */
 public class TokenModel implements Serializable {
-    private String t;
-    private int id;
-    private String cellphone;
-    private String verification;//敏感操作的验证密码
+    private String t;//token字符串
+    private int id;//用户ID
+    private String cellphone;//电话号码
+    private String verification;
     private int apt; // 登录类型
     @JSONField(serialize = false)
     private String sign;
@@ -85,7 +85,7 @@ public class TokenModel implements Serializable {
         return "SessionModel{" +
                 ", id='" + id + '\'' +
                 ", cellphone='" + cellphone + '\'' +
-                ", verification='" + "******" + '\'' +
+                ", cellphone='" + "******" + '\'' +
                 ", apt=" + apt +
                 '}';
     }
@@ -125,7 +125,7 @@ public class TokenModel implements Serializable {
     @JSONField(serialize = false)
     public boolean isTokenParamsOk() {
         if (!StringUtils.isEmpty(this.getT())
-                && !StringUtils.isEmpty(this.getId() + "")
+                && this.getId() > 0
                 && CellPhoneUtils.isCellphone(this.getCellphone())
                 && !StringUtils.isEmpty(this.getSign())
                 && (this.getApt() == 1 || this.getApt() == 2)) {

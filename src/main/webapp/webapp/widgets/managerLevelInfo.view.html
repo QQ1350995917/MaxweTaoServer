@@ -12,6 +12,8 @@
             <div class="panel panel-default" style="float: left; width: 25%;">
                 <div class="panel-heading">
                     <h3 class="panel-title">${topLevel.name}</h3>
+                    <input name="name" type="hidden" value="${topLevel.name}">
+                    <input name="level" type="hidden" value="${topLevel.level}">
                 </div>
                 <ul class="list-group">
                     <li class="list-group-item">
@@ -44,34 +46,28 @@
         </form>
     </#list>
 </#if>
-<h2 id="historyVersion" class="page-header">历史记录</h2>
+<h2 id="historyLevel" class="page-header">历史记录</h2>
 
 <div class="table-responsive">
     <table class="table table-striped">
         <thead>
         <tr>
             <th>序号</th>
-            <th>系统平台</th>
-            <th>软件名称</th>
-            <th>构建版本</th>
-            <th>版本名称</th>
-            <th>更新信息</th>
-            <th>强制升级</th>
-            <th>创建时间</th>
+            <th>级别</th>
+            <th>最小码量</th>
+            <th>每码价格</th>
+            <th>生成时间</th>
         </tr>
         </thead>
         <tbody>
-        <#if historyVersions?exists>
-            <#list historyVersions as historyVersion>
+        <#if historyLevels?exists>
+            <#list historyLevels as historyLevel>
                 <tr>
-                    <td>${historyVersion_index+1}</td>
-                    <td>${historyVersion.platform}</td>
-                    <td>${historyVersion.appName}</td>
-                    <td>${historyVersion.versionCode}</td>
-                    <td>${historyVersion.versionName}</td>
-                    <td style="max-width: 300px">${historyVersion.information}</td>
-                    <td>${historyVersion.upgrade}</td>
-                    <td>${historyVersion.createTime}</td>
+                    <td>${historyLevel_index+1}</td>
+                    <td>${historyLevel.name}</td>
+                    <td>${historyLevel.minNum}</td>
+                    <td>${historyLevel.price}</td>
+                    <td>${historyLevel.createTime}</td>
                 </tr>
             </#list>
         </#if>

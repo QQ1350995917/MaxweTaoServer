@@ -1,5 +1,7 @@
 package org.maxwe.tao.server.common.utils;
 
+import com.alibaba.druid.util.StringUtils;
+
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
@@ -14,7 +16,19 @@ import java.security.SecureRandom;
  */
 public class PasswordUtils {
 
-    private static byte[] encrypt(String content,String password){
+    /**
+     * 识别明文密码是否符合系统规定
+     * @param password 明文密码
+     * @return
+     */
+    public static boolean isPlainPasswordOk(String password) {
+        if (!StringUtils.isEmpty(password) && password.length() >= 6 && password.length() <= 12) {
+            return true;
+        }
+        return false;
+    }
+
+    private static byte[] encrypt(String content, String password) {
         try {
             KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
             SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
@@ -44,7 +58,7 @@ public class PasswordUtils {
         return null;
     }
 
-    private static byte[] decrypt(byte[] content,String password){
+    private static byte[] decrypt(byte[] content, String password) {
         try {
             KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
             SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
@@ -95,9 +109,9 @@ public class PasswordUtils {
         return result;
     }
 
-    private static String genPassword(String cellphone){
+    private static String genPassword(String cellphone) {
         int index1 = Integer.parseInt(cellphone.substring(cellphone.length() - 1, cellphone.length()));
-        if (index1 == 0){
+        if (index1 == 0) {
             index1 = 1;
         }
         int index2 = Integer.parseInt(cellphone.substring(index1 - 1, index1));
@@ -106,10 +120,11 @@ public class PasswordUtils {
         return p1 + p2;
     }
 
-    public static String enPassword(String cellphone,String password){
-        return parseByte2HexStr(encrypt(password,genPassword(cellphone)));
+    public static String enPassword(String cellphone, String password) {
+        return parseByte2HexStr(encrypt(password, genPassword(cellphone)));
     }
-    public static String dePassword(String cellphone,String password){
+
+    public static String dePassword(String cellphone, String password) {
         byte[] bytes = parseHexStr2Byte(password);
         byte[] decrypt = decrypt(bytes, genPassword(cellphone));
         return new String(decrypt);

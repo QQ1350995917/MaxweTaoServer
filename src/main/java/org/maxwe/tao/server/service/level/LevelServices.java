@@ -77,7 +77,7 @@ public class LevelServices implements ILevelServices {
             LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
             topLevels.add(levelEntity);
         } else {
-            topLevels.add(new LevelEntity("总代", 0, 0f, 1, 0));
+            topLevels.add(new LevelEntity("总代", 0, 0f, 2, 0));
         }
 
 
@@ -87,7 +87,7 @@ public class LevelServices implements ILevelServices {
             LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
             topLevels.add(levelEntity);
         } else {
-            topLevels.add(new LevelEntity("一级代理", 0, 0f, 1, 0));
+            topLevels.add(new LevelEntity("一级代理", 0, 0f, 3, 0));
         }
 
 
@@ -97,7 +97,7 @@ public class LevelServices implements ILevelServices {
             LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
             topLevels.add(levelEntity);
         } else {
-            topLevels.add(new LevelEntity("分销商", 0, 0f, 1, 0));
+            topLevels.add(new LevelEntity("分销商", 0, 0f, 4, 0));
         }
 
         return topLevels;

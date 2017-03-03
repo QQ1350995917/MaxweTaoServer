@@ -29,9 +29,14 @@ public interface IMateController {
     void leader();
 
     /**
-     * 根据自己的id查找
+     * 根据自己的id查找下级
      * 用于获取下级列表
      */
     void mates();
+
+    /**
+     * 根据自己的id查找下级详情
+     */
+    void mate();
 
 }

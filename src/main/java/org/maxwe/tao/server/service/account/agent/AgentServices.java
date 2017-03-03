@@ -63,8 +63,8 @@ public class AgentServices implements IAgentServices {
 
     @Override
     public boolean askForReach(AgentEntity agentSubEntity) {
-        int count = Db.update("UPDATE agent SET pId = ? , pIdTime = ? , weight = 1  WHERE id = ? ",
-                agentSubEntity.getpId(), new Timestamp(System.currentTimeMillis()), agentSubEntity.getId());
+        int count = Db.update("UPDATE agent SET pId = ? , pIdTime = ? ,weChat = ?, weight = 1  WHERE id = ? ",
+                agentSubEntity.getpId(), new Timestamp(System.currentTimeMillis()),agentSubEntity.getWechat(), agentSubEntity.getId());
         if (count == 1) {
             return true;
         } else {

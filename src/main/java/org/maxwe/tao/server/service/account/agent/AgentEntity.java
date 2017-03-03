@@ -15,6 +15,7 @@ public class AgentEntity extends AccountEntity{
     private int haveCodes; // 累计购买
     private int spendCodes; // 已经消费
     private int leftCodes; // 当前剩余
+    private String wechat; // 微信号码
     private String trueName; // 真实姓名
     private String zhifubao;// 支付宝账户
     private long pIdTime;
@@ -79,6 +80,14 @@ public class AgentEntity extends AccountEntity{
 
     public void setLeftCodes(int leftCodes) {
         this.leftCodes = leftCodes;
+    }
+
+    public String getWechat() {
+        return wechat;
+    }
+
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
     }
 
     public String getTrueName() {

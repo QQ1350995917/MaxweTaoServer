@@ -28,7 +28,7 @@ public class HistoryServices implements IHistoryServices {
 
     @Override
     public LinkedList<HistoryEntity> retrieveByFromId(int fromId, int pageIndex, int pageSize) {
-        List<Record> historyRecords = Db.find("SELECT * FROM history WHERE fromId = ? ORDER BY createTime DESC limit ? , ?",
+        List<Record> historyRecords = Db.find("SELECT * FROM history WHERE fromId = ? ORDER BY toId ASC, createTime DESC limit ? , ?",
                 fromId, pageIndex * pageSize, pageSize);
         LinkedList<HistoryEntity> historyEntities = new LinkedList<>();
         for (Record agentRecord : historyRecords) {

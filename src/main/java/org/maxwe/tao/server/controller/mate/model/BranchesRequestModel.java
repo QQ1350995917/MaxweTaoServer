@@ -1,31 +1,18 @@
-package org.maxwe.tao.server.controller.mate;
+package org.maxwe.tao.server.controller.mate.model;
 
-import org.maxwe.tao.server.controller.account.agent.model.AgentModel;
 import org.maxwe.tao.server.controller.account.model.TokenModel;
-
-import java.util.LinkedList;
 
 /**
  * Created by Pengwei Ding on 2017-01-09 18:39.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description:
+ * Description: 获取枝干下所有分支的请求模型
  */
-public class BranchModel extends TokenModel {
-    private int total;
+public class BranchesRequestModel extends TokenModel {
     private int pageIndex;
     private int pageSize;
-    private LinkedList<AgentModel> agentEntities; // 相应字段
 
-    public BranchModel() {
+    public BranchesRequestModel() {
         super();
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public void setTotal(int total) {
-        this.total = total;
     }
 
     public int getPageIndex() {
@@ -42,14 +29,6 @@ public class BranchModel extends TokenModel {
 
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
-    }
-
-    public LinkedList<AgentModel> getAgentEntities() {
-        return agentEntities;
-    }
-
-    public void setAgentEntities(LinkedList<AgentModel> agentEntities) {
-        this.agentEntities = agentEntities;
     }
 
     public boolean isParamsOk() {

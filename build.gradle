@@ -13,7 +13,7 @@ tomcat {
     httpPort = 8080
     httpsPort = 8443
     enableSSL = true
-    contextPath = "/tao"
+    contextPath = "/"
 }
 
 buildscript {

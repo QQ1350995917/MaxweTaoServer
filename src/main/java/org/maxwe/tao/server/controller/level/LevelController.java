@@ -67,10 +67,10 @@ public class LevelController extends Controller implements ILevelController {
 
         int levelsSum = iLevelServices.retrieveAllNumber();
         LinkedList<LevelEntity> levelEntities = iLevelServices.retrieveAll(pageIndex, pageSize);
-        this.setAttr("levels", levelEntities);
+        this.setAttr("historyLevels", levelEntities);
         this.setAttr("pages", levelsSum / pageSize + (levelsSum % pageSize == 0 ? 0 : 1));
         this.setAttr("pageIndex", pageIndex);
-        render("/webapp/widgets/systemLevelInfo.view.html");
+        render("/webapp/widgets/managerLevelInfo.view.html");
     }
 
     /**

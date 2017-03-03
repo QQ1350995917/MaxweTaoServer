@@ -127,6 +127,6 @@ public class SystemController extends Controller implements ISystemController {
     public void summaryThird() {
         int dataCounter = JiDiServices.getInstance().getDataCounter();
         this.setAttr("dataCounter", dataCounter);
-        render("/webapp/widgets/systemThirdData.view.html");
+        render("/webapp/widgets/businessThirdData.view.html");
     }
 }
