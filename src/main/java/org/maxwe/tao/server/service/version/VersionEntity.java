@@ -1,6 +1,8 @@
 package org.maxwe.tao.server.service.version;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.annotation.JSONField;
+import org.maxwe.tao.server.common.utils.DateTimeUtils;
 
 /**
  * Created by Pengwei Ding on 2017-01-06 18:07.
@@ -20,6 +22,11 @@ public class VersionEntity {
     private int upgrade; // 0不强制升级 其他强制
     private long createTime;
     private long updateTime;
+
+    @JSONField(serialize=false)
+    private String createTimeLabel;
+    @JSONField(serialize=false)
+    private String updateTimeLabel;
 
     public VersionEntity() {
         super();
@@ -118,6 +125,15 @@ public class VersionEntity {
 
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCreateTimeLabel() {
+        return DateTimeUtils.parseLongToFullTime(this.getCreateTime());
+    }
+
+
+    public String getUpdateTimeLabel() {
+        return DateTimeUtils.parseLongToFullTime(this.getUpdateTime());
     }
 
     @Override

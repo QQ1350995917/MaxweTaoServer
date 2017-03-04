@@ -30,8 +30,8 @@
             <#list databaseBackups as databaseBackup>
                 <tr>
                     <td>${databaseBackup_index}</td>
-                    <td>${databaseBackup.createTime}</td>
-                    <td>${databaseBackup.createTime}</td>
+                    <td>${databaseBackup.createTimeLabel}</td>
+                    <td>${databaseBackup.createTimeLabel}</td>
                     <td>
                         <button type="submit" class="btn btn-default" onclick="downloadDatabaseBackupFile(1,'${databaseBackup.id}')">下载</button>
                     </td>

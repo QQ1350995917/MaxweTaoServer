@@ -13,6 +13,7 @@
             <th>序号</th>
             <th>ID</th>
             <th>PID</th>
+            <th>激活码</th>
             <th>手机</th>
             <th>注册时间</th>
         </tr>
@@ -24,8 +25,9 @@
                     <td>${user_index+1}</td>
                     <td>${user.id}</td>
                     <td>${user.pId!""}</td>
+                    <td>${user.actCode!"未激活"}</td>
                     <td>${user.cellphone}</td>
-                    <td>${user.createTime}</td>
+                    <td>${user.createTimeLabel}</td>
                 </tr>
             </#list>
         </#if>

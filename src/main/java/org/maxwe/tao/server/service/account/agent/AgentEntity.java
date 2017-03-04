@@ -1,5 +1,7 @@
 package org.maxwe.tao.server.service.account.agent;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import org.maxwe.tao.server.common.utils.DateTimeUtils;
 import org.maxwe.tao.server.service.account.AccountEntity;
 
 /**
@@ -20,6 +22,11 @@ public class AgentEntity extends AccountEntity{
     private String zhifubao;// 支付宝账户
     private long pIdTime;
     private long reachTime;
+
+    @JSONField(serialize=false)
+    private String createTimeLabel;
+    @JSONField(serialize=false)
+    private String updateTimeLabel;
 
     public AgentEntity() {
         super();
@@ -120,6 +127,15 @@ public class AgentEntity extends AccountEntity{
 
     public void setReachTime(long reachTime) {
         this.reachTime = reachTime;
+    }
+
+    public String getCreateTimeLabel() {
+        return DateTimeUtils.parseLongToFullTime(this.getCreateTime());
+    }
+
+
+    public String getUpdateTimeLabel() {
+        return DateTimeUtils.parseLongToFullTime(this.getUpdateTime());
     }
 
     @Override

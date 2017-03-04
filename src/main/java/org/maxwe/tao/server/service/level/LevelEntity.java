@@ -1,5 +1,8 @@
 package org.maxwe.tao.server.service.level;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import org.maxwe.tao.server.common.utils.DateTimeUtils;
+
 import java.io.Serializable;
 
 /**
@@ -18,6 +21,10 @@ public class LevelEntity implements Serializable {
     private long createTime;
     private long updateTime;
 
+    @JSONField(serialize=false)
+    private String createTimeLabel;
+    @JSONField(serialize=false)
+    private String updateTimeLabel;
 
     public LevelEntity() {
         super();
@@ -106,5 +113,14 @@ public class LevelEntity implements Serializable {
 
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCreateTimeLabel() {
+        return DateTimeUtils.parseLongToFullTime(this.getCreateTime());
+    }
+
+
+    public String getUpdateTimeLabel() {
+        return DateTimeUtils.parseLongToFullTime(this.getUpdateTime());
     }
 }

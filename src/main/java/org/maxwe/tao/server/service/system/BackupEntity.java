@@ -1,5 +1,8 @@
 package org.maxwe.tao.server.service.system;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import org.maxwe.tao.server.common.utils.DateTimeUtils;
+
 /**
  * Created by Pengwei Ding on 2017-02-26 08:27.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
@@ -14,6 +17,11 @@ public class BackupEntity {
     private int counter;//
     private long createTime;
     private long updateTime;
+
+    @JSONField(serialize=false)
+    private String createTimeLabel;
+    @JSONField(serialize=false)
+    private String updateTimeLabel;
 
     public BackupEntity() {
         super();
@@ -90,5 +98,14 @@ public class BackupEntity {
 
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCreateTimeLabel() {
+        return DateTimeUtils.parseLongToFullTime(this.getCreateTime());
+    }
+
+
+    public String getUpdateTimeLabel() {
+        return DateTimeUtils.parseLongToFullTime(this.getUpdateTime());
     }
 }

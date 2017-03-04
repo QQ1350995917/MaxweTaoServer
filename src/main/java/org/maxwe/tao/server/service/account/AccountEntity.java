@@ -1,5 +1,8 @@
 package org.maxwe.tao.server.service.account;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import org.maxwe.tao.server.common.utils.DateTimeUtils;
+
 import java.io.Serializable;
 
 /**
@@ -16,6 +19,14 @@ public class AccountEntity implements Serializable {
     private int status; // 状态，0禁用，1正常，数据库默认为1
     private long createTime; // 创建时间
     private long updateTime; // 更新时间
+
+
+    @JSONField(serialize=false)
+    private String createTimeLabel;
+    @JSONField(serialize=false)
+    private String updateTimeLabel;
+
+
 
     public AccountEntity() {
         super();
@@ -75,6 +86,15 @@ public class AccountEntity implements Serializable {
 
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCreateTimeLabel() {
+        return DateTimeUtils.parseLongToFullTime(this.getCreateTime());
+    }
+
+
+    public String getUpdateTimeLabel() {
+        return DateTimeUtils.parseLongToFullTime(this.getUpdateTime());
     }
 
     @Override

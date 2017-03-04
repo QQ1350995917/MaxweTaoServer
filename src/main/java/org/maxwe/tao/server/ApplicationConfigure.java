@@ -6,6 +6,7 @@ import com.jfinal.config.*;
 import com.jfinal.ext.handler.ContextPathHandler;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.c3p0.C3p0Plugin;
+import com.jfinal.render.FreeMarkerRender;
 import com.jfinal.render.ViewType;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PropertyConfigurator;
@@ -138,6 +139,7 @@ public class ApplicationConfigure extends JFinalConfig {
     @Override
     public void afterJFinalStart() {
         super.afterJFinalStart();
+        FreeMarkerRender.setProperty("datetime_format", "yyyy-MM-dd HH:mm:ss");
     }
 
     @Override

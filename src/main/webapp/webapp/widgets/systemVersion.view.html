@@ -63,7 +63,7 @@
                     <div class="input-group input-group-sm">
                         <span class="input-group-addon">创建时间</span>
                         <input type="number" max="1" min="0" class="form-control" placeholder="创建时间" aria-describedby="sizing-addon3"
-                               value="${topVersion.createTime!}" disabled required>
+                               value="${topVersion.createTimeLabel!}" disabled required>
                     </div>
                 </li>
                 <li class="list-group-item">
@@ -101,7 +101,7 @@
                     <td>${historyVersion.versionName}</td>
                     <td style="max-width: 300px">${historyVersion.information}</td>
                     <td>${historyVersion.upgrade}</td>
-                    <td>${historyVersion.createTime}</td>
+                    <td>${historyVersion.createTimeLabel}</td>
                 </tr>
             </#list>
         </#if>

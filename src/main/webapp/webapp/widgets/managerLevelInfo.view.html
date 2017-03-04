@@ -40,7 +40,7 @@
                         <div class="input-group input-group-sm">
                             <span class="input-group-addon">更新时间</span>
                             <input type="number" max="1" min="0" class="form-control" placeholder="更新时间" aria-describedby="sizing-addon3"
-                                   value="${topLevel.createTime!}" disabled required>
+                                   value="${topLevel.createTimeLabel!}" disabled required>
                         </div>
                     </li>
                     <li class="list-group-item">
@@ -72,7 +72,7 @@
                     <td>${historyLevel.name}</td>
                     <td>${historyLevel.minNum}</td>
                     <td>${historyLevel.price}</td>
-                    <td>${historyLevel.createTime}</td>
+                    <td>${historyLevel.createTimeLabel}</td>
                 </tr>
             </#list>
         </#if>

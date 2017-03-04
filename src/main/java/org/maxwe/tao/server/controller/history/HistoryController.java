@@ -52,4 +52,16 @@ public class HistoryController extends Controller implements IHistoryController 
             renderJson(resultJson);
         }
     }
+
+    @Override
+    @Before({AppInterceptor.class, TokenInterceptor.class})
+    public void deal() {
+
+    }
+
+    @Override
+    @Before({AppInterceptor.class, TokenInterceptor.class})
+    public void rebate() {
+
+    }
 }

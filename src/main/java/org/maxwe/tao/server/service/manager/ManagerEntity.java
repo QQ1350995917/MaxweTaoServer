@@ -1,5 +1,8 @@
 package org.maxwe.tao.server.service.manager;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import org.maxwe.tao.server.common.utils.DateTimeUtils;
+
 import java.io.Serializable;
 
 /**
@@ -19,6 +22,11 @@ public class ManagerEntity implements Serializable{
     private String access; // 权限
     private long createTime;
     private long updateTime;
+
+    @JSONField(serialize=false)
+    private String createTimeLabel;
+    @JSONField(serialize=false)
+    private String updateTimeLabel;
 
     public ManagerEntity() {
         super();
@@ -102,5 +110,14 @@ public class ManagerEntity implements Serializable{
 
     public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCreateTimeLabel() {
+        return DateTimeUtils.parseLongToFullTime(this.getCreateTime());
+    }
+
+
+    public String getUpdateTimeLabel() {
+        return DateTimeUtils.parseLongToFullTime(this.getUpdateTime());
     }
 }
