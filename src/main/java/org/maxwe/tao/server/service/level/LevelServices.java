@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by Pengwei Ding on 2016-08-13 18:26.
@@ -16,10 +19,34 @@ import java.util.Map;
  * Description: @TODO
  */
 public class LevelServices implements ILevelServices {
+    private static ConcurrentMap<Integer, LevelEntity> topLevelsMap = new ConcurrentHashMap<>();
+
+    static {
+        initTopLevel();
+//        topLevelsMap.put(1, new LevelEntity("联合创始人", 100, 0f, 1, 0));
+//        topLevelsMap.put(2, new LevelEntity("总代", 60, 0f, 2, 0));
+//        topLevelsMap.put(3, new LevelEntity("一级代理", 30, 0f, 3, 0));
+//        topLevelsMap.put(4, new LevelEntity("分销商", 5, 0f, 4, 0));
+    }
+
+
+    public static void main(String[] args) {
+//        int codeNum = 60;
+//        Set<Map.Entry<Integer, LevelEntity>> entries = topLevelsMap.entrySet();
+//        for (Map.Entry<Integer, LevelEntity> entry : entries) {
+//            int currentOffset = codeNum - entry.getValue().getMinNum();
+//            System.out.println(currentOffset);
+//            if (currentOffset >= 0) {
+//                System.out.println(entry.getValue().getName());
+//                break;
+//            } else if (currentOffset < 0) {
+//                continue;
+//            }
+//        }
+    }
 
     @Override
     public LevelEntity create(LevelEntity levelEntity) {
-
         boolean succeed = Db.tx(new IAtom() {
             public boolean run() throws SQLException {
                 Db.update("UPDATE level SET weight = weight + 1 WHERE level = ?", levelEntity.getLevel());
@@ -31,7 +58,13 @@ public class LevelServices implements ILevelServices {
                         .set("price", levelEntity.getPrice())
                         .set("level", levelEntity.getLevel())
                         .set("weight", levelEntity.getWeight());
-                return Db.save("level", "id", record);
+                boolean save = Db.save("level", "id", record);
+                if (save) {
+                    levelEntity.setCreateTime(System.currentTimeMillis());
+                    levelEntity.setUpdateTime(System.currentTimeMillis());
+                    topLevelsMap.put(levelEntity.getLevel(), levelEntity);
+                }
+                return save;
             }
         });
 
@@ -40,7 +73,15 @@ public class LevelServices implements ILevelServices {
         } else {
             return null;
         }
+    }
 
+    @Override
+    public LevelEntity retrieveById(String id) {
+        List<Record> records = Db.find("SELECT * FROM level WHERE id = ?", id);
+        if (records != null && records.size() > 0) {
+            return JSON.parseObject(JSON.toJSONString(records.get(0).getColumns()), LevelEntity.class);
+        }
+        return null;
     }
 
     @Override
@@ -61,13 +102,35 @@ public class LevelServices implements ILevelServices {
     @Override
     public LinkedList<LevelEntity> retrieveTop() {
         LinkedList<LevelEntity> topLevels = new LinkedList<>();
+        Set<Map.Entry<Integer, LevelEntity>> entries = topLevelsMap.entrySet();
+        for (Map.Entry<Integer, LevelEntity> entry : entries) {
+            topLevels.add(entry.getKey() - 1, entry.getValue());
+        }
+        return topLevels;
+    }
+
+    @Override
+    public LevelEntity retrieveByNum(int codeNum) {
+        LevelEntity result = null;
+        Set<Map.Entry<Integer, LevelEntity>> entries = topLevelsMap.entrySet();
+        for (Map.Entry<Integer, LevelEntity> entry : entries) {
+            int currentOffset = codeNum - entry.getValue().getMinNum();
+            if (currentOffset >= 0) {
+                result = entry.getValue();
+                break;
+            }
+        }
+        return result;
+    }
+
+    private static void initTopLevel() {
         List<Record> level1s = Db.find("SELECT * FROM level WHERE level = ? ORDER BY weight ASC LIMIT 0,1", 1);
         if (level1s != null && level1s.size() > 0) {
             Map<String, Object> levelMap = level1s.get(0).getColumns();
             LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
-            topLevels.add(levelEntity);
+            topLevelsMap.put(1, levelEntity);
         } else {
-            topLevels.add(new LevelEntity("联合创始人", 0, 0f, 1, 0));
+            topLevelsMap.put(1, new LevelEntity("联合创始人", 0, 0f, 1, 0));
         }
 
 
@@ -75,9 +138,9 @@ public class LevelServices implements ILevelServices {
         if (level2s != null && level2s.size() > 0) {
             Map<String, Object> levelMap = level2s.get(0).getColumns();
             LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
-            topLevels.add(levelEntity);
+            topLevelsMap.put(2, levelEntity);
         } else {
-            topLevels.add(new LevelEntity("总代", 0, 0f, 2, 0));
+            topLevelsMap.put(2, new LevelEntity("总代", 0, 0f, 2, 0));
         }
 
 
@@ -85,9 +148,9 @@ public class LevelServices implements ILevelServices {
         if (level3s != null && level3s.size() > 0) {
             Map<String, Object> levelMap = level3s.get(0).getColumns();
             LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
-            topLevels.add(levelEntity);
+            topLevelsMap.put(3, levelEntity);
         } else {
-            topLevels.add(new LevelEntity("一级代理", 0, 0f, 3, 0));
+            topLevelsMap.put(3, new LevelEntity("一级代理", 0, 0f, 3, 0));
         }
 
 
@@ -95,29 +158,18 @@ public class LevelServices implements ILevelServices {
         if (level4s != null && level4s.size() > 0) {
             Map<String, Object> levelMap = level4s.get(0).getColumns();
             LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
-            topLevels.add(levelEntity);
+            topLevelsMap.put(4, levelEntity);
         } else {
-            topLevels.add(new LevelEntity("分销商", 0, 0f, 4, 0));
+            topLevelsMap.put(4, new LevelEntity("分销商", 0, 0f, 4, 0));
         }
 
-        return topLevels;
-    }
-
-    @Override
-    public LevelEntity retrieveByNum(int codeNum) {
-        LevelEntity result = null;
-        LinkedList<LevelEntity> levelEntities = this.retrieveTop();
-        for (LevelEntity levelEntity : levelEntities) {
-            int currentOffset = codeNum - levelEntity.getMinNum();
-            if (currentOffset >= 0) {
-                result = levelEntity;
-            } else if (currentOffset < 0) {
-                break;
-            }
+        List<Record> level5s = Db.find("SELECT * FROM level WHERE level = ? ORDER BY weight ASC LIMIT 0,1", 5);
+        if (level5s != null && level5s.size() > 0) {
+            Map<String, Object> levelMap = level5s.get(0).getColumns();
+            LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
+            topLevelsMap.put(5, levelEntity);
+        } else {
+            topLevelsMap.put(5, new LevelEntity("单码", 1, 0f, 5, 0));
         }
-        if (result == null) {
-            result = levelEntities.getFirst();
-        }
-        return result;
     }
 }

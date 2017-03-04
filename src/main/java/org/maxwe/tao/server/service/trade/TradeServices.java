@@ -28,7 +28,8 @@ public class TradeServices implements ITradeServices {
                         .set("toId", historyEntity.getToId())
                         .set("type", historyEntity.getType())
                         .set("actCode", historyEntity.getActCode())
-                        .set("codeNum", historyEntity.getCodeNum());
+                        .set("codeNum", historyEntity.getCodeNum())
+                        .set("codeDeal", historyEntity.getCodeDeal());
                 boolean isSave = Db.save("history", historyRecord);
                 return updateAgent == 1 && isSave;
             }
@@ -53,7 +54,8 @@ public class TradeServices implements ITradeServices {
                         .set("toId", historyEntity.getToId())
                         .set("type", historyEntity.getType())
                         .set("actCode", historyEntity.getActCode())
-                        .set("codeNum", historyEntity.getCodeNum());
+                        .set("codeNum", historyEntity.getCodeNum())
+                        .set("codeDeal", historyEntity.getCodeDeal());
                 boolean isSave = Db.save("history", historyRecord);
 
                 return fromAgent == 1 && toAgent == 1 && isSave;

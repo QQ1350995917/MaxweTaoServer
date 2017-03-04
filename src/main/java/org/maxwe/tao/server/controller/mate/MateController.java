@@ -3,6 +3,7 @@ package org.maxwe.tao.server.controller.mate;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.PropertyFilter;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
@@ -356,7 +357,8 @@ public class MateController extends Controller implements IMateController {
         LevelEntity branchLevel = iLevelServices.retrieveByNum(branchAgent.getHaveCodes());
 
         BranchInfoResponseModel branchInfoResponseModel = new BranchInfoResponseModel(new MateModel(branchAgent, branchLevel));
-        branchInfoResponseModel.setLevels(iLevelServices.retrieveTop());
+        LinkedList<LevelEntity> levelEntities = iLevelServices.retrieveTop();
+        branchInfoResponseModel.setLevels(levelEntities);
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         iResultSet.setData(branchInfoResponseModel);
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
@@ -372,7 +374,7 @@ public class MateController extends Controller implements IMateController {
                 }
                 return true;
             }
-        });
+        }, SerializerFeature.DisableCircularReferenceDetect);
         renderJson(resultJson);
     }
 }

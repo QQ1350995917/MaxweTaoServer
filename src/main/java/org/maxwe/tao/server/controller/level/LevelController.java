@@ -36,7 +36,7 @@ public class LevelController extends Controller implements ILevelController {
                 price < 0 ||
                 price > 10000 ||
                 level < 1 ||
-                level > 4) {
+                level > 5) {
             renderError(400);
             return;
         } else {
@@ -47,6 +47,9 @@ public class LevelController extends Controller implements ILevelController {
             levelEntity.setMinNum(minNum);
             levelEntity.setPrice(price);
             levelEntity.setLevel(level);
+            if (level == 5) {
+                levelEntity.setMinNum(1);
+            }
             LevelEntity saveLevelEntity = iLevelServices.create(levelEntity);
             if (saveLevelEntity == null) {
                 renderError(400);

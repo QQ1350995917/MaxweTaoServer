@@ -5,18 +5,22 @@ import com.alibaba.fastjson.JSON;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
-import org.maxwe.tao.server.common.cache.TokenContext;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.common.utils.GrantCodeUtils;
 import org.maxwe.tao.server.common.utils.PasswordUtils;
+import org.maxwe.tao.server.controller.mate.model.MateModel;
+import org.maxwe.tao.server.controller.trade.model.GrantRequestModel;
+import org.maxwe.tao.server.controller.trade.model.GrantResponseModel;
+import org.maxwe.tao.server.controller.trade.model.TradeRequestModel;
+import org.maxwe.tao.server.controller.trade.model.TradeResponseModel;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
-import org.maxwe.tao.server.service.account.CSEntity;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 import org.maxwe.tao.server.service.account.agent.AgentServices;
 import org.maxwe.tao.server.service.account.agent.IAgentServices;
 import org.maxwe.tao.server.service.history.HistoryEntity;
+import org.maxwe.tao.server.service.level.ILevelServices;
 import org.maxwe.tao.server.service.level.LevelEntity;
 import org.maxwe.tao.server.service.level.LevelServices;
 import org.maxwe.tao.server.service.trade.ITradeServices;
@@ -27,20 +31,21 @@ import java.util.UUID;
 /**
  * Created by Pengwei Ding on 2017-01-09 18:54.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description:
+ * Description: 交易控制器，包括单码授权交易和多码交易
  */
 public class TradeController extends Controller implements ITradeController {
     private final Logger logger = Logger.getLogger(TradeController.class.getName());
     private IAgentServices iAgentServices = new AgentServices();
     private ITradeServices iTradeServices = new TradeServices();
+    private ILevelServices iLevelServices = new LevelServices();
 
     @Override
     @Before({AppInterceptor.class, TokenInterceptor.class})
     public void grant() {
         String params = this.getAttr("p");
-        TradeModel requestModel = JSON.parseObject(params, TradeModel.class);
+        GrantRequestModel requestModel = JSON.parseObject(params, GrantRequestModel.class);
         IResultSet iResultSet = new ResultSet();
-        if (!requestModel.isParamsOk()) {
+        if (!requestModel.isTokenParamsOk()) {
             this.logger.info("grant : 参数错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestModel);
@@ -50,11 +55,8 @@ public class TradeController extends Controller implements ITradeController {
             return;
         }
 
-        CSEntity agentCS = new CSEntity(0, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
-        CSEntity csEntity = TokenContext.getCSEntity(agentCS);
-
         // 这里查询授权码的数量是否足够
-        AgentEntity agentEntity = iAgentServices.retrieveById(csEntity.getId());
+        AgentEntity agentEntity = iAgentServices.retrieveById(requestModel.getId());
         if (agentEntity == null) {
             this.logger.info("grant : 服务器内部错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
@@ -64,7 +66,7 @@ public class TradeController extends Controller implements ITradeController {
             return;
         }
 
-        if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getCellphone(), requestModel.getVerification()), agentEntity.getPassword())) {
+        if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getCellphone(), requestModel.getAuthenticatePassword()), agentEntity.getPassword())) {
             this.logger.info("grant : 认证密码错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestModel);
@@ -94,12 +96,23 @@ public class TradeController extends Controller implements ITradeController {
             return;
         }
 
+        LevelEntity levelEntity = iLevelServices.retrieveByNum(1);
+        if (levelEntity == null) {
+            this.logger.info("grant : 服务器内部错误-没有找到单个码的价格 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+            renderJson(JSON.toJSONString(iResultSet));
+            return;
+        }
+
         HistoryEntity historyEntity = new HistoryEntity();
         historyEntity.setId(UUID.randomUUID().toString());
         historyEntity.setFromId(agentEntity.getId());
         historyEntity.setType(1);
         historyEntity.setActCode(GrantCodeUtils.genGrantCode());
         historyEntity.setCodeNum(1);
+        historyEntity.setCodeDeal(1 * levelEntity.getPrice());
 
         boolean grant = iTradeServices.grant(agentEntity, historyEntity);
         if (!grant) {
@@ -111,8 +124,8 @@ public class TradeController extends Controller implements ITradeController {
         } else {
             this.logger.info("grant : 授权成功 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-            requestModel.setActCode(historyEntity.getActCode());
-            iResultSet.setData(requestModel);
+            GrantResponseModel grantResponseModel = new GrantResponseModel(historyEntity.getActCode(), historyEntity.getCodeNum(), levelEntity.getPrice());
+            iResultSet.setData(grantResponseModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
             String resultJson = JSON.toJSONString(iResultSet);
             renderJson(resultJson);
@@ -123,9 +136,9 @@ public class TradeController extends Controller implements ITradeController {
     @Before({AppInterceptor.class, TokenInterceptor.class})
     public void trade() {
         String params = this.getAttr("p");
-        TradeModel requestModel = JSON.parseObject(params, TradeModel.class);
+        TradeRequestModel requestModel = JSON.parseObject(params, TradeRequestModel.class);
         IResultSet iResultSet = new ResultSet();
-        if (!requestModel.isParamsOk()) {
+        if (!requestModel.isTradeRequestParamsOk()) {
             this.logger.info("trade : 参数错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestModel);
@@ -135,12 +148,9 @@ public class TradeController extends Controller implements ITradeController {
             return;
         }
 
-        CSEntity agentCS = new CSEntity(0, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
-        CSEntity csEntity = TokenContext.getCSEntity(agentCS);
-
         // 这里查询授权码的数量是否足够
-        AgentEntity trunkEntity = iAgentServices.retrieveById(csEntity.getId());
-        if (trunkEntity == null) {
+        AgentEntity trunkAgent = iAgentServices.retrieveById(requestModel.getId());
+        if (trunkAgent == null) {
             this.logger.info("grant : 服务器内部错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestModel);
@@ -149,7 +159,17 @@ public class TradeController extends Controller implements ITradeController {
             return;
         }
 
-        if (trunkEntity.getLeftCodes() < requestModel.getCodeNum()) {
+        if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getCellphone(), requestModel.getAuthenticatePassword()), trunkAgent.getPassword())) {
+            this.logger.info("grant : 认证密码错误 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+            String resultJson = JSON.toJSONString(iResultSet);
+            renderJson(resultJson);
+            return;
+        }
+
+        if (trunkAgent.getLeftCodes() < requestModel.getCodeNum()) {
             this.logger.info("grant : 账户的授权数量不足 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
             iResultSet.setData(requestModel);
@@ -160,8 +180,8 @@ public class TradeController extends Controller implements ITradeController {
         }
 
         // 检测流向账户信息
-        AgentEntity branchEntity = iAgentServices.retrieveById(requestModel.getTargetId());
-        if (branchEntity == null) {
+        AgentEntity branchAgent = iAgentServices.retrieveById(requestModel.getBranchAgent().getAgent().getId());
+        if (branchAgent == null) {
             this.logger.info("grant : 服务器内部错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
             iResultSet.setData(requestModel);
@@ -170,25 +190,47 @@ public class TradeController extends Controller implements ITradeController {
             return;
         }
 
-        LevelEntity levelEntity = new LevelServices().retrieveByNum(branchEntity.getHaveCodes());
+        LevelEntity branchLevel = iLevelServices.retrieveById(requestModel.getBranchAgent().getLevel().getId());
         // 查询级别ID下对应的数量
-        if (requestModel.getCodeNum() < levelEntity.getMinNum()) {
-            this.logger.info("grant : 当前转让数量小于最小转让数量 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD_2.getCode());
+        if (branchLevel == null) {
+            this.logger.info("grant : 找不到级别的ID " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
             iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_BAD);
-            String resultJson = JSON.toJSONString(iResultSet);
-            renderJson(resultJson);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+            renderJson(JSON.toJSONString(iResultSet));
             return;
+        }
+
+        if (branchAgent.getHaveCodes() < 1) {
+            if (requestModel.getCodeNum() < branchLevel.getMinNum()) {
+                this.logger.info("grant : 当前转让数量小于最小转让数量 " + requestModel.toString());
+                iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD_2.getCode());
+                iResultSet.setData(requestModel);
+                iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_BAD);
+                String resultJson = JSON.toJSONString(iResultSet);
+                renderJson(resultJson);
+                return;
+            }
+        } else {
+            if (requestModel.getCodeNum() < 1) {
+                this.logger.info("grant : 当前转让数量小于0 " + requestModel.toString());
+                iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
+                iResultSet.setData(requestModel);
+                iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_BAD);
+                String resultJson = JSON.toJSONString(iResultSet);
+                renderJson(resultJson);
+                return;
+            }
         }
 
         HistoryEntity historyEntity = new HistoryEntity();
         historyEntity.setId(UUID.randomUUID().toString());
-        historyEntity.setFromId(trunkEntity.getId());
-        historyEntity.setToId(branchEntity.getId());
+        historyEntity.setFromId(trunkAgent.getId());
+        historyEntity.setToId(branchAgent.getId());
         historyEntity.setType(2);
         historyEntity.setCodeNum(requestModel.getCodeNum());
-        boolean grant = iTradeServices.trade(trunkEntity, branchEntity, historyEntity);
+        historyEntity.setCodeDeal(requestModel.getCodeNum() * branchLevel.getPrice());
+        boolean grant = iTradeServices.trade(trunkAgent, branchAgent, historyEntity);
         if (!grant) {
             this.logger.info("grant : 服务器内部错误 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
@@ -199,8 +241,13 @@ public class TradeController extends Controller implements ITradeController {
         }
 
         this.logger.info("trade : 交易成功 " + requestModel.toString());
+        TradeResponseModel tradeResponseModel = new TradeResponseModel();
+        tradeResponseModel.setBranchAgent(new MateModel(branchAgent, branchLevel));
+        tradeResponseModel.setCodeNum(requestModel.getCodeNum());
+        tradeResponseModel.setPrice(branchLevel.getPrice());
+        tradeResponseModel.setCodeDeal(requestModel.getCodeNum() * branchLevel.getPrice());
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(requestModel);
+        iResultSet.setData(tradeResponseModel);
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
         String resultJson = JSON.toJSONString(iResultSet);
         renderJson(resultJson);

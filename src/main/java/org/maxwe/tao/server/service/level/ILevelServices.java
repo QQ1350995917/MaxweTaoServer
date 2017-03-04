@@ -11,6 +11,8 @@ public interface ILevelServices {
 
     LevelEntity create(LevelEntity levelEntity);
 
+    LevelEntity retrieveById(String id);
+
     LinkedList<LevelEntity> retrieveAll(int pageIndex,int pageSize);
 
     int retrieveAllNumber();

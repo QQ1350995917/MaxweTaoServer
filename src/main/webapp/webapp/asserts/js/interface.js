@@ -311,6 +311,7 @@ function createManagerLevelView(pageIndex, pageSize) {
         $("#form_system_topLevel1").ajaxForm(object);
         $("#form_system_topLevel2").ajaxForm(object);
         $("#form_system_topLevel3").ajaxForm(object);
+        $("#form_system_topLevel4").ajaxForm(object);
     }, function () {
         alert("错误");
     }, function () {

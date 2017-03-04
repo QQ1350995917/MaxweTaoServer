@@ -8,11 +8,13 @@ package org.maxwe.tao.server.controller.trade;
 public interface ITradeController {
     /**
      * 生成一个授权码
+     * 授权给普通用户使用
      */
     void grant();
 
     /**
      * 交易授权码
+     * 交易给代理使用
      */
     void trade();
 }

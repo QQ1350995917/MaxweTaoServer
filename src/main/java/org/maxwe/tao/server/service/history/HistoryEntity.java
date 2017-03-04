@@ -14,6 +14,7 @@ public class HistoryEntity implements Serializable {
     private int type; // 1激活码，2批量激活码
     private String actCode; //如果类型为1，则是向单个用激活
     private int codeNum;//如果类型为2，则表示交易为数量
+    private float codeDeal;//成交价格 成交价格等于当前定价乘以交易码量
     private long createTime;//创建时间
     private long updateTime;//更新时间
 
@@ -67,6 +68,14 @@ public class HistoryEntity implements Serializable {
 
     public void setCodeNum(int codeNum) {
         this.codeNum = codeNum;
+    }
+
+    public float getCodeDeal() {
+        return codeDeal;
+    }
+
+    public void setCodeDeal(float codeDeal) {
+        this.codeDeal = codeDeal;
     }
 
     public long getCreateTime() {
