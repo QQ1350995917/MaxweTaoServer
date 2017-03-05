@@ -21,21 +21,21 @@ public class LevelEntity implements Serializable {
     private long createTime;
     private long updateTime;
 
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     private String createTimeLabel;
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     private String updateTimeLabel;
 
     public LevelEntity() {
         super();
     }
 
-    public LevelEntity(String name,int minNum){
+    public LevelEntity(String name, int minNum) {
         this.name = name;
         this.minNum = minNum;
     }
 
-    public LevelEntity(String name,int minNum,float price,int level,int weight){
+    public LevelEntity(String name, int minNum, float price, int level, int weight) {
         this.name = name;
         this.minNum = minNum;
         this.price = price;
@@ -119,8 +119,18 @@ public class LevelEntity implements Serializable {
         return DateTimeUtils.parseLongToFullTime(this.getCreateTime());
     }
 
-
     public String getUpdateTimeLabel() {
         return DateTimeUtils.parseLongToFullTime(this.getUpdateTime());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && obj instanceof LevelEntity) {
+            if (this.getLevel() == ((LevelEntity) obj).getLevel()) {
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 }

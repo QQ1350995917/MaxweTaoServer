@@ -44,6 +44,7 @@ public interface IAgentServices {
      * @return
      */
     LinkedList<AgentEntity> retrieveByPid(int pId,int pageIndex,int pageSize);
+    int countByPid(int pId);
 
     LinkedList<AgentEntity> retrieveAll(int pageIndex,int pageSize);
     int retrieveAllSum();

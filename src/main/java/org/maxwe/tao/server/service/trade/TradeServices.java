@@ -42,8 +42,8 @@ public class TradeServices implements ITradeServices {
     public boolean trade(AgentEntity fromAgentEntity, AgentEntity toAgentEntity, HistoryEntity historyEntity) {
         boolean succeed = Db.tx(new IAtom() {
             public boolean run() throws SQLException {
-                int toAgent = Db.update("UPDATE agent SET haveCodes = haveCodes + ?, leftCodes = leftCodes + ? " +
-                        "where id = ? ", historyEntity.getCodeNum(), historyEntity.getCodeNum(), toAgentEntity.getId());
+                int toAgent = Db.update("UPDATE agent SET haveCodes = haveCodes + ?, leftCodes = leftCodes + ?, level = ? " +
+                        "where id = ? ", historyEntity.getCodeNum(), historyEntity.getCodeNum(),toAgentEntity.getLevel(), toAgentEntity.getId());
 
                 int fromAgent = Db.update("UPDATE agent SET spendCodes = spendCodes + ?, leftCodes = leftCodes - ? " +
                         "where id = ? ", historyEntity.getCodeNum(), historyEntity.getCodeNum(), fromAgentEntity.getId());

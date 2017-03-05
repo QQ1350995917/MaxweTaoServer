@@ -10,10 +10,7 @@ import org.maxwe.tao.server.common.response.ResultSet;
 import org.maxwe.tao.server.common.utils.GrantCodeUtils;
 import org.maxwe.tao.server.common.utils.PasswordUtils;
 import org.maxwe.tao.server.controller.mate.model.MateModel;
-import org.maxwe.tao.server.controller.trade.model.GrantRequestModel;
-import org.maxwe.tao.server.controller.trade.model.GrantResponseModel;
-import org.maxwe.tao.server.controller.trade.model.TradeRequestModel;
-import org.maxwe.tao.server.controller.trade.model.TradeResponseModel;
+import org.maxwe.tao.server.controller.trade.model.*;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
@@ -96,15 +93,16 @@ public class TradeController extends Controller implements ITradeController {
             return;
         }
 
-        LevelEntity levelEntity = iLevelServices.retrieveByNum(1);
-        if (levelEntity == null) {
-            this.logger.info("grant : 服务器内部错误-没有找到单个码的价格 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
-            renderJson(JSON.toJSONString(iResultSet));
-            return;
-        }
+//        LevelEntity levelEntity = iLevelServices.retrieveByLevel(5);
+//        if (levelEntity == null) {
+//            levelEntity = new LevelEntity("单码", 1, 0f, 5, 0);
+//            this.logger.info("grant : 服务器内部错误-没有找到单个码的价格 " + requestModel.toString());
+//            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
+//            iResultSet.setData(requestModel);
+//            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+//            renderJson(JSON.toJSONString(iResultSet));
+//            return;
+//        }
 
         HistoryEntity historyEntity = new HistoryEntity();
         historyEntity.setId(UUID.randomUUID().toString());
@@ -112,7 +110,7 @@ public class TradeController extends Controller implements ITradeController {
         historyEntity.setType(1);
         historyEntity.setActCode(GrantCodeUtils.genGrantCode());
         historyEntity.setCodeNum(1);
-        historyEntity.setCodeDeal(1 * levelEntity.getPrice());
+        historyEntity.setCodeDeal(1 * 0);
 
         boolean grant = iTradeServices.grant(agentEntity, historyEntity);
         if (!grant) {
@@ -124,7 +122,7 @@ public class TradeController extends Controller implements ITradeController {
         } else {
             this.logger.info("grant : 授权成功 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-            GrantResponseModel grantResponseModel = new GrantResponseModel(historyEntity.getActCode(), historyEntity.getCodeNum(), levelEntity.getPrice());
+            GrantResponseModel grantResponseModel = new GrantResponseModel(historyEntity.getActCode(), historyEntity.getCodeNum(), 0);
             iResultSet.setData(grantResponseModel);
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
             String resultJson = JSON.toJSONString(iResultSet);
@@ -230,6 +228,7 @@ public class TradeController extends Controller implements ITradeController {
         historyEntity.setType(2);
         historyEntity.setCodeNum(requestModel.getCodeNum());
         historyEntity.setCodeDeal(requestModel.getCodeNum() * branchLevel.getPrice());
+        branchAgent.setLevel(branchLevel.getLevel());
         boolean grant = iTradeServices.trade(trunkAgent, branchAgent, historyEntity);
         if (!grant) {
             this.logger.info("grant : 服务器内部错误 " + requestModel.toString());
@@ -251,5 +250,146 @@ public class TradeController extends Controller implements ITradeController {
         iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
         String resultJson = JSON.toJSONString(iResultSet);
         renderJson(resultJson);
+    }
+
+    @Override
+    @Before({AppInterceptor.class, TokenInterceptor.class})
+    public void upgrade() {
+        String params = this.getAttr("p");
+        UpgradeRequestModel requestModel = JSON.parseObject(params, UpgradeRequestModel.class);
+        IResultSet iResultSet = new ResultSet();
+        if (!requestModel.isUpgradeRequestParamsOk()) {
+            this.logger.info("update : 请求参数错误 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+            renderJson(JSON.toJSONString(iResultSet));
+            return;
+        }
+
+        // 这里查询授权码的数量是否足够
+        AgentEntity trunkAgent = iAgentServices.retrieveById(requestModel.getId());
+        if (trunkAgent == null) {
+            this.logger.info("update : 服务器内部错误 找不到主干账户" + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+            renderJson(JSON.toJSONString(iResultSet));
+            return;
+        }
+
+        if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getCellphone(), requestModel.getAuthenticatePassword()), trunkAgent.getPassword())) {
+            this.logger.info("update : 认证密码错误 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+            String resultJson = JSON.toJSONString(iResultSet);
+            renderJson(resultJson);
+            return;
+        }
+
+        if (trunkAgent.getLeftCodes() < requestModel.getCodeNum()) {
+            this.logger.info("update : 账户的授权数量不足 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_BAD);
+            String resultJson = JSON.toJSONString(iResultSet);
+            renderJson(resultJson);
+            return;
+        }
+
+        // 检测流向账户信息
+        AgentEntity branchAgent = iAgentServices.retrieveById(requestModel.getBranch().getAgent().getId());
+        if (branchAgent == null) {
+            this.logger.info("update : 服务器内部错误 找不到分支账户" + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+            renderJson(JSON.toJSONString(iResultSet));
+            return;
+        }
+
+        LevelEntity branchLevel = iLevelServices.retrieveById(requestModel.getBranch().getLevel().getId());
+        // 查询分支级别ID下对应的数量
+        if (branchLevel == null) {
+            this.logger.info("update : 找不到分支账户对应级别的ID " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+            renderJson(JSON.toJSONString(iResultSet));
+            return;
+        }
+
+        LevelEntity upgradeToLevel = iLevelServices.retrieveById(requestModel.getUpgradeToLevel().getId());
+        if (upgradeToLevel == null) {
+            this.logger.info("update : 服务器内部错误 找不到要升级到的级别" + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+            renderJson(JSON.toJSONString(iResultSet));
+            return;
+        }
+
+        if (upgradeToLevel.getLevel() > requestModel.getBranch().getLevel().getLevel()){
+            this.logger.info("update : 不能给代理降级 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD_2.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_BAD);
+            String resultJson = JSON.toJSONString(iResultSet);
+            renderJson(resultJson);
+            return;
+        }
+
+        if (branchLevel.getMinNum() + requestModel.getCodeNum() < upgradeToLevel.getMinNum()) {
+            if (requestModel.getCodeNum() < branchLevel.getMinNum()) {
+                this.logger.info("update : 当前转让数量不足升级 " + requestModel.toString());
+                iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD_2.getCode());
+                iResultSet.setData(requestModel);
+                iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_BAD);
+                String resultJson = JSON.toJSONString(iResultSet);
+                renderJson(resultJson);
+                return;
+            }
+        } else {
+            if (requestModel.getCodeNum() < 1) {
+                this.logger.info("update : 当前转让数量小于0 " + requestModel.toString());
+                iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
+                iResultSet.setData(requestModel);
+                iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_BAD);
+                String resultJson = JSON.toJSONString(iResultSet);
+                renderJson(resultJson);
+                return;
+            }
+        }
+
+        HistoryEntity historyEntity = new HistoryEntity();
+        historyEntity.setId(UUID.randomUUID().toString());
+        historyEntity.setFromId(trunkAgent.getId());
+        historyEntity.setToId(branchAgent.getId());
+        historyEntity.setType(2);
+        historyEntity.setCodeNum(requestModel.getCodeNum());
+        historyEntity.setCodeDeal(requestModel.getCodeNum() * branchLevel.getPrice());
+        branchAgent.setLevel(upgradeToLevel.getLevel());
+        boolean grant = iTradeServices.trade(trunkAgent, branchAgent, historyEntity);
+        if (!grant) {
+            this.logger.info("update : 服务器内部错误 " + requestModel.toString());
+            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
+            iResultSet.setData(requestModel);
+            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+            renderJson(JSON.toJSONString(iResultSet));
+            return;
+        }
+
+        this.logger.info("update : 升级成功 " + requestModel.toString());
+        UpgradeResponseModel upgradeResponseModel = new UpgradeResponseModel();
+        upgradeResponseModel.setBranch(new MateModel(branchAgent, branchLevel));
+        upgradeResponseModel.setCodeNum(requestModel.getCodeNum());
+        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+        iResultSet.setData(upgradeResponseModel);
+        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+        String resultJson = JSON.toJSONString(iResultSet);
+        renderJson(resultJson);
+
+
     }
 }

@@ -19,7 +19,7 @@ public interface ILevelServices {
 
     LinkedList<LevelEntity> retrieveTop();
 
-    LevelEntity retrieveByNum(int codeNum);
+    LevelEntity retrieveByLevel(int level);
 
 
 }

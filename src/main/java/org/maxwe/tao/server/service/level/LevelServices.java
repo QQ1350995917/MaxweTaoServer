@@ -110,16 +110,8 @@ public class LevelServices implements ILevelServices {
     }
 
     @Override
-    public LevelEntity retrieveByNum(int codeNum) {
-        LevelEntity result = null;
-        Set<Map.Entry<Integer, LevelEntity>> entries = topLevelsMap.entrySet();
-        for (Map.Entry<Integer, LevelEntity> entry : entries) {
-            int currentOffset = codeNum - entry.getValue().getMinNum();
-            if (currentOffset >= 0) {
-                result = entry.getValue();
-                break;
-            }
-        }
+    public LevelEntity retrieveByLevel(int level) {
+        LevelEntity result = topLevelsMap.get(level);
         return result;
     }
 
@@ -162,14 +154,13 @@ public class LevelServices implements ILevelServices {
         } else {
             topLevelsMap.put(4, new LevelEntity("分销商", 0, 0f, 4, 0));
         }
-
-        List<Record> level5s = Db.find("SELECT * FROM level WHERE level = ? ORDER BY weight ASC LIMIT 0,1", 5);
-        if (level5s != null && level5s.size() > 0) {
-            Map<String, Object> levelMap = level5s.get(0).getColumns();
-            LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
-            topLevelsMap.put(5, levelEntity);
-        } else {
-            topLevelsMap.put(5, new LevelEntity("单码", 1, 0f, 5, 0));
-        }
+//        List<Record> level5s = Db.find("SELECT * FROM level WHERE level = ? ORDER BY weight ASC LIMIT 0,1", 5);
+//        if (level5s != null && level5s.size() > 0) {
+//            Map<String, Object> levelMap = level5s.get(0).getColumns();
+//            LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
+//            topLevelsMap.put(5, levelEntity);
+//        } else {
+//            topLevelsMap.put(5, new LevelEntity("单码", 1, 0f, 5, 0));
+//        }
     }
 }

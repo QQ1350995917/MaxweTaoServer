@@ -106,7 +106,7 @@ public class MateController extends Controller implements IMateController {
             this.logger.info("beg : 查找成功 " + requestModel.toString());
             iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
 
-            LevelEntity trunkLevelEntity = iLevelServices.retrieveByNum(trunkEntity.getHaveCodes());
+            LevelEntity trunkLevelEntity = iLevelServices.retrieveByLevel(trunkEntity.getLevel());
             MateModel mateModel = new MateModel(trunkEntity, trunkLevelEntity);
             BranchBegResponseModel branchBegResponseModel = requestModel.getBranchBegResponseModel();
             branchBegResponseModel.setTrunk(mateModel);
@@ -166,7 +166,7 @@ public class MateController extends Controller implements IMateController {
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet));
         } else {
-            LevelEntity branchLevelEntity = iLevelServices.retrieveByNum(branchAgentEntity.getHaveCodes());
+            LevelEntity branchLevelEntity = iLevelServices.retrieveByLevel(branchAgentEntity.getLevel());
             MateModel mateModel = new MateModel(branchAgentEntity, branchLevelEntity);
             GrantBranchResponseModel grantBranchResponseModel = new GrantBranchResponseModel(mateModel);
             this.logger.info("grant : 授权代理加入成功 " + requestModel.toString());
@@ -212,7 +212,7 @@ public class MateController extends Controller implements IMateController {
             iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
             renderJson(JSON.toJSONString(iResultSet));
         } else {
-            LevelEntity branchLevelEntity = iLevelServices.retrieveByNum(branchAgentEntity.getHaveCodes());
+            LevelEntity branchLevelEntity = iLevelServices.retrieveByLevel(branchAgentEntity.getLevel());
             MateModel mateModel = new MateModel(branchAgentEntity, branchLevelEntity);
             GrantBranchResponseModel grantBranchResponseModel = new GrantBranchResponseModel(mateModel);
             this.logger.info("reject : 拒绝代理加入成功 " + requestModel.toString());
@@ -261,7 +261,7 @@ public class MateController extends Controller implements IMateController {
 
         this.logger.info("leader : 查找上级成功 " + requestModel.toString());
         iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        LevelEntity trunkLevelEntity = iLevelServices.retrieveByNum(trunkAgent.getHaveCodes());
+        LevelEntity trunkLevelEntity = iLevelServices.retrieveByLevel(trunkAgent.getLevel());
         MateModel trunkMateModel = new MateModel(trunkAgent, trunkLevelEntity);
         TrunkInfoResponseModel trunkInfoResponseModel = new TrunkInfoResponseModel(trunkMateModel, branchAgent);
         iResultSet.setData(trunkInfoResponseModel);
@@ -306,7 +306,7 @@ public class MateController extends Controller implements IMateController {
 
             LinkedList<MateModel> branchesMates = new LinkedList<>();
             for (AgentEntity branchAgent : branchesAgents) {
-                LevelEntity levelEntity = iLevelServices.retrieveByNum(branchAgent.getHaveCodes());
+                LevelEntity levelEntity = iLevelServices.retrieveByLevel(branchAgent.getLevel());
                 branchesMates.add(new MateModel(branchAgent, levelEntity));
             }
             BranchesResponseModel branchesResponseModel = new BranchesResponseModel();
@@ -354,7 +354,7 @@ public class MateController extends Controller implements IMateController {
             renderJson(JSON.toJSONString(iResultSet));
             return;
         }
-        LevelEntity branchLevel = iLevelServices.retrieveByNum(branchAgent.getHaveCodes());
+        LevelEntity branchLevel = iLevelServices.retrieveByLevel(branchAgent.getLevel());
 
         BranchInfoResponseModel branchInfoResponseModel = new BranchInfoResponseModel(new MateModel(branchAgent, branchLevel));
         LinkedList<LevelEntity> levelEntities = iLevelServices.retrieveTop();

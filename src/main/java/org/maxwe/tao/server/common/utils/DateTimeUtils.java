@@ -59,7 +59,82 @@ public class DateTimeUtils {
         return fixTime;
     }
 
-    public static long getCurrentTimestamp(){
+    public static long getCurrentTimestamp() {
         return new Date().getTime();
+    }
+
+    /**
+     * 获取当前的年份月份和天数
+     *
+     * @return
+     */
+    public static int[] getCurrentYear() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int date = calendar.get(Calendar.DATE);
+        return new int[]{year, month, date};
+    }
+
+    /**
+     * 获取某年某月的起始和结束时间点
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return
+     * @throws Exception
+     */
+    public static long[] getMonthTimestampLine(int year, int month) throws Exception {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);
+        int maximum = calendar.getActualMaximum(Calendar.DATE);
+        int minimum = calendar.getActualMinimum(Calendar.DATE);
+
+        calendar.set(Calendar.DATE, minimum);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        long startLine = calendar.getTimeInMillis();
+
+
+        calendar.set(Calendar.DATE, maximum);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        long endLine = calendar.getTimeInMillis();
+
+        return new long[]{startLine, endLine};
+    }
+
+    /**
+     * 获取某年某月的结束点和之前偏移月份的起始时间点
+     *
+     * @param year  年份
+     * @param month 起始月份
+     * @param offset 偏移月份
+     * @return
+     * @throws Exception
+     */
+    public static long[] getMonthTimestampLine(int year, int month,int offset) throws Exception {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month - 1);
+        int maximum = calendar.getActualMaximum(Calendar.DATE);
+        calendar.set(Calendar.DATE, maximum);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        long endLine = calendar.getTimeInMillis();
+
+        calendar.set(Calendar.MONTH, month - 1 - offset);
+        int minimum = calendar.getActualMinimum(Calendar.DATE);
+        calendar.set(Calendar.DATE, minimum);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        long startLine = calendar.getTimeInMillis();
+
+        return new long[]{startLine, endLine};
     }
 }

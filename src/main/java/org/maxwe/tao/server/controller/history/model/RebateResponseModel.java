@@ -1,7 +1,5 @@
 package org.maxwe.tao.server.controller.history.model;
 
-import org.maxwe.tao.server.service.history.RebateMonthEntity;
-
 import java.util.List;
 
 /**
@@ -10,35 +8,21 @@ import java.util.List;
  * Description: 代理返点请求模型
  */
 public class RebateResponseModel extends RebateRequestModel {
-    private long total;
-    private long totalPages;
-    private List<RebateMonthEntity> rebates;
+    private List<RebateModel> rebates;
 
     public RebateResponseModel() {
         super();
     }
 
-    public long getTotal() {
-        return total;
+    public RebateResponseModel(List<RebateModel> rebates) {
+        this.rebates = rebates;
     }
 
-    public void setTotal(long total) {
-        this.total = total;
-    }
-
-    public long getTotalPages() {
-        return totalPages;
-    }
-
-    public void setTotalPages(long totalPages) {
-        this.totalPages = totalPages;
-    }
-
-    public List<RebateMonthEntity> getRebates() {
+    public List<RebateModel> getRebates() {
         return rebates;
     }
 
-    public void setRebates(List<RebateMonthEntity> rebates) {
+    public void setRebates(List<RebateModel> rebates) {
         this.rebates = rebates;
     }
 }

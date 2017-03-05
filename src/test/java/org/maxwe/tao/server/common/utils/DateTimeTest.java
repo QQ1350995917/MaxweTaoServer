@@ -8,6 +8,11 @@ package org.maxwe.tao.server.common.utils;
 public class DateTimeTest {
 
     public static void main(String[] args) throws Exception {
-        DateTimeUtils.test();
+        long startLine = DateTimeUtils.getMonthTimestampLine(2017, 3, 1)[0];
+        long endLine = DateTimeUtils.getMonthTimestampLine(2017, 3, 1)[1];
+
+        System.out.println(DateTimeUtils.parseLongToFullTime(startLine));
+        System.out.println(DateTimeUtils.parseLongToFullTime(endLine));
+
     }
 }

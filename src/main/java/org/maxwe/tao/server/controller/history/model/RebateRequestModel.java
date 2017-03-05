@@ -1,5 +1,6 @@
 package org.maxwe.tao.server.controller.history.model;
 
+import org.maxwe.tao.server.common.utils.DateTimeUtils;
 import org.maxwe.tao.server.controller.account.model.TokenModel;
 
 /**
@@ -8,44 +9,45 @@ import org.maxwe.tao.server.controller.account.model.TokenModel;
  * Description: 代理返点请求模型
  */
 public class RebateRequestModel extends TokenModel {
-    private int pageIndex;
-    private int pageSize;
-    private long startLine;//开始时间戳
-    private long endLine;//结束时间戳
+    private int year;//年份
+    private int month;//月份
+    private int monthCounter;//月份数量
 
     public RebateRequestModel() {
         super();
     }
 
-    public int getPageIndex() {
-        return pageIndex;
+    public int getYear() {
+        return year;
     }
 
-    public void setPageIndex(int pageIndex) {
-        this.pageIndex = pageIndex;
+    public void setYear(int year) {
+        this.year = year;
     }
 
-    public int getPageSize() {
-        return pageSize;
+    public int getMonth() {
+        return month;
     }
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+    public void setMonth(int month) {
+        this.month = month;
     }
 
-    public long getStartLine() {
-        return startLine;
+    public int getMonthCounter() {
+        return monthCounter;
     }
 
-    public void setStartLine(long startLine) {
-        this.startLine = startLine;
+    public void setMonthCounter(int monthCounter) {
+        this.monthCounter = monthCounter;
     }
 
-    public long getEndLine() {
-        return endLine;
-    }
-
-    public void setEndLine(long endLine) {
-        this.endLine = endLine;
+    public boolean isRebateParamsOk(){
+        if (year < 2017 || year > DateTimeUtils.getCurrentYear()[0]){
+            return false;
+        }
+        if (month < 0 || month > 13){
+            return false;
+        }
+        return super.isTokenParamsOk();
     }
 }

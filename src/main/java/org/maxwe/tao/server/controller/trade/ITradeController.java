@@ -17,4 +17,9 @@ public interface ITradeController {
      * 交易给代理使用
      */
     void trade();
+
+    /**
+     * 升级下级级别
+     */
+    void upgrade();
 }

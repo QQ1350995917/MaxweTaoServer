@@ -1,6 +1,7 @@
 package org.maxwe.tao.server.service.history;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Pengwei Ding on 2017-01-09 15:50.
@@ -19,4 +20,5 @@ public interface IHistoryServices {
 
     int countByFromId(String fromId);
 
+    int countActCodeInFromIdInTime(long startLine,long endLine,List<Integer> fromIds);
 }
