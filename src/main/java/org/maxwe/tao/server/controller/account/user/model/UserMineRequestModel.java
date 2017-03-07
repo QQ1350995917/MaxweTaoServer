@@ -8,4 +8,11 @@ import org.maxwe.tao.server.controller.account.model.TokenModel;
  * Description: 用户获取自己信息的请求模型
  */
 public class UserMineRequestModel extends TokenModel {
+    public UserMineRequestModel() {
+        super();
+    }
+
+    public UserMineRequestModel(String t, int id, String cellphone) {
+        super(t, id, cellphone);
+    }
 }

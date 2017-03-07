@@ -14,114 +14,73 @@
 <body>
 <div class="panel panel-default" style="margin: 10px">
     <!-- Default panel contents -->
-    <div class="panel-heading">代理注册</div>
+    <div class="panel-heading">获取手机短信验证码 URL:<a href="../common/response_code.html#domain">domain</a>/meta/smsCode</div>
     <div class="panel-body">
         <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/signup</p>
+            <p>请求参数：</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>参数名</td>
+                    <td>类型</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>cellphone</td>
+                    <td>String</td>
+                    <td>18511694468</td>
+                    <td>手机号码</td>
+                </tr>
+            </table>
         </div>
 
         <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
-        </div>
-    </div>
-</div>
-
-<div class="panel panel-default" style="margin: 10px">
-    <!-- Default panel contents -->
-    <div class="panel-heading">代理登录</div>
-    <div class="panel-body">
-        <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/signin</p>
-        </div>
-
-        <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
-        </div>
-    </div>
-</div>
-
-
-<div class="panel panel-default" style="margin: 10px">
-    <!-- Default panel contents -->
-    <div class="panel-heading">代理忘记密码</div>
-    <div class="panel-body">
-        <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/lost</p>
-        </div>
-
-        <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
+            <p>响应码及信息</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>响应码</td>
+                    <td>信息</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>200</td>
+                    <td>发送成功</td>
+                    <td></td>
+                    <td>发送短信验证码成功</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>400</td>
+                    <td>参数错误</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>421</td>
+                    <td>网络忙，请稍后</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>500</td>
+                    <td>发送失败，请重试</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
-
-<div class="panel panel-default" style="margin: 10px">
-    <!-- Default panel contents -->
-    <div class="panel-heading">代理修改密码</div>
-    <div class="panel-body">
-        <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/modify</p>
-        </div>
-
-        <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
-        </div>
-    </div>
-</div>
-
-<div class="panel panel-default" style="margin: 10px">
-    <!-- Default panel contents -->
-    <div class="panel-heading">代理修改密码</div>
-    <div class="panel-body">
-        <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/bind</p>
-        </div>
-
-        <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
-        </div>
-    </div>
-</div>
-
 </body>
 </html>

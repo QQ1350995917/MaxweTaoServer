@@ -18,7 +18,7 @@ public class TokenModel implements Serializable {
     private int id;//用户ID
     private String cellphone;//电话号码
     private String verification;
-    private int apt; // 登录类型
+    private int apt; // 登录类型,在内存中标记token的类型
     @JSONField(serialize = false)
     private String sign;
 

@@ -51,7 +51,7 @@ public class AgentController extends Controller implements IAgentController {
         if (agentEntity != null) {
             this.logger.info("exist : 检测到重复账户 " + requestModel.toString());
             AccountExistResponseModel agentExistResponseModel = new AccountExistResponseModel(requestModel);
-            agentExistResponseModel.setCode(ResponseModel.RC_SUCCESS);
+            agentExistResponseModel.setCode(ResponseModel.RC_NOT_ACCEPTABLE);
             agentExistResponseModel.setMessage("您输入的手机号码已被注册");
             agentExistResponseModel.setExistence(true);
             renderJson(JSON.toJSONString(agentExistResponseModel));
@@ -85,7 +85,7 @@ public class AgentController extends Controller implements IAgentController {
         if (!StringUtils.equals(requestModel.getSmsCode(), SMSManager.getSMSCode(requestModel.getCellphone()))) {
             this.logger.info("register : 请求参数中验证码错误 " + requestModel.toString());
             AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel);
-            agentExistResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
+            agentExistResponseModel.setCode(ResponseModel.RC_CONFLICT);
             agentExistResponseModel.setMessage("您输入的验证码错误");
             renderJson(JSON.toJSONString(agentExistResponseModel));
             return;
@@ -176,6 +176,17 @@ public class AgentController extends Controller implements IAgentController {
             renderJson(JSON.toJSONString(accountLostResponseModel));
             return;
         }
+
+        // 验证码检测
+        if (!StringUtils.equals(requestModel.getSmsCode(), SMSManager.getSMSCode(requestModel.getCellphone()))) {
+            this.logger.info("lost : 验证码错误 " + requestModel.toString());
+            AccountLostResponseModel accountLostResponseModel = new AccountLostResponseModel(requestModel);
+            accountLostResponseModel.setCode(ResponseModel.RC_CONFLICT);
+            accountLostResponseModel.setMessage("您输入的验证码错误");
+            renderJson(JSON.toJSONString(accountLostResponseModel));
+            return;
+        }
+
         // 注册检测
         AgentEntity existAgent = iAgentServices.retrieveByCellphone(requestModel.getCellphone());
         if (existAgent == null) {
@@ -183,17 +194,7 @@ public class AgentController extends Controller implements IAgentController {
             this.logger.info("lost : 电话号码没有注册，无法使用找回密码 " + requestModel.toString());
             AccountLostResponseModel accountLostResponseModel = new AccountLostResponseModel(requestModel);
             accountLostResponseModel.setCode(ResponseModel.RC_NOT_FOUND);
-            accountLostResponseModel.setMessage("请您输入正确的参数");
-            renderJson(JSON.toJSONString(accountLostResponseModel));
-            return;
-        }
-
-        // 验证码检测
-        if (!StringUtils.equals(requestModel.getSmsCode(), SMSManager.getSMSCode(requestModel.getCellphone()))) {
-            this.logger.info("lost : 验证码错误 " + requestModel.toString());
-            AccountLostResponseModel accountLostResponseModel = new AccountLostResponseModel(requestModel);
-            accountLostResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
-            accountLostResponseModel.setMessage("您输入的验证码错误");
+            accountLostResponseModel.setMessage("该号码没有注册，请前往注册");
             renderJson(JSON.toJSONString(accountLostResponseModel));
             return;
         }
@@ -229,7 +230,7 @@ public class AgentController extends Controller implements IAgentController {
         if (existAgentEntity == null) {
             this.logger.info("password : 修改密码没有查询到该记录-服务器内部错误 " + requestModel.toString());
             AccountModifyResponseModel accountModifyResponseModel = new AccountModifyResponseModel(requestModel);
-            accountModifyResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
+            accountModifyResponseModel.setCode(ResponseModel.RC_NOT_FOUND);
             accountModifyResponseModel.setMessage("系统错误，请重试");
             renderJson(JSON.toJSONString(accountModifyResponseModel));
             return;
@@ -280,6 +281,28 @@ public class AgentController extends Controller implements IAgentController {
 
     @Override
     @Before({AppInterceptor.class, TokenInterceptor.class})
+    public void mine() {
+        String params = this.getAttr("p");
+        AgentMineRequestModel requestModel = JSON.parseObject(params, AgentMineRequestModel.class);
+        AgentEntity agentEntity = iAgentServices.retrieveById(requestModel.getId());
+        if (agentEntity == null) {
+            AgentMineResponseModel agentMineResponseModel = new AgentMineResponseModel(requestModel);
+            agentMineResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
+            agentMineResponseModel.setMessage("获取信息失败");
+            renderJson(JSON.toJSONString(agentMineResponseModel));
+            return;
+        }
+        LevelEntity levelEntity = iLevelServices.retrieveByLevel(agentEntity.getLevel());
+        AgentModel agentModel = new AgentModel(agentEntity, levelEntity);
+        AgentMineResponseModel agentMineResponseModel = new AgentMineResponseModel(requestModel);
+        agentMineResponseModel.setCode(ResponseModel.RC_SUCCESS);
+        agentMineResponseModel.setAgent(agentModel);
+        agentMineResponseModel.setMessage("获取信息成功");
+        renderJson(JSON.toJSONString(agentMineResponseModel));
+    }
+
+    @Override
+    @Before({AppInterceptor.class, TokenInterceptor.class})
     public void bank() {
         String params = this.getAttr("p");
         AgentBankRequestModel requestModel = JSON.parseObject(params, AgentBankRequestModel.class);
@@ -294,9 +317,9 @@ public class AgentController extends Controller implements IAgentController {
 
         AgentEntity agentEntity = iAgentServices.retrieveById(requestModel.getId());
         if (agentEntity == null) {
-            this.logger.info("bank : 没有找到要更新的用户 " + requestModel.toString());
+            this.logger.info("bank : 没有找到要绑定的用户 " + requestModel.toString());
             AgentBankResponseModel agentBankResponseModel = new AgentBankResponseModel(requestModel);
-            agentBankResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
+            agentBankResponseModel.setCode(ResponseModel.RC_NOT_FOUND);
             agentBankResponseModel.setMessage("系统错误，请重试");
             renderJson(JSON.toJSONString(agentBankResponseModel));
             return;
@@ -343,25 +366,5 @@ public class AgentController extends Controller implements IAgentController {
     }
 
 
-    @Override
-    @Before({AppInterceptor.class, TokenInterceptor.class})
-    public void mine() {
-        String params = this.getAttr("p");
-        AgentMineRequestModel requestModel = JSON.parseObject(params, AgentMineRequestModel.class);
-        AgentEntity agentEntity = iAgentServices.retrieveById(requestModel.getId());
-        if (agentEntity == null) {
-            AgentMineResponseModel agentMineResponseModel = new AgentMineResponseModel(requestModel);
-            agentMineResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
-            agentMineResponseModel.setMessage("获取信息失败");
-            renderJson(JSON.toJSONString(agentMineResponseModel));
-            return;
-        }
-        LevelEntity levelEntity = iLevelServices.retrieveByLevel(agentEntity.getLevel());
-        AgentModel agentModel = new AgentModel(agentEntity, levelEntity);
-        AgentMineResponseModel agentMineResponseModel = new AgentMineResponseModel(requestModel);
-        agentMineResponseModel.setCode(ResponseModel.RC_SUCCESS);
-        agentMineResponseModel.setAgent(agentModel);
-        agentMineResponseModel.setMessage("获取信息成功");
-        renderJson(JSON.toJSONString(agentMineResponseModel));
-    }
+
 }

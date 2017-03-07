@@ -54,7 +54,7 @@ public class UserController extends Controller implements IUserController {
         if (userEntity != null) {
             this.logger.info("exist : 检测到重复账户 " + requestModel.toString());
             AccountExistResponseModel agentExistResponseModel = new AccountExistResponseModel(requestModel);
-            agentExistResponseModel.setCode(ResponseModel.RC_SUCCESS);
+            agentExistResponseModel.setCode(ResponseModel.RC_NOT_ACCEPTABLE);
             agentExistResponseModel.setMessage("您输入的手机号码已被注册");
             agentExistResponseModel.setExistence(true);
             renderJson(JSON.toJSONString(agentExistResponseModel));
@@ -86,7 +86,7 @@ public class UserController extends Controller implements IUserController {
         if (!StringUtils.equals(requestModel.getSmsCode(), SMSManager.getSMSCode(requestModel.getCellphone()))) {
             this.logger.info("register : 请求参数中验证码错误 " + requestModel.toString());
             AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel);
-            agentExistResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
+            agentExistResponseModel.setCode(ResponseModel.RC_CONFLICT);
             agentExistResponseModel.setMessage("您输入的验证码错误");
             renderJson(JSON.toJSONString(agentExistResponseModel));
             return;
@@ -180,7 +180,7 @@ public class UserController extends Controller implements IUserController {
             // 电话号码没有注册
             this.logger.info("lost : 电话号码没有注册，无法使用找回密码 " + requestModel.toString());
             AccountLostResponseModel accountLostResponseModel = new AccountLostResponseModel(requestModel);
-            accountLostResponseModel.setCode(ResponseModel.RC_NOT_FOUND);
+            accountLostResponseModel.setCode(ResponseModel.RC_CONFLICT);
             accountLostResponseModel.setMessage("请您输入正确的参数");
             renderJson(JSON.toJSONString(accountLostResponseModel));
             return;
@@ -190,7 +190,7 @@ public class UserController extends Controller implements IUserController {
         if (!StringUtils.equals(requestModel.getSmsCode(), SMSManager.getSMSCode(requestModel.getCellphone()))) {
             this.logger.info("lost : 验证码错误 " + requestModel.toString());
             AccountLostResponseModel accountLostResponseModel = new AccountLostResponseModel(requestModel);
-            accountLostResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
+            accountLostResponseModel.setCode(ResponseModel.RC_NOT_FOUND);
             accountLostResponseModel.setMessage("您输入的验证码错误");
             renderJson(JSON.toJSONString(accountLostResponseModel));
             return;
@@ -227,7 +227,7 @@ public class UserController extends Controller implements IUserController {
         if (existUserEntity == null) {
             this.logger.info("password : 修改密码没有查询到该记录-服务器内部错误 " + requestModel.toString());
             AccountModifyResponseModel accountModifyResponseModel = new AccountModifyResponseModel(requestModel);
-            accountModifyResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
+            accountModifyResponseModel.setCode(ResponseModel.RC_NOT_FOUND);
             accountModifyResponseModel.setMessage("系统错误，请重试");
             renderJson(JSON.toJSONString(accountModifyResponseModel));
             return;
