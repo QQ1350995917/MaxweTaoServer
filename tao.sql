@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2017-03-01 08:48:39
+-- Generation Time: 2017-03-06 08:46:14
 -- 服务器版本： 5.6.22
 -- PHP Version: 5.5.20
 
@@ -37,26 +37,20 @@ CREATE TABLE IF NOT EXISTS `agent` (
   `password` varchar(64) NOT NULL COMMENT '登录密码',
   `name` varchar(36) DEFAULT NULL COMMENT '姓名',
   `named` varchar(36) DEFAULT NULL COMMENT '被命名',
-  `levelId` varchar(36) NOT NULL DEFAULT '0' COMMENT '代理的级别ID',
+  `level` int(4) NOT NULL DEFAULT '0' COMMENT '代理的级别，顶级为1，依次加一',
   `weight` int(1) NOT NULL DEFAULT '0' COMMENT '排序，数据权重',
   `status` int(1) NOT NULL DEFAULT '1' COMMENT '代理的状态，-1删除，0禁用，1正常',
   `haveCodes` int(11) NOT NULL DEFAULT '0' COMMENT '累计的购买授权码数量',
   `spendCodes` int(11) NOT NULL DEFAULT '0' COMMENT '累计的授权码数量',
   `leftCodes` int(11) NOT NULL DEFAULT '0' COMMENT '当前可用的授权码数量',
+  `weChat` varchar(36) DEFAULT NULL COMMENT '微信号',
   `trueName` varchar(36) DEFAULT NULL COMMENT '真实姓名',
   `zhifubao` varchar(36) DEFAULT NULL COMMENT '支付宝账户',
   `pIdTime` timestamp NULL DEFAULT NULL COMMENT '申请加入代理体系的时间',
   `reachTime` timestamp NULL DEFAULT NULL COMMENT '达成上下级代理的时间',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=100002 DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `agent`
---
-
-INSERT INTO `agent` (`id`, `pId`, `reach`, `cellphone`, `password`, `name`, `named`, `levelId`, `weight`, `status`, `haveCodes`, `spendCodes`, `leftCodes`, `trueName`, `zhifubao`, `pIdTime`, `reachTime`, `createTime`, `updateTime`) VALUES
-(100000, 100000, 1, '18511694468', '0CE018668103ACE0F1066A490FA9A1C4', NULL, NULL, '0', 0, 1, 100, 0, 100, '丁朋伟', '18511694468', NULL, '2017-02-28 00:00:00', '2017-02-27 07:24:47', '2017-03-01 08:47:47');
+) ENGINE=InnoDB AUTO_INCREMENT=100003 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -90,6 +84,8 @@ CREATE TABLE IF NOT EXISTS `history` (
   `type` int(11) NOT NULL COMMENT '1激活码，2批量激活码',
   `actCode` varchar(12) DEFAULT NULL COMMENT '如果类型为1，则是向单个用激活；如果类型为2，则表示交易为数量',
   `codeNum` int(11) NOT NULL COMMENT '如果类型为2，则是代理之间交易，记录数量',
+  `price` float DEFAULT NULL COMMENT '成交价格',
+  `codeDeal` float DEFAULT NULL COMMENT '成交价格',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -104,22 +100,14 @@ DROP TABLE IF EXISTS `level`;
 CREATE TABLE IF NOT EXISTS `level` (
   `id` varchar(36) NOT NULL COMMENT '业务ID',
   `name` varchar(36) NOT NULL COMMENT '名称',
-  `description` text NOT NULL COMMENT '描述',
+  `description` text COMMENT '描述',
   `minNum` int(11) NOT NULL COMMENT '一次的最少取码量',
   `price` float NOT NULL COMMENT '每码价格',
+  `level` int(11) NOT NULL COMMENT '等级',
+  `weight` int(11) NOT NULL DEFAULT '0' COMMENT '权重，数字越大，权重越小',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `level`
---
-
-INSERT INTO `level` (`id`, `name`, `description`, `minNum`, `price`, `createTime`, `updateTime`) VALUES
-('694d50b0-d96d-11e6-9335-5d7f657e4af7', '联合创始人', '联合创始人', 1000, 48, '2017-01-14 02:43:22', '2017-01-14 00:00:00'),
-('694dddfa-d96d-11e6-9335-5d7f657e4af7', '总代', '总代', 500, 55, '2017-01-14 02:43:26', '2017-01-05 00:00:00'),
-('8f2e8e0c-d96d-11e6-9335-5d7f657e4af7', '一级代理', '一级代理', 20, 65, '2017-01-14 02:43:30', '2017-01-05 00:00:00'),
-('8f2ea536-d96d-11e6-9335-5d7f657e4af7', '分销商', '分销商', 3, 78, '2017-01-14 02:43:35', '2017-01-18 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -146,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `manager` (
 --
 
 INSERT INTO `manager` (`id`, `loginName`, `nickName`, `cellphone`, `password`, `level`, `status`, `access`, `createTime`, `updateTime`) VALUES
-('9965aad0-f19c-11e6-87a2-adf5c4f88bd2', 'administrator110', 'admin', '18511694468', 'B9416C80E3045C9929C3AE9B7B352124', -99, -67, '["200","201","202","300","301","302"]', '2017-02-13 03:29:17', '2017-02-21 01:46:41');
+('9965aad0-f19c-11e6-87a2-adf5c4f88bd2', 'administrator110', 'admin', '18511694468', 'B9416C80E3045C9929C3AE9B7B352124', -99, -67, '["200","201","204","202","203","300","301","302"]', '2017-02-13 03:29:17', '2017-03-03 01:35:04');
 
 -- --------------------------------------------------------
 
@@ -165,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `status` int(11) NOT NULL DEFAULT '1' COMMENT '0禁用，1正常',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
-) ENGINE=InnoDB AUTO_INCREMENT=10000001 DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- --------------------------------------------------------
 
@@ -243,12 +231,12 @@ ALTER TABLE `version`
 -- AUTO_INCREMENT for table `agent`
 --
 ALTER TABLE `agent`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '代理的ID，从100000起始',AUTO_INCREMENT=100002;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '代理的ID，从100000起始',AUTO_INCREMENT=100003;
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10000001;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=51;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

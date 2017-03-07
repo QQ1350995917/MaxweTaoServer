@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>对接必看</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+</head>
+<body>
+<div class="page-header">
+    <h2 style="text-align:center">系统公共参数部分</h2>
+</div>
+<div class="panel panel-default" style="margin: 10px">
+    <!-- Default panel contents -->
+    <div id="domain" class="panel-heading">domain</div>
+    <div class="panel-body">
+        <p>http://taomami.cn</p>
+    </div>
+</div>
+<div class="panel panel-default" style="margin: 10px">
+    <!-- Default panel contents -->
+    <div class="panel-heading"><h3>系统响应编码</h3></div>
+
+    <!-- Table -->
+    <table class="table">
+        <thead>
+        <tr>
+            <td>编码</td>
+            <td>常量标示</td>
+            <td>对应消息</td>
+            <td>释义</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>200</td>
+            <td>RC_SUCCESS</td>
+            <td>执行成功</td>
+            <td>执行成功</td>
+        </tr>
+        <tr>
+            <td>204</td>
+            <td>RC_SUCCESS_EMPTY</td>
+            <td>执行成功</td>
+            <td>执行成功，但是处理的结果是空</td>
+        </tr>
+
+        <tr>
+            <td>400</td>
+            <td>RC_BAD_PARAMS</td>
+            <td>参数错误</td>
+            <td>请求提交的参数不符合请求规则</td>
+        </tr>
+
+        <tr>
+            <td>401</td>
+            <td>RC_UNAUTHORIZED</td>
+            <td>未启用</td>
+            <td>未启用</td>
+        </tr>
+
+        <tr>
+            <td>403</td>
+            <td>RC_FORBIDDEN</td>
+            <td>权限拒绝</td>
+            <td>请求中的参数没有权限处理提交的内容</td>
+        </tr>
+
+        <tr>
+            <td>404</td>
+            <td>RC_NOT_FOUND</td>
+            <td>找不到内容</td>
+            <td>请求中的参数在服务器上没有对应的内容</td>
+        </tr>
+
+        <tr>
+            <td>408</td>
+            <td>RC_TIMEOUT</td>
+            <td>登录超时</td>
+            <td>登录超时，需要重新登录</td>
+        </tr>
+
+        <tr>
+            <td>409</td>
+            <td>RC_CONFLICT</td>
+            <td>提交冲突</td>
+            <td>提交的内容和现有的内容有冲突，比如：注册已经存在用户名</td>
+        </tr>
+
+        <tr>
+            <td>410</td>
+            <td>RC_GONE</td>
+            <td>拒绝服务</td>
+            <td>访问频率过于频繁造成的拒绝服务</td>
+        </tr>
+
+        <tr>
+            <td>500</td>
+            <td>RC_SERVER_ERROR</td>
+            <td>服务器错误</td>
+            <td>服务器内部发生了错误</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
