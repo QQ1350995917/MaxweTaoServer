@@ -6,6 +6,7 @@ import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.cache.TokenContext;
+import org.maxwe.tao.server.common.response.ResponseModel;
 import org.maxwe.tao.server.controller.account.model.TokenModel;
 import org.maxwe.tao.server.common.response.IResultSet;
 import org.maxwe.tao.server.common.response.ResultSet;
@@ -65,15 +66,14 @@ public class TokenInterceptor implements Interceptor {
         CSEntity agentCS = new CSEntity(0, requestModel.getCellphone(), requestModel.getT(),requestModel.getApt());
         if (TokenContext.getCSEntity(agentCS) == null) {
             this.logger.error("TokenInterceptor ->  " + inv.getActionKey() + " : 客户端CS连接过期 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_TIMEOUT.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_ACCESS_TIMEOUT);
-            inv.getController().renderJson(iResultSet);
+            ResponseModel responseModel = new ResponseModel();
+            responseModel.setCode(ResponseModel.RC_TIMEOUT);
+            responseModel.setMessage("登录超时，请重新登录");
+            inv.getController().renderJson(responseModel);
             return;
         }
 
         TokenContext.getCSEntity(agentCS).resetTimestamp();
-
         inv.invoke();
     }
 }

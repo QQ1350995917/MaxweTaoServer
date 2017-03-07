@@ -292,6 +292,7 @@ public class UserController extends Controller implements IUserController {
             this.logger.info("mine : 执行成功 " + requestModel.toString());
             UserMineResponseModel accountModifyResponseModel = new UserMineResponseModel(requestModel);
             accountModifyResponseModel.setCode(ResponseModel.RC_SUCCESS);
+            accountModifyResponseModel.setUser(userEntity);
             accountModifyResponseModel.setMessage("获取成功");
             renderJson(JSON.toJSONString(accountModifyResponseModel));
         }
