@@ -1,4 +1,4 @@
-package org.maxwe.tao.server.controller.account;
+package org.maxwe.tao.server.controller.account.model;
 
 import com.alibaba.druid.util.StringUtils;
 import org.maxwe.tao.server.common.utils.CellPhoneUtils;

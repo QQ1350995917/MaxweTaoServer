@@ -1,4 +1,4 @@
-package org.maxwe.tao.server.controller.account;
+package org.maxwe.tao.server.controller.account.model;
 
 import org.maxwe.tao.server.controller.account.model.TokenModel;
 

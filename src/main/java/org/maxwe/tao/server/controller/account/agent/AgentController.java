@@ -10,9 +10,8 @@ import org.maxwe.tao.server.common.response.ResponseModel;
 import org.maxwe.tao.server.common.sms.SMSManager;
 import org.maxwe.tao.server.common.utils.PasswordUtils;
 import org.maxwe.tao.server.common.utils.TokenUtils;
-import org.maxwe.tao.server.controller.account.*;
 import org.maxwe.tao.server.controller.account.agent.model.*;
-import org.maxwe.tao.server.controller.account.model.TokenModel;
+import org.maxwe.tao.server.controller.account.model.*;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.account.CSEntity;
@@ -38,7 +37,7 @@ public class AgentController extends Controller implements IAgentController {
     public void exist() {
         String params = this.getAttr("p");
         AccountExistRequestModel requestModel = JSON.parseObject(params, AccountExistRequestModel.class);
-        if (requestModel == null || !requestModel.isAgentExistRequestParamsOk()) {
+        if (requestModel == null || !requestModel.isAccountExistRequestParamsOk()) {
             this.logger.info("exist : 请求参数错误 " + requestModel.toString());
             AccountExistResponseModel agentExistResponseModel = new AccountExistResponseModel(requestModel);
             agentExistResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
@@ -56,15 +55,16 @@ public class AgentController extends Controller implements IAgentController {
             agentExistResponseModel.setMessage("您输入的手机号码已被注册");
             agentExistResponseModel.setExistence(true);
             renderJson(JSON.toJSONString(agentExistResponseModel));
-            return;
+        } else {
+            this.logger.info("exist : 账户重复性检测通过 " + requestModel.toString());
+            AccountExistResponseModel agentExistResponseModel = new AccountExistResponseModel(requestModel);
+            agentExistResponseModel.setCode(ResponseModel.RC_SUCCESS);
+            agentExistResponseModel.setMessage("您输入的手机号码可用");
+            agentExistResponseModel.setExistence(false);
+            renderJson(JSON.toJSONString(agentExistResponseModel));
         }
 
-        this.logger.info("exist : 账户重复性检测通过 " + requestModel.toString());
-        AccountExistResponseModel agentExistResponseModel = new AccountExistResponseModel(requestModel);
-        agentExistResponseModel.setCode(ResponseModel.RC_SUCCESS);
-        agentExistResponseModel.setMessage("您输入的手机号码可用");
-        agentExistResponseModel.setExistence(false);
-        renderJson(JSON.toJSONString(agentExistResponseModel));
+
     }
 
     @Override
@@ -111,18 +111,19 @@ public class AgentController extends Controller implements IAgentController {
             agentExistResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
             agentExistResponseModel.setMessage("系统错误，请重试");
             renderJson(JSON.toJSONString(agentExistResponseModel));
-            return;
+        } else {
+            CSEntity csEntity = new CSEntity(saveAgent.getId(), saveAgent.getCellphone(), TokenUtils.getToken(saveAgent.getCellphone(), requestModel.getPassword()), requestModel.getApt());
+            TokenContext.addCSEntity(csEntity);
+            this.logger.info("create : 注册成功 " + requestModel.toString());
+            //创建
+            TokenModel sessionModel = new TokenModel(csEntity.getToken(), saveAgent.getId(), saveAgent.getCellphone());
+            AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel, sessionModel);
+            agentExistResponseModel.setCode(ResponseModel.RC_SUCCESS);
+            agentExistResponseModel.setMessage("注册成功");
+            renderJson(JSON.toJSONString(agentExistResponseModel));
         }
 
-        CSEntity csEntity = new CSEntity(saveAgent.getId(), saveAgent.getCellphone(), TokenUtils.getToken(saveAgent.getCellphone(), requestModel.getPassword()), requestModel.getApt());
-        TokenContext.addCSEntity(csEntity);
-        this.logger.info("create : 注册成功 " + requestModel.toString());
-        //创建
-        TokenModel sessionModel = new TokenModel(csEntity.getToken(), saveAgent.getId(), saveAgent.getCellphone());
-        AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel, sessionModel);
-        agentExistResponseModel.setCode(ResponseModel.RC_SUCCESS);
-        agentExistResponseModel.setMessage("注册成功");
-        renderJson(JSON.toJSONString(agentExistResponseModel));
+
     }
 
     @Override
@@ -147,16 +148,17 @@ public class AgentController extends Controller implements IAgentController {
             accountSignInResponseModel.setCode(ResponseModel.RC_FORBIDDEN);
             accountSignInResponseModel.setMessage("账户或密码错误");
             renderJson(JSON.toJSONString(accountSignInResponseModel));
-            return;
+        } else {
+            CSEntity csEntity = new CSEntity(agentEntity.getId(), agentEntity.getCellphone(), TokenUtils.getToken(agentEntity.getCellphone(), requestModel.getPassword()), requestModel.getApt());
+            TokenContext.addCSEntity(csEntity);
+            this.logger.info("login : 登录成功 " + requestModel.toString());
+            TokenModel sessionModel = new TokenModel(csEntity.getToken(), agentEntity.getId(), agentEntity.getCellphone());
+            AccountSignInResponseModel accountSignInResponseModel = new AccountSignInResponseModel(requestModel, sessionModel);
+            accountSignInResponseModel.setCode(ResponseModel.RC_SUCCESS);
+            accountSignInResponseModel.setMessage("登录成功");
+            renderJson(JSON.toJSONString(accountSignInResponseModel));
+
         }
-        CSEntity csEntity = new CSEntity(agentEntity.getId(), agentEntity.getCellphone(), TokenUtils.getToken(agentEntity.getCellphone(), requestModel.getPassword()), requestModel.getApt());
-        TokenContext.addCSEntity(csEntity);
-        this.logger.info("login : 登录成功 " + requestModel.toString());
-        TokenModel sessionModel = new TokenModel(csEntity.getToken(), agentEntity.getId(), agentEntity.getCellphone());
-        AccountSignInResponseModel accountSignInResponseModel = new AccountSignInResponseModel(requestModel, sessionModel);
-        accountSignInResponseModel.setCode(ResponseModel.RC_SUCCESS);
-        accountSignInResponseModel.setMessage("登录成功");
-        renderJson(JSON.toJSONString(accountSignInResponseModel));
     }
 
 

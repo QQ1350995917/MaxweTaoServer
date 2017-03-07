@@ -1,17 +1,14 @@
 package org.maxwe.tao.server.controller.meta;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.taobao.api.ApiException;
 import org.apache.log4j.Logger;
-import org.maxwe.tao.server.common.response.IResultSet;
-import org.maxwe.tao.server.common.response.ResultSet;
+import org.maxwe.tao.server.common.response.ResponseModel;
 import org.maxwe.tao.server.common.sms.SMSManager;
 import org.maxwe.tao.server.common.utils.IPUtils;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
-import org.maxwe.tao.server.service.account.agent.AgentEntity;
 
 /**
  * Created by Pengwei Ding on 2017-01-09 22:12.
@@ -25,38 +22,36 @@ public class MetaController extends Controller implements IMetaController {
     @Before({AppInterceptor.class})
     public void smsCode() {
         String params = this.getAttr("p");
-        SMSCodeModel requestModel = JSON.parseObject(params, SMSCodeModel.class);
-        IResultSet iResultSet = new ResultSet();
-//        if (requestModel == null || !requestModel.isParamsOk()) {
-//            this.logger.info("smsCode : 请求参数错误 " + params);
-//            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
-//            iResultSet.setData(requestModel);
-//            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
-//            renderJson(JSON.toJSONString(iResultSet));
-//            return;
-//        }
+        SMSCodeRequestModel requestModel = JSON.parseObject(params, SMSCodeRequestModel.class);
+        if (requestModel == null || !requestModel.isSMSCodeRequestParamsOk()) {
+            this.logger.info("smsCode : 请求参数错误 " + params);
+            SMSCodeResponseModel smsCodeResponseModel = new SMSCodeResponseModel(requestModel);
+            smsCodeResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
+            smsCodeResponseModel.setMessage("请输入正确的手机号码");
+        }
 
         if (SMSManager.isCacheAddress(IPUtils.getIpAddress(this.getRequest()))) {
             this.logger.info("smsCode : 请求频繁 " + params);
-            iResultSet.setCode(IResultSet.ResultCode.RC_TO_MANY.getCode());
-            iResultSet.setData(requestModel.getCellphone());
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-            renderJson(JSON.toJSONString(iResultSet, new SimplePropertyPreFilter(AgentEntity.class, "t")));
+            SMSCodeResponseModel smsCodeResponseModel = new SMSCodeResponseModel(requestModel);
+            smsCodeResponseModel.setCode(ResponseModel.RC_TO_MANY);
+            smsCodeResponseModel.setMessage("网络忙，请稍后");
             return;
         }
 
         try {
             SMSManager.sendSMS(requestModel.getCellphone());
             this.logger.info("smsCode : 验证码" + SMSManager.getSMSCode(requestModel.getCellphone()) + "已经发送 " + params);
+            SMSCodeResponseModel smsCodeResponseModel = new SMSCodeResponseModel(requestModel);
+            smsCodeResponseModel.setCode(ResponseModel.RC_SUCCESS);
+            smsCodeResponseModel.setMessage("发送成功");
         } catch (ApiException e) {
             this.logger.error("smsCode : 验证码发送错误 " + params + "\r\n" + e.getMessage());
             e.printStackTrace();
+            SMSCodeResponseModel smsCodeResponseModel = new SMSCodeResponseModel(requestModel);
+            smsCodeResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
+            smsCodeResponseModel.setMessage("发送失败");
         }
 
-        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(requestModel);
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        renderJson(JSON.toJSONString(iResultSet));
 
     }
 }

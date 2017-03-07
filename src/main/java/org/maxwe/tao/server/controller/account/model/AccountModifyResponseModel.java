@@ -1,25 +1,24 @@
-package org.maxwe.tao.server.controller.account;
+package org.maxwe.tao.server.controller.account.model;
 
 import org.maxwe.tao.server.common.response.ResponseModel;
-import org.maxwe.tao.server.controller.account.model.TokenModel;
 
 /**
  * Created by Pengwei Ding on 2017-03-07 13:26.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: 登录响应模型
+ * Description: 修改密码的响应模型
  */
-public class AccountSignInResponseModel extends ResponseModel<AccountSignInRequestModel> {
+public class AccountModifyResponseModel extends ResponseModel<AccountModifyRequestModel> {
     private TokenModel token;
 
-    public AccountSignInResponseModel() {
+    public AccountModifyResponseModel() {
         super();
     }
 
-    public AccountSignInResponseModel(AccountSignInRequestModel requestModel) {
+    public AccountModifyResponseModel(AccountModifyRequestModel requestModel) {
         super(requestModel);
     }
 
-    public AccountSignInResponseModel(AccountSignInRequestModel requestModel,TokenModel token) {
+    public AccountModifyResponseModel(AccountModifyRequestModel requestModel, TokenModel token) {
         super(requestModel);
         this.token = token;
     }

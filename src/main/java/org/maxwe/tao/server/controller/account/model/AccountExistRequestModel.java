@@ -1,44 +1,42 @@
 package org.maxwe.tao.server.controller.account.model;
 
-import com.alibaba.druid.util.StringUtils;
-import com.alibaba.fastjson.annotation.JSONField;
+import org.maxwe.tao.server.common.utils.CellPhoneUtils;
 
 /**
- * Created by Pengwei Ding on 2017-01-09 19:08.
+ * Created by Pengwei Ding on 2017-03-07 11:07.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description:
+ * Description: 判断手机号码是否已经存在的请求模型
  */
-public class ExistModel extends TokenModel {
+public class AccountExistRequestModel extends TokenModel {
     private String cellphone;
 
-    public ExistModel() {
+    public AccountExistRequestModel() {
         super();
     }
 
-    public ExistModel(String cellphone) {
-        this.cellphone = cellphone;
-    }
-
+    @Override
     public String getCellphone() {
         return cellphone;
     }
 
+    @Override
     public void setCellphone(String cellphone) {
         this.cellphone = cellphone;
     }
 
     @Override
     public String toString() {
-        return "ExistModel{" +
+        return "AccountExistRequestModel{" +
                 "cellphone='" + cellphone + '\'' +
                 '}';
     }
 
-    @JSONField(serialize = false)
-    public boolean isParamsOk() {
-        if (!StringUtils.isEmpty(this.getCellphone())) {
+    public boolean isAccountExistRequestParamsOk() {
+        if (CellPhoneUtils.isCellphone(cellphone)) {
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
+
 }

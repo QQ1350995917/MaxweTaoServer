@@ -17,6 +17,7 @@ public class ResponseModel<T extends TokenModel> implements Serializable {
     public transient static final int RC_NOT_FOUND = 404;//找不到内容	请求中的参数在服务器上没有对应的内容
     public transient static final int RC_NOT_ACCEPTABLE = 406;//内容一致导致的冲突	请求中的参数在服务器上完全一致，比如：注册
     public transient static final int RC_CONFLICT = 409;//内容不一致导致的冲突	提交的内容和现有的内容不一致冲突，比如：密码验证
+    public transient static final int RC_TO_MANY = 421;//链接频率过高
 
     public transient static final int RC_SERVER_ERROR = 500;
 

@@ -1,7 +1,6 @@
-package org.maxwe.tao.server.controller.account;
+package org.maxwe.tao.server.controller.account.model;
 
 import org.maxwe.tao.server.common.response.ResponseModel;
-import org.maxwe.tao.server.controller.account.model.TokenModel;
 
 /**
  * Created by Pengwei Ding on 2017-03-07 13:26.
