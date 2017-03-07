@@ -104,6 +104,13 @@ public class TokenModel implements Serializable {
         return encryptResultStr;
     }
 
+    public boolean isCellphoneParamsOk() {
+        if (!CellPhoneUtils.isCellphone(this.getCellphone())) {
+            return false;
+        }
+        return true;
+    }
+
     @JSONField(serialize = false)
     public boolean isDecryptSignOK() throws Exception {
         String password = (this.getCellphone() + new StringBuffer(this.getCellphone()).reverse()).substring(1, 17);//生成的ID是11位，补全16位密码

@@ -17,19 +17,19 @@ public interface IAccountController {
      * 注册接口
      * 用户创建账户接口
      */
-    void register();
+    void signup();
+
+    /**
+     * 用户接口
+     * 用户登录接口
+     */
+    void signin();
 
     /**
      * 用户接口
      * 找回密码
      */
     void lost();
-
-    /**
-     * 用户接口
-     * 用户登录接口
-     */
-    void login();
 
     /**
      * 用户接口
@@ -41,7 +41,7 @@ public interface IAccountController {
      * 用户接口
      * 用户退出登录接口
      */
-    void logout();
+    void signout();
 
     /**
      * 我的信息

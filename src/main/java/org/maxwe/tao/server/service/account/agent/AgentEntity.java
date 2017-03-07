@@ -23,6 +23,7 @@ public class AgentEntity extends AccountEntity{
     private String zhifubao;// 支付宝账户
     private long pIdTime;
     private long reachTime;
+    private long bankTime;
 
     @JSONField(serialize=false)
     private String createTimeLabel;
@@ -136,6 +137,14 @@ public class AgentEntity extends AccountEntity{
 
     public void setReachTime(long reachTime) {
         this.reachTime = reachTime;
+    }
+
+    public long getBankTime() {
+        return bankTime;
+    }
+
+    public void setBankTime(long bankTime) {
+        this.bankTime = bankTime;
     }
 
     public String getCreateTimeLabel() {
