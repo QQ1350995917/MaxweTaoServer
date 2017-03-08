@@ -1,6 +1,7 @@
 package org.maxwe.tao.server.controller.account.user.model;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.annotation.JSONField;
 import org.maxwe.tao.server.controller.account.model.AuthenticateModel;
 
 /**
@@ -23,6 +24,7 @@ public class UserActiveRequestModel extends AuthenticateModel {
         this.actCode = actCode;
     }
 
+    @JSONField(serialize=false)
     public boolean isUserActiveRequestParamsOk(){
         if (StringUtils.isEmpty(actCode)){
             return false;

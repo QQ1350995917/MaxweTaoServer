@@ -1,9 +1,9 @@
 package org.maxwe.tao.server.controller.account.model;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.annotation.JSONField;
 import org.maxwe.tao.server.common.utils.CellPhoneUtils;
 import org.maxwe.tao.server.common.utils.PasswordUtils;
-import org.maxwe.tao.server.controller.account.model.TokenModel;
 
 /**
  * Created by Pengwei Ding on 2017-03-07 13:26.
@@ -34,6 +34,7 @@ public class AccountLostRequestModel extends TokenModel {
         this.password = password;
     }
 
+    @JSONField(serialize=false)
     public boolean isAccountLostRequestParamsOk(){
         if (!CellPhoneUtils.isCellphone(this.getCellphone())) {
             return false;

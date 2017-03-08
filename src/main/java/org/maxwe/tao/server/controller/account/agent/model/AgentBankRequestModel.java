@@ -1,6 +1,7 @@
 package org.maxwe.tao.server.controller.account.agent.model;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.annotation.JSONField;
 import org.maxwe.tao.server.controller.account.model.AuthenticateModel;
 
 /**
@@ -32,6 +33,7 @@ public class AgentBankRequestModel extends AuthenticateModel {
         this.zhifubao = zhifubao;
     }
 
+    @JSONField(serialize=false)
     public boolean isAgentBankRequestParamsOk(){
         if (StringUtils.isEmpty(trueName)){
             return false;

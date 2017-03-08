@@ -2,6 +2,8 @@ package org.maxwe.tao.server.controller.account.model;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.PropertyFilter;
+import com.alibaba.fastjson.serializer.ValueFilter;
 import org.apache.commons.codec.binary.Base64;
 import org.maxwe.tao.server.common.utils.CellPhoneUtils;
 import org.maxwe.tao.server.common.utils.CryptionUtils;
@@ -14,12 +16,37 @@ import java.io.Serializable;
  * Description: token模型
  */
 public class TokenModel implements Serializable {
+    @JSONField(serialize = false)
+    public static final PropertyFilter propertyFilter = new PropertyFilter() {
+        @Override
+        public boolean apply(Object object, String name, Object value) {
+            if ("apt".equals(name)) {
+                return false;
+            }
+            return true;
+        }
+    };
+
+    @JSONField(serialize = false)
+    public static final ValueFilter valueFilter = new ValueFilter() {
+        @Override
+        public Object process(Object object, String name, Object value) {
+            if ("password".equals(name)
+                    || "smsCode".equals(name)
+                    || "verification".equals(name)
+                    || "authenticatePassword".equals(name)
+                    || "sign".equals(name)) {
+                return "******";
+            }
+            return value;
+        }
+    };
+
     private String t;//token字符串
     private int id;//用户ID
     private String cellphone;//电话号码
     private String verification;
     private int apt; // 登录类型,在内存中标记token的类型
-    @JSONField(serialize = false)
     private String sign;
 
     public TokenModel() {
@@ -104,6 +131,7 @@ public class TokenModel implements Serializable {
         return encryptResultStr;
     }
 
+    @JSONField(serialize=false)
     public boolean isCellphoneParamsOk() {
         if (!CellPhoneUtils.isCellphone(this.getCellphone())) {
             return false;

@@ -1,5 +1,6 @@
 package org.maxwe.tao.server.controller.meta;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import org.maxwe.tao.server.controller.account.model.TokenModel;
 
 /**
@@ -12,6 +13,7 @@ public class SMSCodeRequestModel extends TokenModel {
         super();
     }
 
+    @JSONField(serialize = false)
     public boolean isSMSCodeRequestParamsOk(){
         return super.isCellphoneParamsOk();
     }

@@ -2,6 +2,8 @@ package org.maxwe.tao.server.controller.account.user;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializeFilter;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
@@ -45,7 +47,7 @@ public class UserController extends Controller implements IUserController {
             AccountExistResponseModel accountExistResponseModel = new AccountExistResponseModel(requestModel);
             accountExistResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
             accountExistResponseModel.setMessage("请您输入正确的手机号码");
-            renderJson(JSON.toJSONString(accountExistResponseModel));
+            renderJson(JSON.toJSONString(accountExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
@@ -57,14 +59,14 @@ public class UserController extends Controller implements IUserController {
             agentExistResponseModel.setCode(ResponseModel.RC_NOT_ACCEPTABLE);
             agentExistResponseModel.setMessage("您输入的手机号码已被注册");
             agentExistResponseModel.setExistence(true);
-            renderJson(JSON.toJSONString(agentExistResponseModel));
+            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         } else {
             this.logger.info("exist : 账户重复性检测通过 " + requestModel.toString());
             AccountExistResponseModel agentExistResponseModel = new AccountExistResponseModel(requestModel);
             agentExistResponseModel.setCode(ResponseModel.RC_SUCCESS);
             agentExistResponseModel.setMessage("您输入的手机号码可用");
             agentExistResponseModel.setExistence(false);
-            renderJson(JSON.toJSONString(agentExistResponseModel));
+            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         }
     }
 
@@ -79,7 +81,7 @@ public class UserController extends Controller implements IUserController {
             AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel);
             agentExistResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
             agentExistResponseModel.setMessage("请您输入正确的参数");
-            renderJson(JSON.toJSONString(agentExistResponseModel));
+            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
         // 验证码检测
@@ -88,7 +90,7 @@ public class UserController extends Controller implements IUserController {
             AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel);
             agentExistResponseModel.setCode(ResponseModel.RC_CONFLICT);
             agentExistResponseModel.setMessage("您输入的验证码错误");
-            renderJson(JSON.toJSONString(agentExistResponseModel));
+            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
         //重复检测 同一种类型下的同一个电话号码算是重复
@@ -98,7 +100,7 @@ public class UserController extends Controller implements IUserController {
             AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel);
             agentExistResponseModel.setCode(ResponseModel.RC_NOT_ACCEPTABLE);
             agentExistResponseModel.setMessage("您输入手机号码已被注册，请直接登录");
-            renderJson(JSON.toJSONString(agentExistResponseModel));
+            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
@@ -111,7 +113,7 @@ public class UserController extends Controller implements IUserController {
             AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel);
             agentExistResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
             agentExistResponseModel.setMessage("系统错误，请重试");
-            renderJson(JSON.toJSONString(agentExistResponseModel));
+            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         } else {
             CSEntity csEntity = new CSEntity(saveUserEntity.getId(), saveUserEntity.getCellphone(), TokenUtils.getToken(saveUserEntity.getCellphone(), requestModel.getPassword()), requestModel.getApt());
             TokenContext.addCSEntity(csEntity);
@@ -121,7 +123,7 @@ public class UserController extends Controller implements IUserController {
             AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel, sessionModel);
             agentExistResponseModel.setCode(ResponseModel.RC_SUCCESS);
             agentExistResponseModel.setMessage("注册成功");
-            renderJson(JSON.toJSONString(agentExistResponseModel));
+            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         }
     }
 
@@ -135,7 +137,7 @@ public class UserController extends Controller implements IUserController {
             AccountSignInResponseModel accountSignInResponseModel = new AccountSignInResponseModel(requestModel);
             accountSignInResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
             accountSignInResponseModel.setMessage("请您输入正确的参数");
-            renderJson(JSON.toJSONString(accountSignInResponseModel));
+            renderJson(JSON.toJSONString(accountSignInResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
@@ -146,7 +148,7 @@ public class UserController extends Controller implements IUserController {
             AccountSignInResponseModel accountSignInResponseModel = new AccountSignInResponseModel(requestModel);
             accountSignInResponseModel.setCode(ResponseModel.RC_FORBIDDEN);
             accountSignInResponseModel.setMessage("账户或密码错误");
-            renderJson(JSON.toJSONString(accountSignInResponseModel));
+            renderJson(JSON.toJSONString(accountSignInResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         } else {
             CSEntity csEntity = new CSEntity(userEntity.getId(), userEntity.getCellphone(), TokenUtils.getToken(userEntity.getCellphone(), requestModel.getPassword()), requestModel.getApt());
             TokenContext.addCSEntity(csEntity);
@@ -156,7 +158,7 @@ public class UserController extends Controller implements IUserController {
             AccountSignInResponseModel accountSignInResponseModel = new AccountSignInResponseModel(requestModel, sessionModel);
             accountSignInResponseModel.setCode(ResponseModel.RC_SUCCESS);
             accountSignInResponseModel.setMessage("登录成功");
-            renderJson(JSON.toJSONString(accountSignInResponseModel));
+            renderJson(JSON.toJSONString(accountSignInResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         }
     }
 
@@ -171,7 +173,7 @@ public class UserController extends Controller implements IUserController {
             AccountLostResponseModel accountLostResponseModel = new AccountLostResponseModel(requestModel);
             accountLostResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
             accountLostResponseModel.setMessage("请您输入正确的参数");
-            renderJson(JSON.toJSONString(accountLostResponseModel));
+            renderJson(JSON.toJSONString(accountLostResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
         // 注册检测
@@ -182,7 +184,7 @@ public class UserController extends Controller implements IUserController {
             AccountLostResponseModel accountLostResponseModel = new AccountLostResponseModel(requestModel);
             accountLostResponseModel.setCode(ResponseModel.RC_CONFLICT);
             accountLostResponseModel.setMessage("请您输入正确的参数");
-            renderJson(JSON.toJSONString(accountLostResponseModel));
+            renderJson(JSON.toJSONString(accountLostResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
@@ -192,7 +194,7 @@ public class UserController extends Controller implements IUserController {
             AccountLostResponseModel accountLostResponseModel = new AccountLostResponseModel(requestModel);
             accountLostResponseModel.setCode(ResponseModel.RC_NOT_FOUND);
             accountLostResponseModel.setMessage("您输入的验证码错误");
-            renderJson(JSON.toJSONString(accountLostResponseModel));
+            renderJson(JSON.toJSONString(accountLostResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
@@ -203,8 +205,7 @@ public class UserController extends Controller implements IUserController {
             AccountLostResponseModel accountLostResponseModel = new AccountLostResponseModel(requestModel);
             accountLostResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
             accountLostResponseModel.setMessage("系统错误，请重试");
-            renderJson(JSON.toJSONString(accountLostResponseModel));
-            return;
+            renderJson(JSON.toJSONString(accountLostResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         } else {
             CSEntity csEntity = new CSEntity(updateUser.getId(), updateUser.getCellphone(), TokenUtils.getToken(updateUser.getCellphone(), requestModel.getPassword()), requestModel.getApt());
             TokenContext.addCSEntity(csEntity);
@@ -214,7 +215,7 @@ public class UserController extends Controller implements IUserController {
             AccountLostResponseModel accountLostResponseModel = new AccountLostResponseModel(requestModel, sessionModel);
             accountLostResponseModel.setCode(ResponseModel.RC_SUCCESS);
             accountLostResponseModel.setMessage("重置密码成功");
-            renderJson(JSON.toJSONString(accountLostResponseModel));
+            renderJson(JSON.toJSONString(accountLostResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         }
     }
 
@@ -229,7 +230,7 @@ public class UserController extends Controller implements IUserController {
             AccountModifyResponseModel accountModifyResponseModel = new AccountModifyResponseModel(requestModel);
             accountModifyResponseModel.setCode(ResponseModel.RC_NOT_FOUND);
             accountModifyResponseModel.setMessage("系统错误，请重试");
-            renderJson(JSON.toJSONString(accountModifyResponseModel));
+            renderJson(JSON.toJSONString(accountModifyResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
@@ -238,7 +239,7 @@ public class UserController extends Controller implements IUserController {
             AccountModifyResponseModel accountModifyResponseModel = new AccountModifyResponseModel(requestModel);
             accountModifyResponseModel.setCode(ResponseModel.RC_CONFLICT);
             accountModifyResponseModel.setMessage("您输入的旧密码有误");
-            renderJson(JSON.toJSONString(accountModifyResponseModel));
+            renderJson(JSON.toJSONString(accountModifyResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
@@ -249,7 +250,7 @@ public class UserController extends Controller implements IUserController {
             AccountModifyResponseModel accountModifyResponseModel = new AccountModifyResponseModel(requestModel);
             accountModifyResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
             accountModifyResponseModel.setMessage("系统错误，请重试");
-            renderJson(JSON.toJSONString(accountModifyResponseModel));
+            renderJson(JSON.toJSONString(accountModifyResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         } else {
             CSEntity newCSEntity = new CSEntity(updateUserEntity.getId(), updateUserEntity.getCellphone(), TokenUtils.getToken(updateUserEntity.getCellphone(), requestModel.getPassword()), requestModel.getApt());
             TokenContext.addCSEntity(newCSEntity);
@@ -258,7 +259,7 @@ public class UserController extends Controller implements IUserController {
             AccountModifyResponseModel accountModifyResponseModel = new AccountModifyResponseModel(requestModel, sessionModel);
             accountModifyResponseModel.setCode(ResponseModel.RC_SUCCESS);
             accountModifyResponseModel.setMessage("重置密码成功");
-            renderJson(JSON.toJSONString(accountModifyResponseModel));
+            renderJson(JSON.toJSONString(accountModifyResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         }
     }
 
@@ -273,7 +274,7 @@ public class UserController extends Controller implements IUserController {
         AccountSignOutResponseModel accountSignOutResponseModel = new AccountSignOutResponseModel();
         accountSignOutResponseModel.setCode(ResponseModel.RC_SUCCESS);
         accountSignOutResponseModel.setMessage("退出成功");
-        renderJson(JSON.toJSONString(accountSignOutResponseModel));
+        renderJson(JSON.toJSONString(accountSignOutResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
     }
 
     @Override
@@ -287,14 +288,14 @@ public class UserController extends Controller implements IUserController {
             UserMineResponseModel accountModifyResponseModel = new UserMineResponseModel(requestModel);
             accountModifyResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
             accountModifyResponseModel.setMessage("系统错误，请重试");
-            renderJson(JSON.toJSONString(accountModifyResponseModel));
+            renderJson(JSON.toJSONString(accountModifyResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         } else {
             this.logger.info("mine : 执行成功 " + requestModel.toString());
             UserMineResponseModel accountModifyResponseModel = new UserMineResponseModel(requestModel);
             accountModifyResponseModel.setCode(ResponseModel.RC_SUCCESS);
             accountModifyResponseModel.setUser(userEntity);
             accountModifyResponseModel.setMessage("获取成功");
-            renderJson(JSON.toJSONString(accountModifyResponseModel));
+            renderJson(JSON.toJSONString(accountModifyResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         }
     }
 
@@ -308,7 +309,7 @@ public class UserController extends Controller implements IUserController {
             UserActiveResponseModel userActiveResponseModel = new UserActiveResponseModel(requestModel);
             userActiveResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
             userActiveResponseModel.setMessage("请您输入正确的参数");
-            renderJson(JSON.toJSONString(userActiveResponseModel));
+            renderJson(JSON.toJSONString(userActiveResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
@@ -318,7 +319,7 @@ public class UserController extends Controller implements IUserController {
             UserActiveResponseModel userActiveResponseModel = new UserActiveResponseModel(requestModel);
             userActiveResponseModel.setCode(ResponseModel.RC_NOT_FOUND);
             userActiveResponseModel.setMessage("找不到您的授权码");
-            renderJson(JSON.toJSONString(userActiveResponseModel));
+            renderJson(JSON.toJSONString(userActiveResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
@@ -327,7 +328,7 @@ public class UserController extends Controller implements IUserController {
             UserActiveResponseModel userActiveResponseModel = new UserActiveResponseModel(requestModel);
             userActiveResponseModel.setCode(ResponseModel.RC_NOT_ACCEPTABLE);
             userActiveResponseModel.setMessage("您的授权码已被激活");
-            renderJson(JSON.toJSONString(userActiveResponseModel));
+            renderJson(JSON.toJSONString(userActiveResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
@@ -337,7 +338,7 @@ public class UserController extends Controller implements IUserController {
             UserActiveResponseModel userActiveResponseModel = new UserActiveResponseModel(requestModel);
             userActiveResponseModel.setCode(ResponseModel.RC_CONFLICT);
             userActiveResponseModel.setMessage("您的密码错误");
-            renderJson(JSON.toJSONString(userActiveResponseModel));
+            renderJson(JSON.toJSONString(userActiveResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
         userEntity.setActCode(requestModel.getActCode());
@@ -348,16 +349,14 @@ public class UserController extends Controller implements IUserController {
             UserActiveResponseModel userActiveResponseModel = new UserActiveResponseModel(requestModel);
             userActiveResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
             userActiveResponseModel.setMessage("激活失败,请重试");
-            renderJson(JSON.toJSONString(userActiveResponseModel));
+            renderJson(JSON.toJSONString(userActiveResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         } else {
             this.logger.info("active : 激活成功 " + requestModel.toString());
             UserActiveResponseModel userActiveResponseModel = new UserActiveResponseModel(requestModel);
             userActiveResponseModel.setCode(ResponseModel.RC_SUCCESS);
             userActiveResponseModel.setMessage("激活成功");
             userActiveResponseModel.setActTime(System.currentTimeMillis());
-            renderJson(JSON.toJSONString(userActiveResponseModel));
+            renderJson(JSON.toJSONString(userActiveResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         }
     }
-
-
 }

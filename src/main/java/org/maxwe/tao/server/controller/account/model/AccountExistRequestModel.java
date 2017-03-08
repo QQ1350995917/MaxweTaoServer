@@ -1,5 +1,6 @@
 package org.maxwe.tao.server.controller.account.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import org.maxwe.tao.server.common.utils.CellPhoneUtils;
 
 /**
@@ -31,6 +32,7 @@ public class AccountExistRequestModel extends TokenModel {
                 '}';
     }
 
+    @JSONField(serialize=false)
     public boolean isAccountExistRequestParamsOk() {
         if (CellPhoneUtils.isCellphone(cellphone)) {
             return true;

@@ -1,6 +1,6 @@
 package org.maxwe.tao.server.controller.account.model;
 
-import org.maxwe.tao.server.controller.account.model.AuthenticateModel;
+import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * Created by Pengwei Ding on 2017-03-07 13:26.
@@ -22,6 +22,7 @@ public class AccountModifyRequestModel extends AuthenticateModel {
         this.password = password;
     }
 
+    @JSONField(serialize=false)
     private boolean isAccountModifyRequestParamsOk() {
         if (!super.isAuthenticateParamsOk()) {
             return false;

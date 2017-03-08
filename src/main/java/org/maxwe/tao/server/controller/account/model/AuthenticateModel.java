@@ -1,5 +1,6 @@
 package org.maxwe.tao.server.controller.account.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import org.maxwe.tao.server.common.utils.PasswordUtils;
 
 /**
@@ -23,6 +24,7 @@ public class AuthenticateModel extends TokenModel {
         this.authenticatePassword = authenticatePassword;
     }
 
+    @JSONField(serialize=false)
     public boolean isAuthenticateParamsOk(){
         return super.isTokenParamsOk() && PasswordUtils.isPlainPasswordOk(this.getAuthenticatePassword());
     }
