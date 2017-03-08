@@ -333,7 +333,7 @@ public class UserController extends Controller implements IUserController {
         }
 
         UserEntity userEntity = iUserServices.retrieveById(requestModel.getId());
-        if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getCellphone(), requestModel.getVerification()), userEntity.getPassword())) {
+        if (!StringUtils.equals(PasswordUtils.enPassword(requestModel.getCellphone(), requestModel.getAuthenticatePassword()), userEntity.getPassword())) {
             this.logger.info("grant : 认证密码错误 " + requestModel.toString());
             UserActiveResponseModel userActiveResponseModel = new UserActiveResponseModel(requestModel);
             userActiveResponseModel.setCode(ResponseModel.RC_CONFLICT);
