@@ -6,24 +6,23 @@ package org.maxwe.tao.server.controller.tao;
  * Description:
  */
 public interface ITaoController {
-    /**
-     * 商品查询
-     */
-    void query();
-    /**
-     * 后去淘口令
-     */
-    void pwd();
-    /**
-     * 转链
-     */
-    void convert();
-
-    /**
-     * 通过ID寻找商品详情
-     */
-    void find();
-
+//    /**
+//     * 商品查询
+//     */
+//    void query();
+//    /**
+//     * 后去淘口令
+//     */
+//    void pwd();
+//    /**
+//     * 转链
+//     */
+//    void convert();
+//
+//    /**
+//     * 通过ID寻找商品详情
+//     */
+//    void find();
 
     /**
      * 陶精灵使用的商品接口

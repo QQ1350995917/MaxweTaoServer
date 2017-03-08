@@ -16,9 +16,9 @@ import java.util.List;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class AliGoodsServices {
+public class GoodsServices {
 
-    public static List<AliResponsePageEntity> searchAlimamaForGoods(AliGoodsRequestModel aliGoodsRequestModel) throws Exception {
+    public static List<AliResponsePageEntity> searchForGoods(AliGoodsRequestModel aliGoodsRequestModel) throws Exception {
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(aliGoodsRequestModel.getUrl());
         httpGet.setHeader("Cookie", aliGoodsRequestModel.getCookie());

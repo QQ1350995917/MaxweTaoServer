@@ -1,25 +1,32 @@
-package org.maxwe.tao.server.controller.tao;
+package org.maxwe.tao.server.controller.tao.model.alimama;
 
-import org.maxwe.tao.server.service.tao.mami.GoodsEntity;
+import org.maxwe.tao.server.common.response.ResponseModel;
+import org.maxwe.tao.server.service.tao.alimama.common.AliResponsePageEntity;
 
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Pengwei Ding on 2017-02-19 10:11.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description:
+ * 以阿里妈妈模型作为标准
+ * 构建淘妈咪系统内的商品响应统一模型
  */
-public class GoodsResponseModel {
+public class GoodsResponseModel extends ResponseModel<GoodsRequestModel>{
     private long pageIndex;
     private long pageSize;
     private long counter;
-    private LinkedList<GoodsEntity> goodsEntities;
+    private List<AliResponsePageEntity> goodsEntities;
 
     public GoodsResponseModel() {
         super();
     }
 
-    public GoodsResponseModel(long pageIndex, long pageSize, long counter, LinkedList<GoodsEntity> goodsEntities) {
+    public GoodsResponseModel(GoodsRequestModel requestModel) {
+        super(requestModel);
+    }
+
+    public GoodsResponseModel(long pageIndex, long pageSize, long counter, List<AliResponsePageEntity> goodsEntities) {
         this.pageIndex = pageIndex;
         this.pageSize = pageSize;
         this.counter = counter;
@@ -50,11 +57,11 @@ public class GoodsResponseModel {
         this.counter = counter;
     }
 
-    public LinkedList<GoodsEntity> getGoodsEntities() {
+    public List<AliResponsePageEntity> getGoodsEntities() {
         return goodsEntities;
     }
 
-    public void setGoodsEntities(LinkedList<GoodsEntity> goodsEntities) {
+    public void setGoodsEntities(List<AliResponsePageEntity> goodsEntities) {
         this.goodsEntities = goodsEntities;
     }
 }
