@@ -1,11 +1,13 @@
 package org.maxwe.tao.server.service.tao.alimama.common;
 
+import java.io.Serializable;
+
 /**
  * Created by Pengwei Ding on 2017-02-24 20; //52.
  * Email; // www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description; // @TODO
  */
-public class AliResponsePaginatorEntity {
+public class AliResponsePaginatorEntity implements Serializable {
     private long length; // 10,
     private long offset; // 0,
     private long page; // 1,

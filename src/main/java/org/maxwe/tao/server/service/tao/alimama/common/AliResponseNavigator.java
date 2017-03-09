@@ -1,5 +1,6 @@
 package org.maxwe.tao.server.service.tao.alimama.common;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
@@ -7,7 +8,7 @@ import java.util.LinkedList;
  * Email; // www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description; // @TODO
  */
-public class AliResponseNavigator {
+public class AliResponseNavigator implements Serializable {
     private String name; // "女装",
     private long id; // 50102996,
     private String type; // "category",

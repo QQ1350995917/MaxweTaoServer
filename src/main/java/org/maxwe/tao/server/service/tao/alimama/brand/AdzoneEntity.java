@@ -5,13 +5,19 @@ package org.maxwe.tao.server.service.tao.alimama.brand;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 导购推广位模型
  */
-public class PositionEntity {
+public class AdZoneEntity {
     private String siteId;
     private String id;
     private String name;
 
-    public PositionEntity() {
+    public AdZoneEntity() {
         super();
+    }
+
+    public AdZoneEntity(String siteId,String id,String name) {
+        this.siteId = siteId;
+        this.id = id;
+        this.name = name;
     }
 
     public String getSiteId() {

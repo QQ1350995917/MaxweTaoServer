@@ -1,5 +1,6 @@
 package org.maxwe.tao.server.service.tao.alimama.common;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class AliResponseDataEntity {
+public class AliResponseDataEntity implements Serializable {
     private AliResponseHeadEntity head;
     private AliResponseConditionEntity condition;
     private AliResponsePaginatorEntity paginator;

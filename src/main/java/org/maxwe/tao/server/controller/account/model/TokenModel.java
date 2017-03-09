@@ -35,7 +35,8 @@ public class TokenModel implements Serializable {
                     || "smsCode".equals(name)
                     || "verification".equals(name)
                     || "authenticatePassword".equals(name)
-                    || "sign".equals(name)) {
+                    || "sign".equals(name)
+                    || "cookie".equals(name)) {
                 return "******";
             }
             return value;

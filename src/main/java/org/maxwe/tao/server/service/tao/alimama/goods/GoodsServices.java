@@ -6,6 +6,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 import org.maxwe.tao.server.service.tao.alimama.common.AliResponseDataEntity;
 import org.maxwe.tao.server.service.tao.alimama.common.AliResponsePageEntity;
 
@@ -14,9 +15,10 @@ import java.util.List;
 /**
  * Created by Pengwei Ding on 2017-02-24 20:41.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description: @TODO
+ * Description: 商品获取和转链服务
  */
 public class GoodsServices {
+    private static final Logger logger = Logger.getLogger(GoodsServices.class.getName());
 
     public static List<AliResponsePageEntity> searchForGoods(AliGoodsRequestModel aliGoodsRequestModel) throws Exception {
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();

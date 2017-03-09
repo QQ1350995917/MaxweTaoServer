@@ -15,6 +15,7 @@ import org.maxwe.tao.server.service.system.SystemServices;
 import org.maxwe.tao.server.service.tao.jidi.JiDiServices;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.LinkedList;
 import java.util.UUID;
 
@@ -30,7 +31,6 @@ public class SystemController extends Controller implements ISystemController {
     @Override
     @Before(SessionInterceptor.class)
     public void system() {
-
         render("/webapp/widgets/systemInfoList.view.html");
     }
 
@@ -128,5 +128,29 @@ public class SystemController extends Controller implements ISystemController {
         int dataCounter = JiDiServices.getInstance().getDataCounter();
         this.setAttr("dataCounter", dataCounter);
         render("/webapp/widgets/businessThirdData.view.html");
+    }
+
+    @Override
+    public void logger() {
+        try {
+            String date = this.getPara("date");
+            this.logger.info("logger : 文件名称 " + date);
+            if (StringUtils.isEmpty(date)) {
+                File file = new File(ApplicationConfigure.LOGGER_REAL_TIME + "/tao");
+                FileInputStream fileInputStream = new FileInputStream(file);
+                byte[] bytes = new byte[fileInputStream.available()];
+                fileInputStream.read(bytes, 0, bytes.length);
+                renderText(new String(bytes), "text/plain");
+            } else {
+                File file = new File(ApplicationConfigure.LOGGER_REAL_TIME + "/tao." + date + ".log");
+                FileInputStream fileInputStream = new FileInputStream(file);
+                byte[] bytes = new byte[fileInputStream.available()];
+                fileInputStream.read(bytes, 0, bytes.length);
+                renderText(new String(bytes), "text/plain");
+            }
+        } catch (Exception e) {
+            render(e.getMessage());
+        }
+
     }
 }

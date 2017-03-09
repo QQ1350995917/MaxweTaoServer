@@ -1,11 +1,13 @@
 package org.maxwe.tao.server.service.tao.alimama.common;
 
+import java.io.Serializable;
+
 /**
  * Created by Pengwei Ding on 2017-02-24 20;//50.
  * Email;// www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description;// @TODO
  */
-public class AliResponseConditionEntity {
+public class AliResponseConditionEntity implements Serializable {
     private String userType;// null,
     private long queryType;// 0,
     private String sortType;// null,

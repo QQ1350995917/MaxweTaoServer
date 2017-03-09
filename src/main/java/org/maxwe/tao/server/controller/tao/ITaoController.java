@@ -35,4 +35,8 @@ public interface ITaoController {
      * 阿里妈妈接口
      */
     void auction();
+
+    void brands();
+
+    void createBrands();
 }

@@ -46,4 +46,9 @@ public interface ISystemController {
      */
     void summaryThird();
 
+    /**
+     * 查询日志
+     */
+    void logger();
+
 }

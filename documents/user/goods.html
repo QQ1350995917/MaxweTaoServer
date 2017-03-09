@@ -10,118 +10,393 @@
     <link href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
     <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <style type="text/css">
+    </style>
 </head>
 <body>
 <div class="panel panel-default" style="margin: 10px">
     <!-- Default panel contents -->
-    <div class="panel-heading">代理注册</div>
+    <div class="panel-heading">获取淘宝商品列表 URL:<a href="../common/response_code.html#domain">domain</a>/tao/search</div>
     <div class="panel-body">
         <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/signup</p>
+            <p>请求参数</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>参数名</td>
+                    <td>类型</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>t</td>
+                    <td>String</td>
+                    <td>HJFASDJFADSFADSFAJSDFJASDFJA...</td>
+                    <td>token</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>id</td>
+                    <td>number</td>
+                    <td>100000</td>
+                    <td>ID</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>cellphone</td>
+                    <td>String</td>
+                    <td>18511694468</td>
+                    <td>手机号码</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>apt</td>
+                    <td>number</td>
+                    <td>2</td>
+                    <td>固定值</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>sign</td>
+                    <td>String</td>
+                    <td>DFADKFKADFAKDSFASDFASD...</td>
+                    <td>签名</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>toPage</td>
+                    <td>number</td>
+                    <td>5</td>
+                    <td>第N页</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>perPageSize</td>
+                    <td>number</td>
+                    <td>20</td>
+                    <td>每页显示N条数据</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>q</td>
+                    <td>String</td>
+                    <td>女装</td>
+                    <td>查询关键字</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>cookie</td>
+                    <td>String</td>
+                    <td>DFADKFKADFAKDSFASDFASD...</td>
+                    <td>登录淘宝后的cookie</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>sortType</td>
+                    <td>number</td>
+                    <td>0</td>
+                    <td>排序类型</td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>urlType</td>
+                    <td>number</td>
+                    <td>0</td>
+                    <td>链接类型标记</td>
+                </tr>
+            </table>
         </div>
 
         <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
+            <p>相应码及信息</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>响应码</td>
+                    <td>信息</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>200</td>
+                    <td>查询成功</td>
+                    <td>
+                        <pre>
+{
+    "code": 200,
+    "counter": 0,
+    "goodsEntities": [
+        {
+            "auctionId": 543778485473,
+            "auctionTag": "385 587 907 1163 1483 2059 3851 3915 4491 4550 4555 6603 11083 11339 11531 12491 13707 13771
+                            21505 25282 27137 28353 32385 33665 40897 48578 50370 52290 53121 53185 59970 61890 61954 80386
+                            104514 105026 105538 119234 119298 122754 122818",
+            "auctionUrl": "http://item.taobao.com/item.htm?id=543778485473",
+            "biz30day": 2961,
+            "couponActivityId": null,
+            "couponAmount": 5,
+            "couponEffectiveEndTime": "2017-03-10",
+            "couponEffectiveStartTime": "2017-03-02",
+            "couponInfo": "满125元减5元",
+            "couponLeftCount": 1171,
+            "couponLink": "",
+            "couponLinkTaoToken": "",
+            "couponOriLink": null,
+            "couponShortLink": null,
+            "couponStartFee": 125,
+            "couponTotalCount": 3000,
+            "dayLeft": -17234,
+            "debugInfo": null,
+            "eventCreatorId": 0,
+            "eventRate": 0,
+            "hasRecommended": 0,
+            "hasSame": 0,
+            "hasUmpBonus": null,
+            "includeDxjh": 0,
+            "isBizActivity": null,
+            "leafCatId": 50011277,
+            "nick": "日系潮牌国际店",
+            "pictUrl": "http://img03.taobaocdn.com/bao/uploaded/i3/2599845929/TB2CNfHdb8kpuFjy0FcXXaUhpXa_!!2599845929.jpg",
+            "reservePrice": 390,
+            "rlRate": 67.17,
+            "rootCatId": 0,
+            "rootCatScore": 0,
+            "rootCategoryName": null,
+            "sameItemPid": "-165627893",
+            "sellerId": 2599845929,
+            "shopTitle": "胖美美 日系原创潮牌",
+            "title": "棒球服<span class=H>女装</span>薄款空军MA-1飞行员夹克工装女士长袖外套男女风衣潮牌",
+            "tk3rdRate": 0,
+            "tkCommFee": 38.4,
+            "tkRate": 30,
+            "tkSpecialCampaignIdRateMap": null,
+            "totalFee": 5213,
+            "totalNum": 141,
+            "umpBonus": null,
+            "userType": 0,
+            "userTypeName": null,
+            "zkPrice": 128
+        }
+    ],
+    "message": "查询成功",
+    "pageIndex": 0,
+    "pageSize": 0,
+    "request": {
+        "cellphone": "18511694468",
+        "cookie": "******",
+        "goodsRequestParamsOk": true,
+        "id": 52,
+        "perPageSize": 20,
+        "q": null,
+        "sign": "******",
+        "sortType": 0,
+        "t": "ae6878b13cac4f59d8a515f50e82b15f",
+        "toPage": 1,
+        "urlType": 0,
+        "verification": "******"
+    }
+}
+                        </pre>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>204</td>
+                    <td>没有数据，请更换查询参数</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>400</td>
+                    <td>请您输入正确的参数</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>404</td>
+                    <td>没有数据，请更换查询参数</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>500</td>
+                    <td>系统错误，请重试</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
 
 <div class="panel panel-default" style="margin: 10px">
     <!-- Default panel contents -->
-    <div class="panel-heading">代理登录</div>
+    <div class="panel-heading">获取淘宝商品转链 URL:<a href="../common/response_code.html#domain">domain</a>/tao/auction</div>
     <div class="panel-body">
         <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/signin</p>
+            <p>请求参数</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>参数名</td>
+                    <td>类型</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>t</td>
+                    <td>String</td>
+                    <td>HJFASDJFADSFADSFAJSDFJASDFJA...</td>
+                    <td>token</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>id</td>
+                    <td>number</td>
+                    <td>100000</td>
+                    <td>ID</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>cellphone</td>
+                    <td>String</td>
+                    <td>18511694468</td>
+                    <td>手机号码</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>apt</td>
+                    <td>number</td>
+                    <td>2</td>
+                    <td>固定值</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>sign</td>
+                    <td>String</td>
+                    <td>DFADKFKADFAKDSFASDFASD...</td>
+                    <td>签名</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>siteid</td>
+                    <td>number</td>
+                    <td>5987543456</td>
+                    <td>导购推广ID</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>adzoneid</td>
+                    <td>number</td>
+                    <td>206778999</td>
+                    <td>推广位的ID</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>auctionid</td>
+                    <td>number</td>
+                    <td>99877665443</td>
+                    <td>商品的ID</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>cookie</td>
+                    <td>String</td>
+                    <td>DFADKFKADFAKDSFASDFASD...</td>
+                    <td>登录淘宝后的cookie</td>
+                </tr>
+            </table>
         </div>
 
         <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
-        </div>
-    </div>
-</div>
-
-
-<div class="panel panel-default" style="margin: 10px">
-    <!-- Default panel contents -->
-    <div class="panel-heading">代理忘记密码</div>
-    <div class="panel-body">
-        <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/lost</p>
-        </div>
-
-        <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
-        </div>
-    </div>
-</div>
-
-<div class="panel panel-default" style="margin: 10px">
-    <!-- Default panel contents -->
-    <div class="panel-heading">代理修改密码</div>
-    <div class="panel-body">
-        <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/modify</p>
-        </div>
-
-        <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
-        </div>
-    </div>
-</div>
-
-<div class="panel panel-default" style="margin: 10px">
-    <!-- Default panel contents -->
-    <div class="panel-heading">代理修改密码</div>
-    <div class="panel-body">
-        <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/bind</p>
-        </div>
-
-        <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
+            <p>相应码及信息</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>响应码</td>
+                    <td>信息</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>200</td>
+                    <td>查询成功</td>
+                    <td>
+                        <pre>
+{
+    "auction": {
+        "clickUrl": "https://s.click.taobao.com/t?e=m%3D2%26s%3DTgvxEA3buBkcQipKwQzePOeEDrYVVa64LKpWJ%2Bin0XLjf2vlNIV67
+                            o%2BamyKkxIC4NIp4fcwrAVmpGS2VpSR8CN2ptj9yhNnA1RZ4ZT6hbQLeLlIAPqEGWdwqGsGoDx1qzoih4R1eZsfj%2
+                            B%2Fzs4MEKGMC2NFlW3j6Ixg5p7bh%2BFbQ%3D",
+        "couponLink": "https://uland.taobao.com/coupon/edetail?e=I87HogthP5kN%2BoQUE6FNzCQqh7tpEjRcBjP%2FytmsYmfHy9UNo5
+                            46lIRhKpS6vJVMnfOdwE2uZiQ1vRasijfVLsKUixUTTLeuzVnc5sN1mS4%3D&pid=mm_120134623_21724431_7262
+                            0906&af=1",
+        "couponLinkTaoToken": "￥kh4wlNwaXN￥",
+        "couponShortLinkUrl": "https://s.click.taobao.com/R62IQ0x",
+        "qrCodeUrl": "http://gqrcode.alicdn.com/img?type=hv&text=https%3A%2F%2Fs.click.taobao.com%2FWJfu20x&h=300&w=300",
+        "shortLinkUrl": "https://s.click.taobao.com/YZfu20x",
+        "taoToken": "￥fLFElNw0BP￥",
+        "type": "auction"
+    },
+    "code": 200,
+    "message": "转链成功",
+    "request": {
+        "adzoneid": 72620906,
+        "auctionRequestParamsOk": true,
+        "auctionid": 544122010180,
+        "cellphone": "18511694468",
+        "cookie": "******",
+        "id": 52,
+        "sign": "******",
+        "siteid": 21724431,
+        "t": "ae6878b13cac4f59d8a515f50e82b15f",
+        "verification": "******"
+    }
+}
+                        </pre>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>400</td>
+                    <td>请您输入正确的参数</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>404</td>
+                    <td>该商品或已下架</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>500</td>
+                    <td>系统错误，请重试</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
-
 </body>
 </html>

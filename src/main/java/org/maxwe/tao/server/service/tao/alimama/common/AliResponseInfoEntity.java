@@ -1,11 +1,13 @@
 package org.maxwe.tao.server.service.tao.alimama.common;
 
+import java.io.Serializable;
+
 /**
  * Created by Pengwei Ding on 2017-02-24 20:46.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: @TODO
  */
-public class AliResponseInfoEntity {
+public class AliResponseInfoEntity implements Serializable {
     private String message;
     private String pvid;
     private boolean ok;

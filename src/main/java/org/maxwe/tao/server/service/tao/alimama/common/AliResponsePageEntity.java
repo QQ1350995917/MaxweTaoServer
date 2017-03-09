@@ -1,5 +1,6 @@
 package org.maxwe.tao.server.service.tao.alimama.common;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -7,7 +8,7 @@ import java.util.HashMap;
  * Email; // www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description; // @TODO
  */
-public class AliResponsePageEntity {
+public class AliResponsePageEntity implements Serializable {
     private HashMap<Integer,String> tkSpecialCampaignIdRateMap;//{2616191: "15.01",4415440: "15.01",6011079: "15.38",35695643: "15.38",36555464: "15.38"}
     private long eventCreatorId; // 0,
     private long rootCatId; // 0,

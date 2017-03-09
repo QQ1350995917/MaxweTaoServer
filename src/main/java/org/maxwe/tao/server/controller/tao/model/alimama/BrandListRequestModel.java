@@ -8,10 +8,10 @@ import org.maxwe.tao.server.controller.account.model.TokenModel;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 导购推广以及其下的推广位列表请求模型
  */
-public class PromotionListRequestModel extends TokenModel {
+public class BrandListRequestModel extends TokenModel {
     private String cookie;
 
-    public PromotionListRequestModel() {
+    public BrandListRequestModel() {
         super();
     }
 
@@ -23,7 +23,7 @@ public class PromotionListRequestModel extends TokenModel {
         this.cookie = cookie;
     }
 
-    public boolean isPromotionListRequestParamsOk(){
+    public boolean isBrandListRequestParamsOk(){
         if (StringUtils.isEmpty(this.getCookie())){
             return false;
         }
