@@ -1,6 +1,7 @@
 package org.maxwe.tao.server.controller.tao.model.alimama;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.annotation.JSONField;
 import org.maxwe.tao.server.controller.account.model.TokenModel;
 
 /**
@@ -82,6 +83,7 @@ public class GoodsRequestModel extends TokenModel {
                 '}';
     }
 
+    @JSONField(serialize=false)
     public boolean isGoodsRequestParamsOk() {
         if (this.getToPage() < 0 ||
                 this.getPerPageSize() < 0 ||

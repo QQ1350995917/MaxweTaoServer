@@ -1,6 +1,7 @@
 package org.maxwe.tao.server.controller.tao.model.alimama;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.annotation.JSONField;
 import org.maxwe.tao.server.controller.account.model.TokenModel;
 
 /**
@@ -50,6 +51,7 @@ public class BrandCreateRequestModel extends TokenModel {
         this.weChat = weChat;
     }
 
+    @JSONField(serialize=false)
     public boolean isBrandCreateRequestParamsOk() {
         if (StringUtils.isEmpty(this.getCookie())) {
             return false;

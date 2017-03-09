@@ -3,6 +3,7 @@ package org.maxwe.tao.server.service.tao.alimama.brand;
 import com.alibaba.fastjson.JSON;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -66,59 +67,96 @@ public class BrandServices {
         }
     }
 
+    /**
+     * 创建一对新的导购推广和导购推广位
+     *
+     * @param requestModel
+     * @return
+     * @throws Exception
+     */
     public static List<GuideEntity> createBrand(BrandCreateRequestModel requestModel) throws Exception {
-        GuideEntity guide = createGuide(requestModel.getCookie(), requestModel.getGuideName(), requestModel.getWeChat());
-        if (guide == null) {
+        boolean isGuideCreateSuccess = createGuide(requestModel.getCookie(), requestModel.getGuideName(), requestModel.getWeChat());
+        if (!isGuideCreateSuccess) {
             return null;
         }
-        LinkedList<GuideEntity> guideEntities = new LinkedList<>();
-        AdZoneEntity adZone = createADZone(requestModel.getCookie(), guide.getSiteId(), requestModel.getAdZoneName());
+
+        BrandListRequestModel brandListRequestModel = new BrandListRequestModel();
+        brandListRequestModel.setCookie(requestModel.getCookie());
+        List<GuideEntity> brandList = getBrandList(brandListRequestModel);
+        if (brandList == null || brandList.size() < 1) {
+            return null;
+        }
+
+        GuideEntity currentGuideEntity = null;
+        for (GuideEntity guideEntity : brandList) {
+            if (guideEntity.getName().equals(requestModel.getGuideName())) {
+                currentGuideEntity = guideEntity;
+                break;
+            }
+        }
+
+        if (currentGuideEntity == null) {
+            return null;
+        }
+
+        List<GuideEntity> result = new LinkedList<>();
+        AdZoneEntity adZone = createADZone(requestModel.getCookie(), currentGuideEntity.getSiteId(), requestModel.getAdZoneName());
         if (adZone != null) {
             LinkedList<AdZoneEntity> adZoneEntities = new LinkedList<>();
             adZoneEntities.add(adZone);
-            guide.setAdZones(adZoneEntities);
+            currentGuideEntity.setAdZones(adZoneEntities);
         }
-        guideEntities.add(guide);
-        return guideEntities;
+        result.add(currentGuideEntity);
+        return result;
     }
 
-    private static GuideEntity createGuide(String cookie, String guideName, String weChat) throws Exception {
+    /**
+     * 创建新的导购推广，该接口比较奇葩，仅仅返回创建是否成功的结果，不会返回具体信息。
+     * 所以在创建成功后要进行二次获取
+     *
+     * @param cookie
+     * @param guideName
+     * @param weChat
+     * @return
+     * @throws Exception
+     */
+    private static boolean createGuide(String cookie, String guideName, String weChat) throws Exception {
         final String URL_ADD_GUIDE = "http://pub.alimama.com/common/site/generalize/guideAdd.json";
         final String PARAMS_ADD_GUIDE = "name=" + guideName + "&categoryId=14&account1=" + weChat;
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet(URL_ADD_GUIDE + "?" + PARAMS_ADD_GUIDE);
-        httpGet.setHeader("Cookie", cookie);
-        httpGet.setHeader("Content-type", "application/json");
-        httpGet.setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.151 Safari/535.19");
-        CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet);
+        HttpPost httpPost = new HttpPost(URL_ADD_GUIDE + "?" + PARAMS_ADD_GUIDE);
+        httpPost.setHeader("Cookie", cookie);
+        httpPost.setHeader("Content-type", "application/json");
+        httpPost.setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.151 Safari/535.19");
+        CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpPost);
         if (closeableHttpResponse.getStatusLine().getStatusCode() == 200) {
             String resultJson = EntityUtils.toString(closeableHttpResponse.getEntity());
             Map rootMap = JSON.parseObject(resultJson, Map.class);
-            Map<String, Object> dataMap = (Map<String, Object>) rootMap.get("data");
-            List<Map<String, Object>> adZoneList = (List<Map<String, Object>>) dataMap.get("guideList");
-            if (adZoneList != null && adZoneList.size() > 0) {
-                Map<String, Object> stringObjectMap = adZoneList.get(0);
-                String name = stringObjectMap.get("name").toString();
-                String guideId = stringObjectMap.get("guideID").toString();
-                if (guideName.equals(name)) {
-                    GuideEntity guideEntity = new GuideEntity(guideId, name);
-                    return guideEntity;
-                } else {
-                    logger.error("getBrandList 执行错误，提交的名称是：" + guideName + " 返回的名称是：" + name + "返回的信息是：" + resultJson);
-                    return null;
-                }
+            Map<String, Object> infoMap = (Map<String, Object>) rootMap.get("info");
+            if (Boolean.parseBoolean(infoMap.get("ok").toString())) {
+                logger.info("createGuide 执行成功，提交的名称是：" + guideName + " 返回的信息是：" + resultJson);
+                return true;
             } else {
-                logger.error("getBrandList 执行错误，返回的信息是：" + resultJson);
-                return null;
+                logger.error("createGuide 执行失败，提交的名称是：" + guideName + " 返回的信息是：" + resultJson);
+                return false;
             }
         } else {
-            logger.error("createGuide 执行错误，仅仅得到网络响应码是：" + closeableHttpResponse.getStatusLine().getStatusCode());
-            return null;
+            logger.error("createGuide 执行失败，仅仅得到网络响应码是：" + closeableHttpResponse.getStatusLine().getStatusCode());
+            return false;
         }
     }
 
+    /**
+     * 创建导购推广位
+     *
+     * @param cookie
+     * @param guideId
+     * @param adZoneName
+     * @return
+     * @throws Exception
+     */
     private static AdZoneEntity createADZone(String cookie, String guideId, String adZoneName) throws Exception {
-        final String URL_ADD_AD_ZONE = "http://pub.alimama.com/common/site/generalize/guideAdd.json";
+        final String URL_ADD_AD_ZONE = "http://pub.alimama.com/common/adzone/selfAdzoneCreate.json";
         final String PARAMS_ADD_AD_ZONE = "tag=29&" +
                 "siteid=" + guideId + "&" +
                 "t=" + System.currentTimeMillis() + "&" +
@@ -127,11 +165,11 @@ public class BrandServices {
                 "_tb_token_=" + getTaoBaoTokenFormCookie(cookie) + "&" +
                 "selectact=add";
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet(URL_ADD_AD_ZONE + "?" + PARAMS_ADD_AD_ZONE);
-        httpGet.setHeader("Cookie", cookie);
-        httpGet.setHeader("Content-type", "application/json");
-        httpGet.setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.151 Safari/535.19");
-        CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet);
+        HttpPost httpPost = new HttpPost(URL_ADD_AD_ZONE + "?" + PARAMS_ADD_AD_ZONE);
+        httpPost.setHeader("Cookie", cookie);
+        httpPost.setHeader("Content-type", "application/json");
+        httpPost.setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.151 Safari/535.19");
+        CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpPost);
         if (closeableHttpResponse.getStatusLine().getStatusCode() == 200) {
             String resultJson = EntityUtils.toString(closeableHttpResponse.getEntity());
             Map rootMap = JSON.parseObject(resultJson, Map.class);

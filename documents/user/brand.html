@@ -16,7 +16,7 @@
 <body>
 <div class="panel panel-default" style="margin: 10px">
     <!-- Default panel contents -->
-    <div class="panel-heading">获取淘宝商品列表 URL:<a href="../common/response_code.html#domain">domain</a>/tao/search</div>
+    <div class="panel-heading">获取推广位信息 URL:<a href="../common/response_code.html#domain">domain</a>/tao/brands</div>
     <div class="panel-body">
         <div class="alert alert-success" role="alert">
             <p>请求参数</p>
@@ -67,45 +67,10 @@
                 </tr>
                 <tr>
                     <td>6</td>
-                    <td>toPage</td>
-                    <td>number</td>
-                    <td>5</td>
-                    <td>第N页</td>
-                </tr>
-                <tr>
-                    <td>7</td>
-                    <td>perPageSize</td>
-                    <td>number</td>
-                    <td>20</td>
-                    <td>每页显示N条数据</td>
-                </tr>
-                <tr>
-                    <td>8</td>
-                    <td>q</td>
-                    <td>String</td>
-                    <td>女装</td>
-                    <td>查询关键字或产品URL</td>
-                </tr>
-                <tr>
-                    <td>9</td>
                     <td>cookie</td>
                     <td>String</td>
                     <td>DFADKFKADFAKDSFASDFASD...</td>
                     <td>登录淘宝后的cookie</td>
-                </tr>
-                <tr>
-                    <td>10</td>
-                    <td>sortType</td>
-                    <td>number</td>
-                    <td>0</td>
-                    <td>排序类型</td>
-                </tr>
-                <tr>
-                    <td>11</td>
-                    <td>urlType</td>
-                    <td>number</td>
-                    <td>0</td>
-                    <td>链接类型标记</td>
                 </tr>
             </table>
         </div>
@@ -125,81 +90,70 @@
                 <tr>
                     <td>1</td>
                     <td>200</td>
-                    <td>查询成功</td>
+                    <td>获取成功</td>
                     <td>
                         <pre>
 {
-    "code": 200,
-    "counter": 0,
-    "goodsEntities": [
+    "brands": [
         {
-            "auctionId": 543778485473,
-            "auctionTag": "385 587 907 1163 1483 2059 3851 3915 4491 4550 4555 6603 11083 11339 11531 12491 13707 13771
-                            21505 25282 27137 28353 32385 33665 40897 48578 50370 52290 53121 53185 59970 61890 61954 80386
-                            104514 105026 105538 119234 119298 122754 122818",
-            "auctionUrl": "http://item.taobao.com/item.htm?id=543778485473",
-            "biz30day": 2961,
-            "couponActivityId": null,
-            "couponAmount": 5,
-            "couponEffectiveEndTime": "2017-03-10",
-            "couponEffectiveStartTime": "2017-03-02",
-            "couponInfo": "满125元减5元",
-            "couponLeftCount": 1171,
-            "couponLink": "",
-            "couponLinkTaoToken": "",
-            "couponOriLink": null,
-            "couponShortLink": null,
-            "couponStartFee": 125,
-            "couponTotalCount": 3000,
-            "dayLeft": -17234,
-            "debugInfo": null,
-            "eventCreatorId": 0,
-            "eventRate": 0,
-            "hasRecommended": 0,
-            "hasSame": 0,
-            "hasUmpBonus": null,
-            "includeDxjh": 0,
-            "isBizActivity": null,
-            "leafCatId": 50011277,
-            "nick": "日系潮牌国际店",
-            "pictUrl": "http://img03.taobaocdn.com/bao/uploaded/i3/2599845929/TB2CNfHdb8kpuFjy0FcXXaUhpXa_!!2599845929.jpg",
-            "reservePrice": 390,
-            "rlRate": 67.17,
-            "rootCatId": 0,
-            "rootCatScore": 0,
-            "rootCategoryName": null,
-            "sameItemPid": "-165627893",
-            "sellerId": 2599845929,
-            "shopTitle": "胖美美 日系原创潮牌",
-            "title": "棒球服<span class=H>女装</span>薄款空军MA-1飞行员夹克工装女士长袖外套男女风衣潮牌",
-            "tk3rdRate": 0,
-            "tkCommFee": 38.4,
-            "tkRate": 30,
-            "tkSpecialCampaignIdRateMap": null,
-            "totalFee": 5213,
-            "totalNum": 141,
-            "umpBonus": null,
-            "userType": 0,
-            "userTypeName": null,
-            "zkPrice": 128
+            "adZones": [
+                {
+                    "id": "72620906",
+                    "name": "微信推广位_app",
+                    "siteId": "21724431"
+                }
+            ],
+            "name": "微信导购_app",
+            "siteId": "21724431"
+        },
+        {
+            "adZones": null,
+            "name": "测试推广位",
+            "siteId": "21666715"
+        },
+        {
+            "adZones": [
+                {
+                    "id": "72044740",
+                    "name": "淘妈咪微信导购推广位",
+                    "siteId": "21454360"
+                }
+            ],
+            "name": "淘妈咪导购推广",
+            "siteId": "21454360"
         }
     ],
-    "message": "查询成功",
-    "pageIndex": 0,
-    "pageSize": 0,
+    "code": 200,
+    "message": "获取成功",
     "request": {
         "cellphone": "18511694468",
         "cookie": "******",
-        "goodsRequestParamsOk": true,
         "id": 52,
-        "perPageSize": 20,
-        "q": null,
         "sign": "******",
-        "sortType": 0,
-        "t": "ae6878b13cac4f59d8a515f50e82b15f",
-        "toPage": 1,
-        "urlType": 0,
-        "verification": "******"
+        "t": "ae6878b13cac4f59d8a515f50e82b15f"
+    }
+}
+                        </pre>
+                    </td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td>2</td>
+                    <td>404</td>
+                    <td>没有找到，请新建</td>
+                    <td>
+                        <pre>
+{
+    "brands": null,
+    "code": 404,
+    "message": "没有找到，请新建",
+    "request": {
+        "cellphone": "18511694468",
+        "cookie": "******",
+        "id": 52,
+        "sign": "******",
+        "t": "3e2cdf5053cf123d73fb311646dd62e3"
     }
 }
                         </pre>
@@ -207,28 +161,7 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td>2</td>
-                    <td>204</td>
-                    <td>没有数据，请更换查询参数</td>
-                    <td></td>
-                    <td>请求参数原样返回</td>
-                </tr>
-                <tr>
                     <td>3</td>
-                    <td>400</td>
-                    <td>请您输入正确的参数</td>
-                    <td></td>
-                    <td>请求参数原样返回</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>404</td>
-                    <td>没有数据，请更换查询参数</td>
-                    <td></td>
-                    <td>请求参数原样返回</td>
-                </tr>
-                <tr>
-                    <td>5</td>
                     <td>500</td>
                     <td>系统错误，请重试</td>
                     <td></td>
@@ -241,7 +174,7 @@
 
 <div class="panel panel-default" style="margin: 10px">
     <!-- Default panel contents -->
-    <div class="panel-heading">获取淘宝商品转链 URL:<a href="../common/response_code.html#domain">domain</a>/tao/auction</div>
+    <div class="panel-heading">创建推广位 URL:<a href="../common/response_code.html#domain">domain</a>/tao/createBrands</div>
     <div class="panel-body">
         <div class="alert alert-success" role="alert">
             <p>请求参数</p>
@@ -292,24 +225,24 @@
                 </tr>
                 <tr>
                     <td>6</td>
-                    <td>siteid</td>
-                    <td>number</td>
-                    <td>5987543456</td>
-                    <td>导购推广ID</td>
+                    <td>guideName</td>
+                    <td>String</td>
+                    <td>淘妈咪导购推广</td>
+                    <td>导购推广位名称</td>
                 </tr>
                 <tr>
                     <td>7</td>
-                    <td>adzoneid</td>
-                    <td>number</td>
-                    <td>206778999</td>
-                    <td>推广位的ID</td>
+                    <td>adZoneName</td>
+                    <td>String</td>
+                    <td>淘妈咪导购推广位</td>
+                    <td>推广位的名称</td>
                 </tr>
                 <tr>
                     <td>8</td>
-                    <td>auctionid</td>
-                    <td>number</td>
-                    <td>99877665443</td>
-                    <td>商品的ID</td>
+                    <td>weChat</td>
+                    <td>String</td>
+                    <td>1234567</td>
+                    <td>微信号</td>
                 </tr>
                 <tr>
                     <td>9</td>
@@ -336,37 +269,34 @@
                 <tr>
                     <td>1</td>
                     <td>200</td>
-                    <td>查询成功</td>
+                    <td>创建成功</td>
                     <td>
                         <pre>
 {
-    "auction": {
-        "clickUrl": "https://s.click.taobao.com/t?e=m%3D2%26s%3DTgvxEA3buBkcQipKwQzePOeEDrYVVa64LKpWJ%2Bin0XLjf2vlNIV67
-                            o%2BamyKkxIC4NIp4fcwrAVmpGS2VpSR8CN2ptj9yhNnA1RZ4ZT6hbQLeLlIAPqEGWdwqGsGoDx1qzoih4R1eZsfj%2
-                            B%2Fzs4MEKGMC2NFlW3j6Ixg5p7bh%2BFbQ%3D",
-        "couponLink": "https://uland.taobao.com/coupon/edetail?e=I87HogthP5kN%2BoQUE6FNzCQqh7tpEjRcBjP%2FytmsYmfHy9UNo5
-                            46lIRhKpS6vJVMnfOdwE2uZiQ1vRasijfVLsKUixUTTLeuzVnc5sN1mS4%3D&pid=mm_120134623_21724431_7262
-                            0906&af=1",
-        "couponLinkTaoToken": "￥kh4wlNwaXN￥",
-        "couponShortLinkUrl": "https://s.click.taobao.com/R62IQ0x",
-        "qrCodeUrl": "http://gqrcode.alicdn.com/img?type=hv&text=https%3A%2F%2Fs.click.taobao.com%2FWJfu20x&h=300&w=300",
-        "shortLinkUrl": "https://s.click.taobao.com/YZfu20x",
-        "taoToken": "￥fLFElNw0BP￥",
-        "type": "auction"
-    },
+    "brands": [
+        {
+            "adZones": [
+                {
+                    "id": "73766584",
+                    "name": "淘妈咪微信导购推广位",
+                    "siteId": "22170286"
+                }
+            ],
+            "name": "淘妈咪导购推广",
+            "siteId": "22170286"
+        }
+    ],
     "code": 200,
-    "message": "转链成功",
+    "message": "创建成功",
     "request": {
-        "adzoneid": 72620906,
-        "auctionRequestParamsOk": true,
-        "auctionid": 544122010180,
+        "adZoneName": "淘妈咪微信导购推广位",
         "cellphone": "18511694468",
         "cookie": "******",
+        "guideName": "淘妈咪导购推广",
         "id": 52,
         "sign": "******",
-        "siteid": 21724431,
-        "t": "ae6878b13cac4f59d8a515f50e82b15f",
-        "verification": "******"
+        "t": "36963f1cf2ecce2a2f3adc591ffda44f"
+        "weChat": "wwwwww"
     }
 }
                         </pre>
@@ -382,13 +312,6 @@
                 </tr>
                 <tr>
                     <td>3</td>
-                    <td>404</td>
-                    <td>该商品或已下架</td>
-                    <td></td>
-                    <td>请求参数原样返回</td>
-                </tr>
-                <tr>
-                    <td>4</td>
                     <td>500</td>
                     <td>系统错误，请重试</td>
                     <td></td>

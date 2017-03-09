@@ -150,16 +150,8 @@ public class TaoController extends Controller implements ITaoController {
 
         try {
             List<GuideEntity> brandList = BrandServices.getBrandList(requestModel);
-            if (brandList == null) {
+            if (brandList == null || brandList.size() < 1) {
                 logger.info("brands : 查询到的数据集是NULL params = " + params);
-                BrandListResponseModel responseModel = new BrandListResponseModel(requestModel);
-                responseModel.setCode(ResponseModel.RC_SERVER_ERROR);
-                responseModel.setMessage("发生错误，请重试");
-                renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{GoodsRequestModel.propertyFilter, TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
-                return;
-            }
-            if (brandList.size() < 1) {
-                logger.info("brands : 查询到的数据集的数量为0 params = " + params);
                 BrandListResponseModel responseModel = new BrandListResponseModel(requestModel);
                 responseModel.setCode(ResponseModel.RC_NOT_FOUND);
                 responseModel.setMessage("没有找到，请新建");
@@ -221,5 +213,4 @@ public class TaoController extends Controller implements ITaoController {
             renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{GoodsRequestModel.propertyFilter, TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         }
     }
-
 }

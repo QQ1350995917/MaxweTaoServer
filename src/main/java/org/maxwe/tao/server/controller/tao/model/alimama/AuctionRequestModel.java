@@ -1,6 +1,7 @@
 package org.maxwe.tao.server.controller.tao.model.alimama;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.annotation.JSONField;
 import org.maxwe.tao.server.controller.account.model.TokenModel;
 
 /**
@@ -50,6 +51,7 @@ public class AuctionRequestModel extends TokenModel {
         this.cookie = cookie;
     }
 
+    @JSONField(serialize=false)
     public boolean isAuctionRequestParamsOk() {
         if (this.getSiteid() <= 0 ||
                 this.getAuctionid() <= 0 ||
