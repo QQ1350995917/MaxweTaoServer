@@ -1,5 +1,6 @@
 package org.maxwe.tao.server.controller.mate.model;
 
+import org.maxwe.tao.server.common.response.ResponseModel;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 
 /**
@@ -7,8 +8,7 @@ import org.maxwe.tao.server.service.account.agent.AgentEntity;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 获取上级代理的响应模型
  */
-public class TrunkInfoResponseModel extends TrunkInfoRequestModel {
-
+public class TrunkInfoResponseModel extends ResponseModel<TrunkInfoRequestModel> {
     private MateModel trunk;
     private AgentEntity branch;
 
@@ -16,7 +16,12 @@ public class TrunkInfoResponseModel extends TrunkInfoRequestModel {
         super();
     }
 
-    public TrunkInfoResponseModel(MateModel trunk,AgentEntity branch){
+    public TrunkInfoResponseModel(TrunkInfoRequestModel requestModel) {
+        super(requestModel);
+    }
+
+    public TrunkInfoResponseModel(TrunkInfoRequestModel requestModel, MateModel trunk, AgentEntity branch) {
+        super(requestModel);
         this.trunk = trunk;
         this.branch = branch;
     }

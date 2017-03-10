@@ -34,14 +34,7 @@ public class BranchBegRequestModel extends AuthenticateModel {
     }
 
     @JSONField(serialize = false)
-    public BranchBegResponseModel getBranchBegResponseModel(){
-        BranchBegResponseModel branchBegResponseModel = new BranchBegResponseModel();
-        branchBegResponseModel.setTrunkId(this.getTrunkId());
-        branchBegResponseModel.setWeChat(this.getWeChat());
-        return branchBegResponseModel;
-    }
-
     public boolean isBranchBegParamsOk() {
-        return super.isAuthenticateParamsOk() && this.getId() > 0 && !StringUtils.isEmpty(this.getWeChat());
+        return super.isAuthenticateParamsOk() && this.getTrunkId() > 0 && !StringUtils.isEmpty(this.getWeChat());
     }
 }

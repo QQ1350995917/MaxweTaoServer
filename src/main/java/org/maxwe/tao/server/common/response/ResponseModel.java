@@ -11,6 +11,9 @@ import java.io.Serializable;
  */
 public class ResponseModel<T extends TokenModel> implements Serializable {
     public transient static final int RC_SUCCESS = 200;//执行成功	执行成功
+    public transient static final int RC_CREATED = 201;//执行成功	 请求已经过期
+    public transient static final int RC_ACCEPTED = 202;//请求成功 参数解密失败
+    public transient static final int RC_NON_PARAMS = 203;//请求成功 缺少参数
     public transient static final int RC_EMPTY = 204;//执行成功 结果为空
     public transient static final int RC_BAD_PARAMS = 400;//参数错误	请求提交的参数不符合请求规则
     public transient static final int RC_FORBIDDEN = 403;//权限拒绝	请求中的参数没有权限处理提交的内容

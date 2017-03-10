@@ -1,19 +1,17 @@
 package org.maxwe.tao.server.controller.history;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializeFilter;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
-import org.maxwe.tao.server.common.cache.TokenContext;
-import org.maxwe.tao.server.common.response.IResultSet;
-import org.maxwe.tao.server.common.response.ResultSet;
+import org.maxwe.tao.server.common.response.ResponseModel;
 import org.maxwe.tao.server.common.utils.DateTimeUtils;
-import org.maxwe.tao.server.controller.history.model.RebateModel;
-import org.maxwe.tao.server.controller.history.model.RebateRequestModel;
-import org.maxwe.tao.server.controller.history.model.RebateResponseModel;
+import org.maxwe.tao.server.controller.account.model.TokenModel;
+import org.maxwe.tao.server.controller.history.model.*;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
-import org.maxwe.tao.server.service.account.CSEntity;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 import org.maxwe.tao.server.service.account.agent.AgentServices;
 import org.maxwe.tao.server.service.account.agent.IAgentServices;
@@ -42,34 +40,29 @@ public class HistoryController extends Controller implements IHistoryController 
     @Before({AppInterceptor.class, TokenInterceptor.class})
     public void history() {
         String params = this.getAttr("p");
-        HistoryModel requestModel = JSON.parseObject(params, HistoryModel.class);
-        IResultSet iResultSet = new ResultSet();
-        if (!requestModel.isParamsOk()) {
+        HistoryListRequestModel requestModel = JSON.parseObject(params, HistoryListRequestModel.class);
+        if (requestModel == null || !requestModel.isListRequestParamsOk()) {
             this.logger.info("history : 请求参数错误 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
-            renderJson(JSON.toJSONString(iResultSet));
+            HistoryListResponseModel listRequestModel = new HistoryListResponseModel(requestModel);
+            listRequestModel.setCode(ResponseModel.RC_BAD_PARAMS);
+            listRequestModel.setMessage("请求参数错误");
+            renderJson(JSON.toJSONString(listRequestModel,new SerializeFilter[]{TokenModel.propertyFilter,TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         } else {
-            CSEntity csEntity = new CSEntity(0, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
-            LinkedList<HistoryEntity> historyEntities = iHistoryServices.retrieveByFromId(TokenContext.getCSEntity(csEntity).getId(), requestModel.getPageIndex(), requestModel.getPageSize());
+            HistoryListResponseModel listRequestModel = new HistoryListResponseModel(requestModel);
+            LinkedList<HistoryEntity> historyEntities = iHistoryServices.retrieveByFromId(requestModel.getId(), requestModel.getPageIndex(), requestModel.getPageSize());
             if (historyEntities == null || historyEntities.size() == 0) {
-                iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
+                this.logger.info("history : 查询为空 " + requestModel.toString());
+                listRequestModel.setCode(ResponseModel.RC_EMPTY);
+                listRequestModel.setMessage("没有数据了");
+                renderJson(JSON.toJSONString(listRequestModel,new SerializeFilter[]{TokenModel.propertyFilter,TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             } else {
-                iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+                this.logger.info("history : 查询数据量 " + historyEntities.size());
+                listRequestModel.setCode(ResponseModel.RC_SUCCESS);
+                listRequestModel.setHistories(historyEntities);
+                listRequestModel.setMessage("查询成功");
+                renderJson(JSON.toJSONString(listRequestModel,new SerializeFilter[]{TokenModel.propertyFilter,TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             }
-            requestModel.setHistoryEntities(historyEntities);
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-            String resultJson = JSON.toJSONString(iResultSet);
-            renderJson(resultJson);
         }
-    }
-
-    @Override
-    @Before({AppInterceptor.class, TokenInterceptor.class})
-    public void deal() {
-
     }
 
     @Override
@@ -77,13 +70,12 @@ public class HistoryController extends Controller implements IHistoryController 
     public void rebate() {
         String params = this.getAttr("p");
         RebateRequestModel requestModel = JSON.parseObject(params, RebateRequestModel.class);
-        IResultSet iResultSet = new ResultSet();
         if (!requestModel.isRebateParamsOk()) {
-            this.logger.info("history : 请求参数错误 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
-            renderJson(JSON.toJSONString(iResultSet));
+            this.logger.info("rebate : 请求参数错误 " + requestModel.toString());
+            RebateResponseModel responseModel = new RebateResponseModel(requestModel);
+            responseModel.setCode(ResponseModel.RC_BAD_PARAMS);
+            responseModel.setMessage("参数错误，请重试");
+            renderJson(JSON.toJSONString(responseModel,new SerializeFilter[]{TokenModel.propertyFilter,TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
@@ -100,15 +92,15 @@ public class HistoryController extends Controller implements IHistoryController 
         }
 
         if (sameLevelAgentIds.size() < 1) {
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-            String resultJson = JSON.toJSONString(iResultSet);
-            renderJson(resultJson);
+            this.logger.info("rebate : 没有同等级的下级 " + requestModel.toString());
+            RebateResponseModel responseModel = new RebateResponseModel(requestModel);
+            responseModel.setCode(ResponseModel.RC_NOT_FOUND);
+            responseModel.setMessage("亲，您还没有同等级的下级，要努力哟");
+            renderJson(JSON.toJSONString(responseModel,new SerializeFilter[]{TokenModel.propertyFilter,TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
-        RebateResponseModel rebateResponseModel = new RebateResponseModel();
+        // 激活码的列表
         List<RebateModel> rebateModels = new LinkedList<>();
         for (int i = requestModel.getMonth(); i >= requestModel.getMonthCounter() - 1; i--) {
             try {
@@ -120,18 +112,15 @@ public class HistoryController extends Controller implements IHistoryController 
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                this.logger.error("rebate : 错误了 " + requestModel.toString() + " exception :" + e.getMessage());
             }
         }
-        rebateResponseModel.setRebates(rebateModels);
 
-        if (rebateModels == null || rebateModels.size() == 0) {
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
-        } else {
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        }
-        iResultSet.setData(rebateResponseModel);
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        String resultJson = JSON.toJSONString(iResultSet);
-        renderJson(resultJson);
+        this.logger.info("rebate : 查询成功 " + requestModel.toString() + " 数据量：" + rebateModels.size());
+        RebateResponseModel responseModel = new RebateResponseModel(requestModel);
+        responseModel.setRebates(rebateModels);
+        responseModel.setCode(ResponseModel.RC_SUCCESS);
+        responseModel.setMessage("查询成功");
+        renderJson(JSON.toJSONString(responseModel,new SerializeFilter[]{TokenModel.propertyFilter,TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
     }
 }

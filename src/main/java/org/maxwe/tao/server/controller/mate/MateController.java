@@ -2,19 +2,17 @@ package org.maxwe.tao.server.controller.mate;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.PropertyFilter;
+import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
-import org.maxwe.tao.server.common.cache.TokenContext;
-import org.maxwe.tao.server.common.response.IResultSet;
-import org.maxwe.tao.server.common.response.ResultSet;
+import org.maxwe.tao.server.common.response.ResponseModel;
 import org.maxwe.tao.server.common.utils.PasswordUtils;
+import org.maxwe.tao.server.controller.account.model.TokenModel;
 import org.maxwe.tao.server.controller.mate.model.*;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
-import org.maxwe.tao.server.service.account.CSEntity;
 import org.maxwe.tao.server.service.account.agent.AgentEntity;
 import org.maxwe.tao.server.service.account.agent.AgentServices;
 import org.maxwe.tao.server.service.account.agent.IAgentServices;
@@ -39,13 +37,12 @@ public class MateController extends Controller implements IMateController {
     public void beg() {
         String params = this.getAttr("p");
         BranchBegRequestModel requestModel = JSON.parseObject(params, BranchBegRequestModel.class);
-        IResultSet iResultSet = new ResultSet();
         if (!requestModel.isBranchBegParamsOk()) {
             this.logger.info("beg : 请求参数错误 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
-            renderJson(JSON.toJSONString(iResultSet));
+            BranchBegResponseModel responseModel = new BranchBegResponseModel(requestModel);
+            responseModel.setCode(ResponseModel.RC_BAD_PARAMS);
+            responseModel.setMessage("参数错误，请重试");
+            renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
@@ -53,81 +50,62 @@ public class MateController extends Controller implements IMateController {
         AgentEntity trunkEntity = this.iAgentServices.retrieveById(requestModel.getTrunkId());
         if (trunkEntity == null) {
             this.logger.info("beg : 没有找到 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
-            renderJson(JSON.toJSONString(iResultSet));
+            BranchBegResponseModel responseModel = new BranchBegResponseModel(requestModel);
+            responseModel.setCode(ResponseModel.RC_NOT_FOUND);
+            responseModel.setMessage("该上级不存在，请确认ID");
+            renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
         // 上级也没有经过审核通过
         if (trunkEntity.getReach() != 1) {
-            this.logger.info("beg : 查找到的尚未通过授权 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD_2.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
-            renderJson(JSON.toJSONString(iResultSet));
+            this.logger.info("beg : 查找到的上级尚未通过授权 " + requestModel.toString());
+            BranchBegResponseModel responseModel = new BranchBegResponseModel(requestModel);
+            responseModel.setCode(ResponseModel.RC_FORBIDDEN);
+            responseModel.setMessage("你的上级不具备对您的授权权限");
+            renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
-        CSEntity csEntity = new CSEntity(0, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
-        CSEntity existCSEntity = TokenContext.getCSEntity(csEntity);
-        AgentEntity agentEntity = this.iAgentServices.retrieveByCellphone(existCSEntity.getCellphone());
+        AgentEntity agentEntity = this.iAgentServices.retrieveByCellphone(requestModel.getCellphone());
         if (!StringUtils.equals(agentEntity.getPassword(), PasswordUtils.enPassword(agentEntity.getCellphone(), requestModel.getAuthenticatePassword()))) {
             this.logger.info("beg : 密码错误 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_ACCESS_BAD.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-            renderJson(JSON.toJSONString(iResultSet));
+            BranchBegResponseModel responseModel = new BranchBegResponseModel(requestModel);
+            responseModel.setCode(ResponseModel.RC_CONFLICT);
+            responseModel.setMessage("密码错误");
+            renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
-        AgentEntity branchAgentEntity = this.iAgentServices.retrieveById(existCSEntity.getId());
+        AgentEntity branchAgentEntity = this.iAgentServices.retrieveById(requestModel.getId());
         if (branchAgentEntity.getpId() != 0) {
             this.logger.info("beg : 已经处于等待授权确认 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_REPEAT.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-            renderJson(JSON.toJSONString(iResultSet));
+            BranchBegResponseModel responseModel = new BranchBegResponseModel(requestModel);
+            responseModel.setCode(ResponseModel.RC_NOT_ACCEPTABLE);
+            responseModel.setMessage("您已经处于待授权确认状态");
+            renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
-        branchAgentEntity.setId(existCSEntity.getId());
         branchAgentEntity.setpId(trunkEntity.getId());
         branchAgentEntity.setWechat(requestModel.getWeChat());
         boolean askForReach = iAgentServices.askForReach(branchAgentEntity);
         if (!askForReach) {
             this.logger.info("beg : 申请加入-服务器内部错误 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
-            renderJson(JSON.toJSONString(iResultSet));
+            BranchBegResponseModel responseModel = new BranchBegResponseModel(requestModel);
+            responseModel.setCode(ResponseModel.RC_SERVER_ERROR);
+            responseModel.setMessage("发生错误，请重试");
+            renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            return;
         } else {
-            this.logger.info("beg : 查找成功 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-
+            this.logger.info("beg : 申请成功 " + requestModel.toString());
             LevelEntity trunkLevelEntity = iLevelServices.retrieveByLevel(trunkEntity.getLevel());
-            MateModel mateModel = new MateModel(trunkEntity, trunkLevelEntity);
-            BranchBegResponseModel branchBegResponseModel = requestModel.getBranchBegResponseModel();
-            branchBegResponseModel.setTrunk(mateModel);
+            MateModel trunkMateModel = new MateModel(trunkEntity, trunkLevelEntity);
+            BranchBegResponseModel branchBegResponseModel = new BranchBegResponseModel(requestModel);
+            branchBegResponseModel.setTrunk(trunkMateModel);
             branchBegResponseModel.setBranch(branchAgentEntity);
-            iResultSet.setData(branchBegResponseModel);
-
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-            String string = JSON.toJSONString(iResultSet, new PropertyFilter() {
-                @Override
-                public boolean apply(Object object, String name, Object value) {
-                    if ("password".equals(name)
-                            || "status".equals(name)
-                            || "named".equals(name)
-                            || "weight".equals(name)
-                            ) {
-                        return false;
-                    }
-                    return true;
-                }
-            });
-            renderJson(string);
+            branchBegResponseModel.setMessage("申请成功");
+            renderJson(JSON.toJSONString(branchBegResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         }
     }
 
@@ -136,24 +114,23 @@ public class MateController extends Controller implements IMateController {
     public void grant() {
         String params = this.getAttr("p");
         GrantBranchRequestModel requestModel = JSON.parseObject(params, GrantBranchRequestModel.class);
-        IResultSet iResultSet = new ResultSet();
         if (!requestModel.isGrantBranchParamsOk()) {
             this.logger.info("grant : 请求参数错误 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
-            renderJson(JSON.toJSONString(iResultSet));
+            GrantBranchResponseModel grantBranchResponseModel = new GrantBranchResponseModel(requestModel);
+            grantBranchResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
+            grantBranchResponseModel.setMessage("参数错误，请重试");
+            renderJson(JSON.toJSONString(grantBranchResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
         // 通过ID查找下级
         AgentEntity branchAgentEntity = this.iAgentServices.retrieveById(requestModel.getBranchId());
         if (branchAgentEntity == null) {
-            this.logger.info("grant : 服务器内部错误 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
-            renderJson(JSON.toJSONString(iResultSet));
+            this.logger.info("grant : 没找到该ID " + requestModel.toString());
+            GrantBranchResponseModel grantBranchResponseModel = new GrantBranchResponseModel(requestModel);
+            grantBranchResponseModel.setCode(ResponseModel.RC_NOT_FOUND);
+            grantBranchResponseModel.setMessage("没找到该ID，请重试");
+            renderJson(JSON.toJSONString(grantBranchResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
@@ -161,66 +138,68 @@ public class MateController extends Controller implements IMateController {
         boolean updateReach = iAgentServices.updateReach(branchAgentEntity);
         if (!updateReach) {
             this.logger.info("grant : 服务器内部错误 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
-            renderJson(JSON.toJSONString(iResultSet));
+            GrantBranchResponseModel grantBranchResponseModel = new GrantBranchResponseModel(requestModel);
+            grantBranchResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
+            grantBranchResponseModel.setMessage("系统错误，请重试");
+            renderJson(JSON.toJSONString(grantBranchResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            return;
         } else {
-            LevelEntity branchLevelEntity = iLevelServices.retrieveByLevel(branchAgentEntity.getLevel());
-            MateModel mateModel = new MateModel(branchAgentEntity, branchLevelEntity);
-            GrantBranchResponseModel grantBranchResponseModel = new GrantBranchResponseModel(mateModel);
             this.logger.info("grant : 授权代理加入成功 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-            iResultSet.setData(grantBranchResponseModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-            renderJson(JSON.toJSONString(iResultSet));
+            LevelEntity branchLevelEntity = iLevelServices.retrieveByLevel(branchAgentEntity.getLevel());
+            MateModel branchMateModel = new MateModel(branchAgentEntity, branchLevelEntity);
+            GrantBranchResponseModel grantBranchResponseModel = new GrantBranchResponseModel(requestModel);
+            grantBranchResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
+            grantBranchResponseModel.setBranch(branchMateModel);
+            grantBranchResponseModel.setMessage("系统错误，请重试");
+            renderJson(JSON.toJSONString(grantBranchResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            return;
         }
     }
 
     @Override
     @Before({AppInterceptor.class, TokenInterceptor.class})
     public void reject() {
-        String params = this.getAttr("p");
-        GrantBranchRequestModel requestModel = JSON.parseObject(params, GrantBranchRequestModel.class);
-        IResultSet iResultSet = new ResultSet();
-        if (!requestModel.isGrantBranchParamsOk()) {
-            this.logger.info("reject : 请求参数错误 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
-            renderJson(JSON.toJSONString(iResultSet));
-            return;
-        }
-
-        // 通过ID查找下级
-        AgentEntity branchAgentEntity = this.iAgentServices.retrieveById(requestModel.getBranchId());
-        if (branchAgentEntity == null) {
-            this.logger.info("reject : 服务器内部错误 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
-            renderJson(JSON.toJSONString(iResultSet));
-            return;
-        }
-
-        branchAgentEntity.setReach(0);
-        boolean updateReach = iAgentServices.updateReach(branchAgentEntity);
-        if (!updateReach) {
-            this.logger.info("reject : 服务器内部错误 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
-            renderJson(JSON.toJSONString(iResultSet));
-        } else {
-            LevelEntity branchLevelEntity = iLevelServices.retrieveByLevel(branchAgentEntity.getLevel());
-            MateModel mateModel = new MateModel(branchAgentEntity, branchLevelEntity);
-            GrantBranchResponseModel grantBranchResponseModel = new GrantBranchResponseModel(mateModel);
-            this.logger.info("reject : 拒绝代理加入成功 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-            iResultSet.setData(grantBranchResponseModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-            renderJson(JSON.toJSONString(iResultSet));
-        }
+//        String params = this.getAttr("p");
+//        GrantBranchRequestModel requestModel = JSON.parseObject(params, GrantBranchRequestModel.class);
+//        IResultSet iResultSet = new ResultSet();
+//        if (!requestModel.isGrantBranchParamsOk()) {
+//            this.logger.info("reject : 请求参数错误 " + requestModel.toString());
+//            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
+//            iResultSet.setData(requestModel);
+//            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
+//            renderJson(JSON.toJSONString(iResultSet));
+//            return;
+//        }
+//
+//        // 通过ID查找下级
+//        AgentEntity branchAgentEntity = this.iAgentServices.retrieveById(requestModel.getBranchId());
+//        if (branchAgentEntity == null) {
+//            this.logger.info("reject : 服务器内部错误 " + requestModel.toString());
+//            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
+//            iResultSet.setData(requestModel);
+//            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+//            renderJson(JSON.toJSONString(iResultSet));
+//            return;
+//        }
+//
+//        branchAgentEntity.setReach(0);
+//        boolean updateReach = iAgentServices.updateReach(branchAgentEntity);
+//        if (!updateReach) {
+//            this.logger.info("reject : 服务器内部错误 " + requestModel.toString());
+//            iResultSet.setCode(IResultSet.ResultCode.RC_SEVER_ERROR.getCode());
+//            iResultSet.setData(requestModel);
+//            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
+//            renderJson(JSON.toJSONString(iResultSet));
+//        } else {
+//            LevelEntity branchLevelEntity = iLevelServices.retrieveByLevel(branchAgentEntity.getLevel());
+//            MateModel mateModel = new MateModel(branchAgentEntity, branchLevelEntity);
+//            GrantBranchResponseModel grantBranchResponseModel = new GrantBranchResponseModel(mateModel);
+//            this.logger.info("reject : 拒绝代理加入成功 " + requestModel.toString());
+//            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+//            iResultSet.setData(grantBranchResponseModel);
+//            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
+//            renderJson(JSON.toJSONString(iResultSet));
+//        }
     }
 
     @Override
@@ -228,13 +207,12 @@ public class MateController extends Controller implements IMateController {
     public void leader() {
         String params = this.getAttr("p");
         TrunkInfoRequestModel requestModel = JSON.parseObject(params, TrunkInfoRequestModel.class);
-        IResultSet iResultSet = new ResultSet();
         if (!requestModel.isTokenParamsOk()) {
             this.logger.info("leader : 请求参数错误 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
-            renderJson(JSON.toJSONString(iResultSet));
+            TrunkInfoResponseModel trunkInfoResponseModel = new TrunkInfoResponseModel(requestModel);
+            trunkInfoResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
+            trunkInfoResponseModel.setMessage("参数错误，请重试");
+            renderJson(JSON.toJSONString(trunkInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
@@ -242,45 +220,31 @@ public class MateController extends Controller implements IMateController {
         AgentEntity branchAgent = this.iAgentServices.retrieveById(requestModel.getId());
         if (branchAgent == null) {
             this.logger.info("leader : 服务器内部错误 ,找不到自己的信息 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
-            renderJson(JSON.toJSONString(iResultSet));
+            TrunkInfoResponseModel trunkInfoResponseModel = new TrunkInfoResponseModel(requestModel);
+            trunkInfoResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
+            trunkInfoResponseModel.setMessage("系统错误，请重试");
+            renderJson(JSON.toJSONString(trunkInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
         AgentEntity trunkAgent = this.iAgentServices.retrieveById(branchAgent.getpId());
         if (trunkAgent == null) {
             this.logger.info("leader : 服务器内部错误 ,找不到上级信息" + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
-            renderJson(JSON.toJSONString(iResultSet));
+            TrunkInfoResponseModel trunkInfoResponseModel = new TrunkInfoResponseModel(requestModel);
+            trunkInfoResponseModel.setCode(ResponseModel.RC_NOT_FOUND);
+            trunkInfoResponseModel.setMessage("找不到上级，请重试");
+            renderJson(JSON.toJSONString(trunkInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
         this.logger.info("leader : 查找上级成功 " + requestModel.toString());
-        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
         LevelEntity trunkLevelEntity = iLevelServices.retrieveByLevel(trunkAgent.getLevel());
         MateModel trunkMateModel = new MateModel(trunkAgent, trunkLevelEntity);
-        TrunkInfoResponseModel trunkInfoResponseModel = new TrunkInfoResponseModel(trunkMateModel, branchAgent);
-        iResultSet.setData(trunkInfoResponseModel);
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        String string = JSON.toJSONString(iResultSet, new PropertyFilter() {
-            @Override
-            public boolean apply(Object object, String name, Object value) {
-                if ("password".equals(name)
-                        || "status".equals(name)
-                        || "pId".equals(name)
-                        || "named".equals(name)
-                        || "weight".equals(name)
-                        ) {
-                    return false;
-                }
-                return true;
-            }
-        });
-        renderJson(string);
+        TrunkInfoResponseModel trunkInfoResponseModel = new TrunkInfoResponseModel(requestModel, trunkMateModel, branchAgent);
+        trunkInfoResponseModel.setCode(ResponseModel.RC_SUCCESS);
+        trunkInfoResponseModel.setTrunk(trunkMateModel);
+        trunkInfoResponseModel.setMessage("查找成功");
+        renderJson(JSON.toJSONString(trunkInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
     }
 
     @Override
@@ -288,20 +252,23 @@ public class MateController extends Controller implements IMateController {
     public void mates() {
         String params = this.getAttr("p");
         BranchesRequestModel requestModel = JSON.parseObject(params, BranchesRequestModel.class);
-        IResultSet iResultSet = new ResultSet();
         if (!requestModel.isParamsOk()) {
-            this.logger.info("query : 请求参数错误 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
-            renderJson(JSON.toJSONString(iResultSet));
+            this.logger.info("mates : 请求参数错误 " + requestModel.toString());
+            BranchesResponseModel branchesResponseModel = new BranchesResponseModel(requestModel);
+            branchesResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
+            branchesResponseModel.setMessage("参数错误，请重试");
+            renderJson(JSON.toJSONString(branchesResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         } else {
             LinkedList<AgentEntity> branchesAgents = iAgentServices.retrieveByPid(requestModel.getId(), requestModel.getPageIndex(), requestModel.getPageSize());
-
+            BranchesResponseModel branchesResponseModel = new BranchesResponseModel(requestModel);
             if (branchesAgents == null || branchesAgents.size() == 0) {
-                iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
+                branchesResponseModel.setCode(ResponseModel.RC_EMPTY);
+                branchesResponseModel.setMessage("没有数据");
             } else {
-                iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
+                int countByPid = iAgentServices.countByPid(requestModel.getId());
+                branchesResponseModel.setCode(ResponseModel.RC_SUCCESS);
+                branchesResponseModel.setMessage("查询成功");
+                branchesResponseModel.setTotal(countByPid);
             }
 
             LinkedList<MateModel> branchesMates = new LinkedList<>();
@@ -309,24 +276,8 @@ public class MateController extends Controller implements IMateController {
                 LevelEntity levelEntity = iLevelServices.retrieveByLevel(branchAgent.getLevel());
                 branchesMates.add(new MateModel(branchAgent, levelEntity));
             }
-            BranchesResponseModel branchesResponseModel = new BranchesResponseModel();
             branchesResponseModel.setBranches(branchesMates);
-            iResultSet.setData(branchesResponseModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-            String resultJson = JSON.toJSONString(iResultSet, new PropertyFilter() {
-                @Override
-                public boolean apply(Object object, String name, Object value) {
-                    if ("password".equals(name)
-                            || "status".equals(name)
-                            || "named".equals(name)
-                            || "weight".equals(name)
-                            ) {
-                        return false;
-                    }
-                    return true;
-                }
-            });
-            renderJson(resultJson);
+            renderJson(JSON.toJSONString(branchesResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         }
     }
 
@@ -335,46 +286,29 @@ public class MateController extends Controller implements IMateController {
     public void mate() {
         String params = this.getAttr("p");
         BranchInfoRequestModel requestModel = JSON.parseObject(params, BranchInfoRequestModel.class);
-        IResultSet iResultSet = new ResultSet();
         if (!requestModel.isBranchInfoParamsOk()) {
             this.logger.info("query : 请求参数错误 " + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_PARAMS_BAD.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_PARAMETERS_BAD);
-            renderJson(JSON.toJSONString(iResultSet));
+            BranchInfoResponseModel branchInfoResponseModel = new BranchInfoResponseModel(requestModel);
+            branchInfoResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
+            branchInfoResponseModel.setMessage("参数错误，请重试");
+            renderJson(JSON.toJSONString(branchInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
 
         AgentEntity branchAgent = iAgentServices.retrieveById(requestModel.getBranchId());
         if (branchAgent == null) {
             this.logger.info("leader : 服务器内部错误 ,找不到下级信息" + requestModel.toString());
-            iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS_EMPTY.getCode());
-            iResultSet.setData(requestModel);
-            iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_ERROR);
-            renderJson(JSON.toJSONString(iResultSet));
+            BranchInfoResponseModel branchInfoResponseModel = new BranchInfoResponseModel(requestModel);
+            branchInfoResponseModel.setCode(ResponseModel.RC_NOT_FOUND);
+            branchInfoResponseModel.setMessage("找不到该ID，请重试");
+            renderJson(JSON.toJSONString(branchInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
         LevelEntity branchLevel = iLevelServices.retrieveByLevel(branchAgent.getLevel());
-
-        BranchInfoResponseModel branchInfoResponseModel = new BranchInfoResponseModel(new MateModel(branchAgent, branchLevel));
         LinkedList<LevelEntity> levelEntities = iLevelServices.retrieveTop();
-        branchInfoResponseModel.setLevels(levelEntities);
-        iResultSet.setCode(IResultSet.ResultCode.RC_SUCCESS.getCode());
-        iResultSet.setData(branchInfoResponseModel);
-        iResultSet.setMessage(IResultSet.ResultMessage.RM_SERVER_OK);
-        String resultJson = JSON.toJSONString(iResultSet, new PropertyFilter() {
-            @Override
-            public boolean apply(Object object, String name, Object value) {
-                if ("password".equals(name)
-                        || "status".equals(name)
-                        || "named".equals(name)
-                        || "weight".equals(name)
-                        ) {
-                    return false;
-                }
-                return true;
-            }
-        }, SerializerFeature.DisableCircularReferenceDetect);
-        renderJson(resultJson);
+        BranchInfoResponseModel branchInfoResponseModel = new BranchInfoResponseModel(requestModel, new MateModel(branchAgent, branchLevel), levelEntities);
+        branchInfoResponseModel.setCode(ResponseModel.RC_SUCCESS);
+        branchInfoResponseModel.setMessage("查找成功");
+        renderJson(JSON.toJSONString(branchInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
     }
 }

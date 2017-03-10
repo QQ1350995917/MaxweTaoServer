@@ -1,5 +1,6 @@
 package org.maxwe.tao.server.controller.mate.model;
 
+import org.maxwe.tao.server.common.response.ResponseModel;
 import org.maxwe.tao.server.service.level.LevelEntity;
 
 import java.util.List;
@@ -9,17 +10,22 @@ import java.util.List;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 代理查看下级信息的响应模型
  */
-public class BranchInfoResponseModel extends BranchInfoRequestModel {
+public class BranchInfoResponseModel extends ResponseModel<BranchInfoRequestModel> {
     private MateModel branch;
-    private List<LevelEntity> levels;
+    private List<LevelEntity> levels;//同时返回所有等级，便于客户端展示
 
     public BranchInfoResponseModel() {
         super();
     }
 
-    public BranchInfoResponseModel(MateModel branch) {
-        super();
+    public BranchInfoResponseModel(BranchInfoRequestModel requestModel) {
+        super(requestModel);
+    }
+
+    public BranchInfoResponseModel(BranchInfoRequestModel requestModel, MateModel branch, List<LevelEntity> levels) {
+        super(requestModel);
         this.branch = branch;
+        this.levels = levels;
     }
 
     public MateModel getBranch() {

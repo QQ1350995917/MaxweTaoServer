@@ -7,15 +7,9 @@ package org.maxwe.tao.server.controller.history;
  */
 public interface IHistoryController {
     /**
-     * 根据授权者的fromId查询
+     * 根据授权者的fromId查询（包括授权码交易和激活码生成）
      */
     void history();
-
-
-    /**
-     * 根据ID查询成交量（包括授权码交易和激活码生成）
-     */
-    void deal();
 
     /**
      * 根据ID查询授权业绩（激活业绩）

@@ -1,5 +1,6 @@
 package org.maxwe.tao.server.controller.trade.model;
 
+import org.maxwe.tao.server.common.response.ResponseModel;
 import org.maxwe.tao.server.controller.mate.model.MateModel;
 
 /**
@@ -7,7 +8,7 @@ import org.maxwe.tao.server.controller.mate.model.MateModel;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 代理之间发生授权码交易的响应模型
  */
-public class TradeResponseModel extends TradeRequestModel {
+public class TradeResponseModel extends ResponseModel<TradeRequestModel> {
     private MateModel branchAgent;
     private int codeNum;
     private float price;
@@ -17,22 +18,22 @@ public class TradeResponseModel extends TradeRequestModel {
         super();
     }
 
-    @Override
+    public TradeResponseModel(TradeRequestModel requestModel) {
+        super(requestModel);
+    }
+
     public MateModel getBranchAgent() {
         return branchAgent;
     }
 
-    @Override
     public void setBranchAgent(MateModel branchAgent) {
         this.branchAgent = branchAgent;
     }
 
-    @Override
     public int getCodeNum() {
         return codeNum;
     }
 
-    @Override
     public void setCodeNum(int codeNum) {
         this.codeNum = codeNum;
     }

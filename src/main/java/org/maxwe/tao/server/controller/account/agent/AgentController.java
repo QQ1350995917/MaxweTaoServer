@@ -112,7 +112,7 @@ public class AgentController extends Controller implements IAgentController {
             agentExistResponseModel.setMessage("系统错误，请重试");
             renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter,TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         } else {
-            CSEntity csEntity = new CSEntity(saveAgent.getId(), saveAgent.getCellphone(), TokenUtils.getToken(saveAgent.getCellphone(), requestModel.getPassword()), requestModel.getApt());
+            CSEntity csEntity = new CSEntity(saveAgent.getCellphone(), TokenUtils.getToken(saveAgent.getCellphone(), requestModel.getPassword()), requestModel.getApt());
             TokenContext.addCSEntity(csEntity);
             this.logger.info("create : 注册成功 " + requestModel.toString());
             //创建
@@ -149,7 +149,7 @@ public class AgentController extends Controller implements IAgentController {
             accountSignInResponseModel.setMessage("账户或密码错误");
             renderJson(JSON.toJSONString(accountSignInResponseModel, new SerializeFilter[]{TokenModel.propertyFilter,TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         } else {
-            CSEntity csEntity = new CSEntity(agentEntity.getId(), agentEntity.getCellphone(), TokenUtils.getToken(agentEntity.getCellphone(), requestModel.getPassword()), requestModel.getApt());
+            CSEntity csEntity = new CSEntity(agentEntity.getCellphone(), TokenUtils.getToken(agentEntity.getCellphone(), requestModel.getPassword()), requestModel.getApt());
             TokenContext.addCSEntity(csEntity);
             this.logger.info("login : 登录成功 " + requestModel.toString());
             TokenModel sessionModel = new TokenModel(csEntity.getToken(), agentEntity.getId(), agentEntity.getCellphone());
@@ -208,7 +208,7 @@ public class AgentController extends Controller implements IAgentController {
             accountLostResponseModel.setMessage("系统错误，请重试");
             renderJson(JSON.toJSONString(accountLostResponseModel, new SerializeFilter[]{TokenModel.propertyFilter,TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         } else {
-            CSEntity csEntity = new CSEntity(updateAgent.getId(), updateAgent.getCellphone(), TokenUtils.getToken(updateAgent.getCellphone(), requestModel.getPassword()), requestModel.getApt());
+            CSEntity csEntity = new CSEntity(updateAgent.getCellphone(), TokenUtils.getToken(updateAgent.getCellphone(), requestModel.getPassword()), requestModel.getApt());
             TokenContext.addCSEntity(csEntity);
             this.logger.info("lost : 找回密码成功 " + requestModel.toString());
             //创建
@@ -253,7 +253,7 @@ public class AgentController extends Controller implements IAgentController {
             accountModifyResponseModel.setMessage("系统错误，请重试");
             renderJson(JSON.toJSONString(accountModifyResponseModel, new SerializeFilter[]{TokenModel.propertyFilter,TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         } else {
-            CSEntity newCSEntity = new CSEntity(updateAgentEntity.getId(), updateAgentEntity.getCellphone(), TokenUtils.getToken(updateAgentEntity.getCellphone(), requestModel.getPassword()), requestModel.getApt());
+            CSEntity newCSEntity = new CSEntity(updateAgentEntity.getCellphone(), TokenUtils.getToken(updateAgentEntity.getCellphone(), requestModel.getPassword()), requestModel.getApt());
             TokenContext.addCSEntity(newCSEntity);
             this.logger.info("password : 修改密码成功 " + requestModel.toString());
             TokenModel sessionModel = new TokenModel(newCSEntity.getToken(), updateAgentEntity.getId(), updateAgentEntity.getCellphone());
@@ -269,7 +269,7 @@ public class AgentController extends Controller implements IAgentController {
     public void signout() {
         String params = this.getAttr("p");
         AccountSignOutRequestModel requestModel = JSON.parseObject(params, AccountSignOutRequestModel.class);
-        CSEntity csEntity = new CSEntity(0, requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
+        CSEntity csEntity = new CSEntity(requestModel.getCellphone(), requestModel.getT(), requestModel.getApt());
         TokenContext.delCSEntity(csEntity);
         this.logger.info("logout : 退出成功 " + requestModel.toString());
         AccountSignOutResponseModel accountSignOutResponseModel = new AccountSignOutResponseModel();

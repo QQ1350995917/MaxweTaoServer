@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>用户必看</title>
+    <title>关系-代理</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -14,44 +14,130 @@
 <body>
 <div class="panel panel-default" style="margin: 10px">
     <!-- Default panel contents -->
-    <div class="panel-heading">代理注册</div>
+    <div class="panel-heading">向上级代理提出加入申请 URL:<a href="../common/common.html#domain">domain</a>/mate/beg
+    </div>
     <div class="panel-body">
         <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/signup</p>
+            <p>请求参数</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>参数名</td>
+                    <td>类型</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>cellphone</td>
+                    <td>String</td>
+                    <td>18511694468</td>
+                    <td>手机号码</td>
+                </tr>
+            </table>
         </div>
 
         <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
+            <p>相应码及信息</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>响应码</td>
+                    <td>信息</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>200</td>
+                    <td>您输入的手机号码可用</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>400</td>
+                    <td>请您输入正确的手机号码</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>406</td>
+                    <td>您输入的手机号码已被注册</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
 
 <div class="panel panel-default" style="margin: 10px">
     <!-- Default panel contents -->
-    <div class="panel-heading">代理登录</div>
+    <div class="panel-heading">上级代理获取下级代理的列表 URL:<a href="../common/common.html#domain">domain</a>/mate/mates
+    </div>
     <div class="panel-body">
         <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/signup</p>
+            <p>请求参数</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>参数名</td>
+                    <td>类型</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>cellphone</td>
+                    <td>String</td>
+                    <td>18511694468</td>
+                    <td>手机号码</td>
+                </tr>
+            </table>
         </div>
 
         <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
+            <p>相应码及信息</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>响应码</td>
+                    <td>信息</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>200</td>
+                    <td>您输入的手机号码可用</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>400</td>
+                    <td>请您输入正确的手机号码</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>406</td>
+                    <td>您输入的手机号码已被注册</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
@@ -59,47 +145,197 @@
 
 <div class="panel panel-default" style="margin: 10px">
     <!-- Default panel contents -->
-    <div class="panel-heading">代理忘记密码</div>
+    <div class="panel-heading">上级代理同意下级加入 URL:<a href="../common/common.html#domain">domain</a>/mate/grant
+    </div>
     <div class="panel-body">
         <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/signup</p>
+            <p>请求参数</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>参数名</td>
+                    <td>类型</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>cellphone</td>
+                    <td>String</td>
+                    <td>18511694468</td>
+                    <td>手机号码</td>
+                </tr>
+            </table>
         </div>
 
         <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
+            <p>相应码及信息</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>响应码</td>
+                    <td>信息</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>200</td>
+                    <td>您输入的手机号码可用</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>400</td>
+                    <td>请您输入正确的手机号码</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>406</td>
+                    <td>您输入的手机号码已被注册</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
 
 <div class="panel panel-default" style="margin: 10px">
     <!-- Default panel contents -->
-    <div class="panel-heading">代理修改密码</div>
+    <div class="panel-heading">下级查看上级信息 URL:<a href="../common/common.html#domain">domain</a>/mate/leader
+    </div>
     <div class="panel-body">
         <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/signup</p>
+            <p>请求参数</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>参数名</td>
+                    <td>类型</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>cellphone</td>
+                    <td>String</td>
+                    <td>18511694468</td>
+                    <td>手机号码</td>
+                </tr>
+            </table>
         </div>
 
         <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
+            <p>相应码及信息</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>响应码</td>
+                    <td>信息</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>200</td>
+                    <td>您输入的手机号码可用</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>400</td>
+                    <td>请您输入正确的手机号码</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>406</td>
+                    <td>您输入的手机号码已被注册</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
 
+<div class="panel panel-default" style="margin: 10px">
+    <!-- Default panel contents -->
+    <div class="panel-heading">上级查看下级信息 URL:<a href="../common/common.html#domain">domain</a>/mate/mate
+    </div>
+    <div class="panel-body">
+        <div class="alert alert-success" role="alert">
+            <p>请求参数</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>参数名</td>
+                    <td>类型</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>cellphone</td>
+                    <td>String</td>
+                    <td>18511694468</td>
+                    <td>手机号码</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="alert alert-info" role="alert">
+            <p>相应码及信息</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>响应码</td>
+                    <td>信息</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>200</td>
+                    <td>您输入的手机号码可用</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>400</td>
+                    <td>请您输入正确的手机号码</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>406</td>
+                    <td>您输入的手机号码已被注册</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
 </body>
 </html>

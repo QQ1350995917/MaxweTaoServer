@@ -1,5 +1,7 @@
 package org.maxwe.tao.server.controller.mate.model;
 
+import org.maxwe.tao.server.common.response.ResponseModel;
+
 import java.util.List;
 
 /**
@@ -7,13 +9,22 @@ import java.util.List;
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
  * Description: 获取枝干下所有分支的响应模型
  */
-public class BranchesResponseModel extends BranchesRequestModel {
+public class BranchesResponseModel extends ResponseModel<BranchesRequestModel> {
     private int total;
-    private int totalPages;
     private List<MateModel> branches;
 
     public BranchesResponseModel() {
         super();
+    }
+
+    public BranchesResponseModel(BranchesRequestModel requestModel) {
+        super(requestModel);
+    }
+
+    public BranchesResponseModel(BranchesRequestModel requestModel, int total, List<MateModel> branches) {
+        super(requestModel);
+        this.total = total;
+        this.branches = branches;
     }
 
     public int getTotal() {
@@ -22,14 +33,6 @@ public class BranchesResponseModel extends BranchesRequestModel {
 
     public void setTotal(int total) {
         this.total = total;
-    }
-
-    public int getTotalPages() {
-        return totalPages;
-    }
-
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
     }
 
     public List<MateModel> getBranches() {

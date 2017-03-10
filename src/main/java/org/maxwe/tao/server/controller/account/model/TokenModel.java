@@ -46,7 +46,6 @@ public class TokenModel implements Serializable {
     private String t;//token字符串
     private int id;//用户ID
     private String cellphone;//电话号码
-    private String verification;
     private int apt; // 登录类型,在内存中标记token的类型
     private String sign;
 
@@ -84,14 +83,6 @@ public class TokenModel implements Serializable {
         this.cellphone = cellphone;
     }
 
-    public String getVerification() {
-        return verification;
-    }
-
-    public void setVerification(String verification) {
-        this.verification = verification;
-    }
-
     public int getApt() {
         return apt;
     }
@@ -123,8 +114,7 @@ public class TokenModel implements Serializable {
         if (this.getId() == 0 || !CellPhoneUtils.isCellphone(this.getCellphone())) {
             return null;
         }
-        String password = (this.getCellphone() + new StringBuffer(this.getCellphone()).reverse()).substring(1, 17);//生成的ID是11位，补全16位密码
-
+        String password = (this.getCellphone() + new StringBuffer(this.getCellphone()).reverse()).substring(1, 17);//电话号码是11位，补全16位密码
         String content = this.getId() + "-" + System.currentTimeMillis() + "-" + this.getCellphone();
         String encodeContent = new String(Base64.encodeBase64(content.getBytes()));
         byte[] encryptResult = CryptionUtils.encryptCustomer(encodeContent, password);
@@ -132,7 +122,7 @@ public class TokenModel implements Serializable {
         return encryptResultStr;
     }
 
-    @JSONField(serialize=false)
+    @JSONField(serialize = false)
     public boolean isCellphoneParamsOk() {
         if (!CellPhoneUtils.isCellphone(this.getCellphone())) {
             return false;
@@ -142,7 +132,7 @@ public class TokenModel implements Serializable {
 
     @JSONField(serialize = false)
     public boolean isDecryptSignOK() throws Exception {
-        String password = (this.getCellphone() + new StringBuffer(this.getCellphone()).reverse()).substring(1, 17);//生成的ID是11位，补全16位密码
+        String password = (this.getCellphone() + new StringBuffer(this.getCellphone()).reverse()).substring(1, 17);//电话号码是11位，补全16位密码
         byte[] decryptResult = CryptionUtils.decryptCustomer(CryptionUtils.parseHexStr2Byte(this.getSign()), password);
         byte[] decode = Base64.decodeBase64(decryptResult);
         String[] split = new String(decode).split("-");

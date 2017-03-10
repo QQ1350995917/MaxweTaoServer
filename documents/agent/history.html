@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>用户必看</title>
+    <title>记录-代理</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -14,89 +14,202 @@
 <body>
 <div class="panel panel-default" style="margin: 10px">
     <!-- Default panel contents -->
-    <div class="panel-heading">代理注册</div>
+    <div class="panel-heading">代理获取授权码历史记录 URL:<a href="../common/common.html#domain">domain</a>/mate/history
+    </div>
     <div class="panel-body">
         <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/signup</p>
+            <p>请求参数</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>参数名</td>
+                    <td>类型</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>t</td>
+                    <td>String</td>
+                    <td>HJFASDJFADSFADSFAJSDFJASDFJA...</td>
+                    <td>token</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>id</td>
+                    <td>number</td>
+                    <td>100000</td>
+                    <td>ID</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>cellphone</td>
+                    <td>String</td>
+                    <td>18511694468</td>
+                    <td>手机号码</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>apt</td>
+                    <td>number</td>
+                    <td>2</td>
+                    <td>固定值</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>sign</td>
+                    <td>String</td>
+                    <td>DFADKFKADFAKDSFASDFASD...</td>
+                    <td>签名</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>pageIndex</td>
+                    <td>number</td>
+                    <td>4</td>
+                    <td>第N页</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>pageSize</td>
+                    <td>number</td>
+                    <td>12</td>
+                    <td>数量</td>
+                </tr>
+            </table>
         </div>
 
         <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
+            <p>相应码及信息</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>响应码</td>
+                    <td>信息</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>200</td>
+                    <td>查询成功</td>
+                    <td>
+                        <pre>
+{
+    "code": 200,
+    "histories": [
+        {
+            "actCode": "GKR6RCLM",
+            "codeDeal": 0,
+            "codeNum": 1,
+            "createTime": 1488955499000,
+            "fromId": 100005,
+            "id": "fa0cc18f-db3a-477a-9be6-be660677ac8c",
+            "price": 0,
+            "toId": 52,
+            "type": 1,
+            "updateTime": 1488959553000
+        }
+    ],
+    "message": "查询成功",
+    "request": {
+        "cellphone": "18511694468",
+        "id": 100005,
+        "pageIndex": 0,
+        "pageSize": 20,
+        "sign": "******",
+        "t": "7287c8fe84919e49cf4163bcdcedcaec"
+    },
+    "total": 0
+}
+                        </pre>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>204</td>
+                    <td>没有数据了</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>400</td>
+                    <td>参数错误，请重试</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
 
 <div class="panel panel-default" style="margin: 10px">
     <!-- Default panel contents -->
-    <div class="panel-heading">代理登录</div>
-    <div class="panel-body">
-        <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/signup</p>
-        </div>
-
-        <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
-        </div>
+    <div class="panel-heading">代理获取授权码历史记录 URL:<a href="../common/common.html#domain">domain</a>/mate/history
     </div>
-</div>
-
-
-<div class="panel panel-default" style="margin: 10px">
-    <!-- Default panel contents -->
-    <div class="panel-heading">代理忘记密码</div>
     <div class="panel-body">
         <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/signup</p>
+            <p>请求参数</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>参数名</td>
+                    <td>类型</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>cellphone</td>
+                    <td>String</td>
+                    <td>18511694468</td>
+                    <td>手机号码</td>
+                </tr>
+            </table>
         </div>
 
         <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
-        </div>
-    </div>
-</div>
-
-<div class="panel panel-default" style="margin: 10px">
-    <!-- Default panel contents -->
-    <div class="panel-heading">代理修改密码</div>
-    <div class="panel-body">
-        <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/response_code.html#domain">domain</a>/agent/signup</p>
-        </div>
-
-        <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
+            <p>相应码及信息</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>响应码</td>
+                    <td>信息</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>200</td>
+                    <td>您输入的手机号码可用</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>400</td>
+                    <td>请您输入正确的手机号码</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>406</td>
+                    <td>您输入的手机号码已被注册</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
