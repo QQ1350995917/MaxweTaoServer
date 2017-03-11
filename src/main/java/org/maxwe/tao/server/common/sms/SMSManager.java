@@ -177,6 +177,6 @@ public class SMSManager {
 //            }
 //        }
 
-        sendSMS("18511694468");
+//        sendSMS("18511694468");
     }
 }

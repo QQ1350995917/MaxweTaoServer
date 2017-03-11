@@ -62,7 +62,7 @@ public class MateController extends Controller implements IMateController {
             this.logger.info("beg : 查找到的上级尚未通过授权 " + requestModel.toString());
             BranchBegResponseModel responseModel = new BranchBegResponseModel(requestModel);
             responseModel.setCode(ResponseModel.RC_FORBIDDEN);
-            responseModel.setMessage("你的上级不具备对您的授权权限");
+            responseModel.setMessage("您的上级不具备对您的授权权限");
             renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
@@ -104,6 +104,7 @@ public class MateController extends Controller implements IMateController {
             BranchBegResponseModel branchBegResponseModel = new BranchBegResponseModel(requestModel);
             branchBegResponseModel.setTrunk(trunkMateModel);
             branchBegResponseModel.setBranch(branchAgentEntity);
+            branchBegResponseModel.setCode(ResponseModel.RC_SUCCESS);
             branchBegResponseModel.setMessage("申请成功");
             renderJson(JSON.toJSONString(branchBegResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         }
@@ -148,9 +149,9 @@ public class MateController extends Controller implements IMateController {
             LevelEntity branchLevelEntity = iLevelServices.retrieveByLevel(branchAgentEntity.getLevel());
             MateModel branchMateModel = new MateModel(branchAgentEntity, branchLevelEntity);
             GrantBranchResponseModel grantBranchResponseModel = new GrantBranchResponseModel(requestModel);
-            grantBranchResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
+            grantBranchResponseModel.setCode(ResponseModel.RC_SUCCESS);
             grantBranchResponseModel.setBranch(branchMateModel);
-            grantBranchResponseModel.setMessage("系统错误，请重试");
+            grantBranchResponseModel.setMessage("授权代理加入成功");
             renderJson(JSON.toJSONString(grantBranchResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
@@ -232,7 +233,7 @@ public class MateController extends Controller implements IMateController {
             this.logger.info("leader : 服务器内部错误 ,找不到上级信息" + requestModel.toString());
             TrunkInfoResponseModel trunkInfoResponseModel = new TrunkInfoResponseModel(requestModel);
             trunkInfoResponseModel.setCode(ResponseModel.RC_NOT_FOUND);
-            trunkInfoResponseModel.setMessage("找不到上级，请重试");
+            trunkInfoResponseModel.setMessage("找不到上级");
             renderJson(JSON.toJSONString(trunkInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }

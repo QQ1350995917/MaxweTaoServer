@@ -12,6 +12,16 @@
     <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
 </head>
 <body>
+<div class="page-header" style="padding-left: 10px;padding-right: 10px">
+    <h2>代理关系接口五种<h2>
+    <ol>
+        <small><li>下级获取上级信息</li></small>
+        <small><li>下级指定上级ID，申请加入</li></small>
+        <small><li>上级获取下级列表</li></small>
+        <small><li>上级批准下级申请</li></small>
+        <small><li>上级获取下级信息</li></small>
+    </ol>
+</div>
 <div class="panel panel-default" style="margin: 10px">
     <!-- Default panel contents -->
     <div class="panel-heading">向上级代理提出加入申请 URL:<a href="../common/common.html#domain">domain</a>/mate/beg
@@ -31,10 +41,52 @@
                 </thead>
                 <tr>
                     <td>1</td>
+                    <td>t</td>
+                    <td>String</td>
+                    <td>HJFASDJFADSFADSFAJSDFJASDFJA...</td>
+                    <td>token</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>id</td>
+                    <td>number</td>
+                    <td>100000</td>
+                    <td>ID</td>
+                </tr>
+                <tr>
+                    <td>3</td>
                     <td>cellphone</td>
                     <td>String</td>
                     <td>18511694468</td>
                     <td>手机号码</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>apt</td>
+                    <td>number</td>
+                    <td>2</td>
+                    <td>固定值</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>sign</td>
+                    <td>String</td>
+                    <td>DFADKFKADFAKDSFASDFASD...</td>
+                    <td>签名</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>trunkId</td>
+                    <td>String</td>
+                    <td>100009</td>
+                    <td>上级ID</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>weChat</td>
+                    <td>String</td>
+                    <td>1234567890</td>
+                    <td>微信账号</td>
                 </tr>
             </table>
         </div>
@@ -54,21 +106,124 @@
                 <tr>
                     <td>1</td>
                     <td>200</td>
-                    <td>您输入的手机号码可用</td>
+                    <td>申请成功</td>
+                    <td>
+                        <pre>
+{
+    "branch": {
+        "bankTime": 0,
+        "cellphone": "18511694468",
+        "createTime": 1489199322000,
+        "haveCodes": 0,
+        "id": 100007,
+        "leftCodes": 0,
+        "level": 0,
+        "name": null,
+        "named": null,
+        "pId": 100006,
+        "pIdTime": 0,
+        "password": "******",
+        "reach": 0,
+        "reachTime": 0,
+        "spendCodes": 0,
+        "status": 1,
+        "trueName": null,
+        "updateTime": 1489199322000,
+        "wechat": "wwwww",
+        "weight": "0",
+        "zhifubao": null
+    },
+    "code": 200,
+    "message": "申请成功",
+    "request": {
+        "authenticatePassword": "******",
+        "cellphone": "18511694468",
+        "id": 100007,
+        "sign": "******",
+        "t": "66c49bea5f9b159e510f161cf4de343c",
+        "trunkId": 100006,
+        "weChat": "wwwww"
+    },
+    "trunk": {
+        "agent": {
+            "bankTime": 0,
+            "cellphone": "18511694469",
+            "createTime": 1489197776000,
+            "haveCodes": 1000,
+            "id": 100006,
+            "leftCodes": 1000,
+            "level": 2,
+            "name": null,
+            "named": null,
+            "pId": 100006,
+            "pIdTime": 1489190400000,
+            "password": "******",
+            "reach": 1,
+            "reachTime": 1489190400000,
+            "spendCodes": 0,
+            "status": 1,
+            "trueName": null,
+            "updateTime": 1489199231000,
+            "wechat": null,
+            "weight": "0",
+            "zhifubao": null
+        },
+        "level": {
+            "createTime": 1488804968000,
+            "description": null,
+            "id": "5bb24403-a8c0-4102-b01a-e96a5a15408a",
+            "level": 2,
+            "minNum": 50,
+            "name": "总代",
+            "price": 0,
+            "updateTime": 1488804968000,
+            "weight": 0
+        }
+    }
+}
+                        </pre>
+                    </td>
                     <td></td>
-                    <td>请求参数原样返回</td>
                 </tr>
                 <tr>
                     <td>2</td>
                     <td>400</td>
-                    <td>请您输入正确的手机号码</td>
+                    <td>参数错误，请重试</td>
                     <td></td>
                     <td>请求参数原样返回</td>
                 </tr>
                 <tr>
                     <td>3</td>
+                    <td>403</td>
+                    <td>您的上级不具备对您的授权权限</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>404</td>
+                    <td>该上级不存在，请确认ID</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>404</td>
+                    <td>该上级不存在，请确认ID</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>6</td>
                     <td>406</td>
-                    <td>您输入的手机号码已被注册</td>
+                    <td>您已经处于待授权确认状态</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>500</td>
+                    <td>密码错误</td>
                     <td></td>
                     <td>请求参数原样返回</td>
                 </tr>
@@ -96,10 +251,52 @@
                 </thead>
                 <tr>
                     <td>1</td>
+                    <td>t</td>
+                    <td>String</td>
+                    <td>HJFASDJFADSFADSFAJSDFJASDFJA...</td>
+                    <td>token</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>id</td>
+                    <td>number</td>
+                    <td>100000</td>
+                    <td>ID</td>
+                </tr>
+                <tr>
+                    <td>3</td>
                     <td>cellphone</td>
                     <td>String</td>
                     <td>18511694468</td>
                     <td>手机号码</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>apt</td>
+                    <td>number</td>
+                    <td>2</td>
+                    <td>固定值</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>sign</td>
+                    <td>String</td>
+                    <td>DFADKFKADFAKDSFASDFASD...</td>
+                    <td>签名</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>pageIndex</td>
+                    <td>number</td>
+                    <td>3</td>
+                    <td>页码</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>pageSize</td>
+                    <td>number</td>
+                    <td>12</td>
+                    <td>数量</td>
                 </tr>
             </table>
         </div>
@@ -119,21 +316,66 @@
                 <tr>
                     <td>1</td>
                     <td>200</td>
-                    <td>您输入的手机号码可用</td>
+                    <td>查询成功</td>
+                    <td>
+                        <pre>
+{
+    "branches": [
+        {
+            "agent": {
+                "bankTime": 0,
+                "cellphone": "18511694468",
+                "createTime": 1489199322000,
+                "haveCodes": 0,
+                "id": 100007,
+                "leftCodes": 0,
+                "level": 0,
+                "name": null,
+                "named": null,
+                "pId": 100006,
+                "pIdTime": 1489202727000,
+                "password": "******",
+                "reach": 0,
+                "reachTime": 0,
+                "spendCodes": 0,
+                "status": 1,
+                "trueName": null,
+                "updateTime": 1489202726000,
+                "wechat": "wwww",
+                "weight": "1",
+                "zhifubao": null
+            },
+            "level": null
+        }
+    ],
+    "code": 200,
+    "message": "查询成功",
+    "request": {
+        "cellphone": "18511694469",
+        "id": 100006,
+        "pageIndex": 0,
+        "pageSize": 20,
+        "paramsOk": true,
+        "sign": "******",
+        "t": "d1569befeb17938262a818e67c212b18"
+    },
+    "total": 2
+}
+                        </pre>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>204</td>
+                    <td>没有数据</td>
                     <td></td>
                     <td>请求参数原样返回</td>
                 </tr>
                 <tr>
                     <td>2</td>
                     <td>400</td>
-                    <td>请您输入正确的手机号码</td>
-                    <td></td>
-                    <td>请求参数原样返回</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>406</td>
-                    <td>您输入的手机号码已被注册</td>
+                    <td>参数错误，请重试</td>
                     <td></td>
                     <td>请求参数原样返回</td>
                 </tr>
@@ -162,10 +404,45 @@
                 </thead>
                 <tr>
                     <td>1</td>
+                    <td>t</td>
+                    <td>String</td>
+                    <td>HJFASDJFADSFADSFAJSDFJASDFJA...</td>
+                    <td>token</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>id</td>
+                    <td>number</td>
+                    <td>100000</td>
+                    <td>ID</td>
+                </tr>
+                <tr>
+                    <td>3</td>
                     <td>cellphone</td>
                     <td>String</td>
                     <td>18511694468</td>
                     <td>手机号码</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>apt</td>
+                    <td>number</td>
+                    <td>2</td>
+                    <td>固定值</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>sign</td>
+                    <td>String</td>
+                    <td>DFADKFKADFAKDSFASDFASD...</td>
+                    <td>签名</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>branchId</td>
+                    <td>number</td>
+                    <td>20009</td>
+                    <td>下级的ID</td>
                 </tr>
             </table>
         </div>
@@ -185,21 +462,69 @@
                 <tr>
                     <td>1</td>
                     <td>200</td>
-                    <td>您输入的手机号码可用</td>
+                    <td>授权代理加入成功</td>
+                    <td>
+                        <pre>
+{
+    "branch": {
+        "agent": {
+            "bankTime": 0,
+            "cellphone": "18511694468",
+            "createTime": 1489199322000,
+            "haveCodes": 0,
+            "id": 100007,
+            "leftCodes": 0,
+            "level": 0,
+            "name": null,
+            "named": null,
+            "pId": 100006,
+            "pIdTime": 1489202727000,
+            "password": "******",
+            "reach": 1,
+            "reachTime": 0,
+            "spendCodes": 0,
+            "status": 1,
+            "trueName": null,
+            "updateTime": 1489202726000,
+            "wechat": "wwww",
+            "weight": "1",
+            "zhifubao": null
+        },
+        "level": null
+    },
+    "code": 200,
+    "message": "授权代理加入成功",
+    "request": {
+        "branchId": 100007,
+        "cellphone": "18511694469",
+        "grantBranchParamsOk": true,
+        "id": 100006,
+        "sign": "******",
+        "t": "d1569befeb17938262a818e67c212b18"
+    }
+}
+                        </pre>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>400</td>
+                    <td>参数错误，请重试</td>
                     <td></td>
                     <td>请求参数原样返回</td>
                 </tr>
                 <tr>
                     <td>2</td>
-                    <td>400</td>
-                    <td>请您输入正确的手机号码</td>
+                    <td>404</td>
+                    <td>没找到该ID，请重试</td>
                     <td></td>
                     <td>请求参数原样返回</td>
                 </tr>
                 <tr>
                     <td>3</td>
                     <td>406</td>
-                    <td>您输入的手机号码已被注册</td>
+                    <td>系统错误，请重试</td>
                     <td></td>
                     <td>请求参数原样返回</td>
                 </tr>
@@ -227,10 +552,38 @@
                 </thead>
                 <tr>
                     <td>1</td>
+                    <td>t</td>
+                    <td>String</td>
+                    <td>HJFASDJFADSFADSFAJSDFJASDFJA...</td>
+                    <td>token</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>id</td>
+                    <td>number</td>
+                    <td>100000</td>
+                    <td>ID</td>
+                </tr>
+                <tr>
+                    <td>3</td>
                     <td>cellphone</td>
                     <td>String</td>
                     <td>18511694468</td>
                     <td>手机号码</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>apt</td>
+                    <td>number</td>
+                    <td>2</td>
+                    <td>固定值</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>sign</td>
+                    <td>String</td>
+                    <td>DFADKFKADFAKDSFASDFASD...</td>
+                    <td>签名</td>
                 </tr>
             </table>
         </div>
@@ -250,21 +603,113 @@
                 <tr>
                     <td>1</td>
                     <td>200</td>
-                    <td>您输入的手机号码可用</td>
-                    <td></td>
+                    <td>查找成功</td>
+                    <td>
+                        <pre>
+{
+    "branch": {
+        "bankTime": 0,
+        "cellphone": "18511694468",
+        "createTime": 1489199322000,
+        "haveCodes": 0,
+        "id": 100007,
+        "leftCodes": 0,
+        "level": 0,
+        "name": null,
+        "named": null,
+        "pId": 100006,
+        "pIdTime": 1489202332000,
+        "password": "******",
+        "reach": 0,
+        "reachTime": 0,
+        "spendCodes": 0,
+        "status": 1,
+        "trueName": null,
+        "updateTime": 1489202331000,
+        "wechat": "wwwww",
+        "weight": "1",
+        "zhifubao": null
+    },
+    "code": 200,
+    "message": "查找成功",
+    "request": {
+        "cellphone": "18511694468",
+        "id": 100007,
+        "sign": "******",
+        "t": "66c49bea5f9b159e510f161cf4de343c"
+    },
+    "trunk": {
+        "agent": {
+            "bankTime": 0,
+            "cellphone": "18511694469",
+            "createTime": 1489197776000,
+            "haveCodes": 1000,
+            "id": 100006,
+            "leftCodes": 1000,
+            "level": 2,
+            "name": null,
+            "named": null,
+            "pId": 100006,
+            "pIdTime": 1489190400000,
+            "password": "******",
+            "reach": 1,
+            "reachTime": 1489190400000,
+            "spendCodes": 0,
+            "status": 1,
+            "trueName": null,
+            "updateTime": 1489199231000,
+            "wechat": null,
+            "weight": "0",
+            "zhifubao": null
+        },
+        "level": {
+            "createTime": 1488804968000,
+            "description": null,
+            "id": "5bb24403-a8c0-4102-b01a-e96a5a15408a",
+            "level": 2,
+            "minNum": 50,
+            "name": "总代",
+            "price": 0,
+            "updateTime": 1488804968000,
+            "weight": 0
+        }
+    }
+}
+                        </pre>
+                    </td>
                     <td>请求参数原样返回</td>
                 </tr>
                 <tr>
                     <td>2</td>
                     <td>400</td>
-                    <td>请您输入正确的手机号码</td>
-                    <td></td>
+                    <td>参数错误，请重试</td>
                     <td>请求参数原样返回</td>
-                </tr>
                 <tr>
                     <td>3</td>
-                    <td>406</td>
-                    <td>您输入的手机号码已被注册</td>
+                    <td>404</td>
+                    <td>找不到上级</td>
+                    <td>
+                        <pre>
+{
+    "branch": null,
+    "code": 404,
+    "message": "找不到上级",
+    "request": {
+        "cellphone": "18511694468",
+        "id": 100007,
+        "sign": "******",
+        "t": "66c49bea5f9b159e510f161cf4de343c"
+    },
+    "trunk": null
+}
+                        </pre>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>500</td>
+                    <td>系统错误，请重试</td>
                     <td></td>
                     <td>请求参数原样返回</td>
                 </tr>
@@ -292,7 +737,42 @@
                 </thead>
                 <tr>
                     <td>1</td>
+                    <td>t</td>
+                    <td>String</td>
+                    <td>HJFASDJFADSFADSFAJSDFJASDFJA...</td>
+                    <td>token</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>id</td>
+                    <td>number</td>
+                    <td>100000</td>
+                    <td>ID</td>
+                </tr>
+                <tr>
+                    <td>3</td>
                     <td>cellphone</td>
+                    <td>String</td>
+                    <td>18511694468</td>
+                    <td>手机号码</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>apt</td>
+                    <td>number</td>
+                    <td>2</td>
+                    <td>固定值</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>sign</td>
+                    <td>String</td>
+                    <td>DFADKFKADFAKDSFASDFASD...</td>
+                    <td>签名</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>branchId</td>
                     <td>String</td>
                     <td>18511694468</td>
                     <td>手机号码</td>
@@ -315,21 +795,108 @@
                 <tr>
                     <td>1</td>
                     <td>200</td>
-                    <td>您输入的手机号码可用</td>
                     <td></td>
-                    <td>请求参数原样返回</td>
+                    <td>
+                        <pre>
+{
+    "branch": {
+        "agent": {
+            "bankTime": 0,
+            "cellphone": "18511694468",
+            "createTime": 1489199322000,
+            "haveCodes": 0,
+            "id": 100007,
+            "leftCodes": 0,
+            "level": 0,
+            "name": null,
+            "named": null,
+            "pId": 100006,
+            "pIdTime": 1489202727000,
+            "password": "******",
+            "reach": 1,
+            "reachTime": 1489203129000,
+            "spendCodes": 0,
+            "status": 1,
+            "trueName": null,
+            "updateTime": 1489203128000,
+            "wechat": "wwww",
+            "weight": "0",
+            "zhifubao": null
+        },
+        "level": null
+    },
+    "code": 200,
+    "levels": [
+        {
+            "createTime": 1488804963000,
+            "description": null,
+            "id": "6e37b285-5afd-4e58-a3b0-6b34e1e6b257",
+            "level": 1,
+            "minNum": 100,
+            "name": "联合创始人",
+            "price": 0,
+            "updateTime": 1488804963000,
+            "weight": 0
+        },
+        {
+            "createTime": 1488804968000,
+            "description": null,
+            "id": "5bb24403-a8c0-4102-b01a-e96a5a15408a",
+            "level": 2,
+            "minNum": 50,
+            "name": "总代",
+            "price": 0,
+            "updateTime": 1488804968000,
+            "weight": 0
+        },
+        {
+            "createTime": 1488804972000,
+            "description": null,
+            "id": "4e767f20-aeec-4936-9a2d-d9a458618d05",
+            "level": 3,
+            "minNum": 20,
+            "name": "一级代理",
+            "price": 0,
+            "updateTime": 1488804972000,
+            "weight": 0
+        },
+        {
+            "createTime": 1488804976000,
+            "description": null,
+            "id": "c3f3478f-4d81-46c9-aaf1-6efe613dbec6",
+            "level": 4,
+            "minNum": 3,
+            "name": "分销商",
+            "price": 0,
+            "updateTime": 1488804976000,
+            "weight": 0
+        }
+    ],
+    "message": "查找成功",
+    "request": {
+        "branchId": 100007,
+        "branchInfoParamsOk": true,
+        "cellphone": "18511694469",
+        "id": 100006,
+        "sign": "******",
+        "t": "d1569befeb17938262a818e67c212b18"
+    }
+}
+                        </pre>
+                    </td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td>2</td>
                     <td>400</td>
-                    <td>请您输入正确的手机号码</td>
+                    <td>参数错误，请重试</td>
                     <td></td>
                     <td>请求参数原样返回</td>
                 </tr>
                 <tr>
                     <td>3</td>
-                    <td>406</td>
-                    <td>您输入的手机号码已被注册</td>
+                    <td>404</td>
+                    <td>找不到该ID，请重试</td>
                     <td></td>
                     <td>请求参数原样返回</td>
                 </tr>

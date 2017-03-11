@@ -103,26 +103,86 @@
     "code": 200,
     "histories": [
         {
-            "actCode": "GKR6RCLM",
+            "actCode": "QK54S1PK",
             "codeDeal": 0,
             "codeNum": 1,
-            "createTime": 1488955499000,
-            "fromId": 100005,
-            "id": "fa0cc18f-db3a-477a-9be6-be660677ac8c",
+            "createTime": 1489210610000,
+            "fromId": 100006,
+            "id": "b79a4588-57d2-4ba3-99ec-9578d06909d6",
             "price": 0,
-            "toId": 52,
+            "toId": 0,
             "type": 1,
-            "updateTime": 1488959553000
+            "updateTime": 1489210610000
+        },
+        {
+            "actCode": null,
+            "codeDeal": 0,
+            "codeNum": 30,
+            "createTime": 1489212388000,
+            "fromId": 100006,
+            "id": "3ff318d3-8ac2-4788-8b0b-abc588913c84",
+            "price": 0,
+            "toId": 100007,
+            "type": 2,
+            "updateTime": 1489212388000
+        },
+        {
+            "actCode": null,
+            "codeDeal": 0,
+            "codeNum": 20,
+            "createTime": 1489207452000,
+            "fromId": 100006,
+            "id": "609b817a-4795-4bdf-9958-4faf70db2ec1",
+            "price": 0,
+            "toId": 100007,
+            "type": 2,
+            "updateTime": 1489207452000
+        },
+        {
+            "actCode": null,
+            "codeDeal": 0,
+            "codeNum": 3,
+            "createTime": 1489213861000,
+            "fromId": 100006,
+            "id": "bca01a26-e2d7-40e4-94d4-15886f50e647",
+            "price": 0,
+            "toId": 100008,
+            "type": 2,
+            "updateTime": 1489213861000
+        },
+        {
+            "actCode": null,
+            "codeDeal": 0,
+            "codeNum": 17,
+            "createTime": 1489213841000,
+            "fromId": 100006,
+            "id": "757a56cb-1b87-4d34-a0d8-c92fe4225606",
+            "price": 0,
+            "toId": 100008,
+            "type": 2,
+            "updateTime": 1489213841000
+        },
+        {
+            "actCode": null,
+            "codeDeal": 0,
+            "codeNum": 3,
+            "createTime": 1489213819000,
+            "fromId": 100006,
+            "id": "d3e4a8c3-2b28-48af-acfa-c6a679e4d95a",
+            "price": 0,
+            "toId": 100008,
+            "type": 2,
+            "updateTime": 1489213819000
         }
     ],
     "message": "查询成功",
     "request": {
-        "cellphone": "18511694468",
-        "id": 100005,
+        "cellphone": "18511694469",
+        "id": 100006,
         "pageIndex": 0,
         "pageSize": 20,
         "sign": "******",
-        "t": "7287c8fe84919e49cf4163bcdcedcaec"
+        "t": "b741de5274fc0c6dcb267f04ed383d75"
     },
     "total": 0
 }
@@ -151,7 +211,7 @@
 
 <div class="panel panel-default" style="margin: 10px">
     <!-- Default panel contents -->
-    <div class="panel-heading">代理获取授权码历史记录 URL:<a href="../common/common.html#domain">domain</a>/mate/history
+    <div class="panel-heading">代理获取返点 URL:<a href="../common/common.html#domain">domain</a>/mate/rebate
     </div>
     <div class="panel-body">
         <div class="alert alert-success" role="alert">
@@ -168,10 +228,59 @@
                 </thead>
                 <tr>
                     <td>1</td>
+                    <td>t</td>
+                    <td>String</td>
+                    <td>HJFASDJFADSFADSFAJSDFJASDFJA...</td>
+                    <td>token</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>id</td>
+                    <td>number</td>
+                    <td>100000</td>
+                    <td>ID</td>
+                </tr>
+                <tr>
+                    <td>3</td>
                     <td>cellphone</td>
                     <td>String</td>
                     <td>18511694468</td>
                     <td>手机号码</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>apt</td>
+                    <td>number</td>
+                    <td>2</td>
+                    <td>固定值</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>sign</td>
+                    <td>String</td>
+                    <td>DFADKFKADFAKDSFASDFASD...</td>
+                    <td>签名</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>year</td>
+                    <td>number</td>
+                    <td>4</td>
+                    <td>年份</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>month</td>
+                    <td>number</td>
+                    <td>12</td>
+                    <td>月份</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>monthCounter</td>
+                    <td>number</td>
+                    <td>12</td>
+                    <td>数量</td>
                 </tr>
             </table>
         </div>
@@ -191,21 +300,50 @@
                 <tr>
                     <td>1</td>
                     <td>200</td>
-                    <td>您输入的手机号码可用</td>
+                    <td>查询成功</td>
+                    <td>
+                        <pre>
+{
+    "code": 200,
+    "message": "查询成功",
+    "rebates": [
+        {
+            "month": 3,
+            "rebate": 0,
+            "year": 2017
+        },
+        {
+            "month": 2,
+            "rebate": 0,
+            "year": 2017
+        }
+    ],
+    "request": {
+        "cellphone": "18511694469",
+        "id": 100006,
+        "month": 3,
+        "monthCounter": 3,
+        "rebateParamsOk": true,
+        "sign": "******",
+        "t": "a21064831c7ff46c22a6b6f5775b1c81",
+        "year": 2017
+    }
+}
+                        </pre>
+                    </td>
                     <td></td>
-                    <td>请求参数原样返回</td>
                 </tr>
                 <tr>
                     <td>2</td>
                     <td>400</td>
-                    <td>请您输入正确的手机号码</td>
+                    <td>参数错误，请重试</td>
                     <td></td>
                     <td>请求参数原样返回</td>
                 </tr>
                 <tr>
                     <td>3</td>
-                    <td>406</td>
-                    <td>您输入的手机号码已被注册</td>
+                    <td>404</td>
+                    <td>亲，您还没有同等级的下级，要努力哟</td>
                     <td></td>
                     <td>请求参数原样返回</td>
                 </tr>

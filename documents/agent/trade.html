@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>用户必看</title>
+    <title>交易-代理</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -14,7 +14,7 @@
 <body>
 <div class="panel panel-default" style="margin: 10px">
     <!-- Default panel contents -->
-    <div class="panel-heading">代理生成激活码 URL:<a href="../../common/response_code.html#domain">domain</a>/trade/exist
+    <div class="panel-heading">代理生成激活码 URL:<a href="../../common/response_code.html#domain">domain</a>/trade/grant
     </div>
     <div class="panel-body">
         <div class="alert alert-success" role="alert">
@@ -31,10 +31,38 @@
                 </thead>
                 <tr>
                     <td>1</td>
+                    <td>t</td>
+                    <td>String</td>
+                    <td>HJFASDJFADSFADSFAJSDFJASDFJA...</td>
+                    <td>token</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>id</td>
+                    <td>number</td>
+                    <td>100000</td>
+                    <td>ID</td>
+                </tr>
+                <tr>
+                    <td>3</td>
                     <td>cellphone</td>
                     <td>String</td>
                     <td>18511694468</td>
                     <td>手机号码</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>apt</td>
+                    <td>number</td>
+                    <td>2</td>
+                    <td>固定值</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>sign</td>
+                    <td>String</td>
+                    <td>DFADKFKADFAKDSFASDFASD...</td>
+                    <td>签名</td>
                 </tr>
             </table>
         </div>
@@ -54,21 +82,60 @@
                 <tr>
                     <td>1</td>
                     <td>200</td>
-                    <td>您输入的手机号码可用</td>
+                    <td>授权成功</td>
+                    <td>
+                        <pre>
+{
+    "actCode": "QK54S1PK",
+    "code": 200,
+    "codeDeal": 0,
+    "codeNum": 1,
+    "message": "授权成功",
+    "price": 0,
+    "request": {
+        "authenticatePassword": "******",
+        "cellphone": "18511694469",
+        "id": 100006,
+        "sign": "******",
+        "t": "d1569befeb17938262a818e67c212b18"
+    }
+}
+                        </pre>
+                    </td>
                     <td></td>
-                    <td>请求参数原样返回</td>
                 </tr>
                 <tr>
                     <td>2</td>
                     <td>400</td>
-                    <td>请您输入正确的手机号码</td>
+                    <td>参数错误，请重试</td>
                     <td></td>
                     <td>请求参数原样返回</td>
                 </tr>
                 <tr>
                     <td>3</td>
-                    <td>406</td>
-                    <td>您输入的手机号码已被注册</td>
+                    <td>400</td>
+                    <td>您的账户授权量不足</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>403</td>
+                    <td>您的账户尚未激活，无权授权</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>409</td>
+                    <td>密码错误</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>500</td>
+                    <td>参数错误，请重试</td>
                     <td></td>
                     <td>请求参数原样返回</td>
                 </tr>
@@ -79,22 +146,195 @@
 
 <div class="panel panel-default" style="margin: 10px">
     <!-- Default panel contents -->
-    <div class="panel-heading">代理登录</div>
+    <div class="panel-heading">上级代理给下级代理转码 URL:<a href="../../common/response_code.html#domain">domain</a>/trade/trade
+    </div>
     <div class="panel-body">
         <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/common.html#domain">domain</a>/agent/signup</p>
+            <p>请求参数</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>参数名</td>
+                    <td>类型</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>t</td>
+                    <td>String</td>
+                    <td>HJFASDJFADSFADSFAJSDFJASDFJA...</td>
+                    <td>token</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>id</td>
+                    <td>number</td>
+                    <td>100000</td>
+                    <td>ID</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>cellphone</td>
+                    <td>String</td>
+                    <td>18511694468</td>
+                    <td>手机号码</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>apt</td>
+                    <td>number</td>
+                    <td>2</td>
+                    <td>固定值</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>sign</td>
+                    <td>String</td>
+                    <td>DFADKFKADFAKDSFASDFASD...</td>
+                    <td>签名</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>branchAgent</td>
+                    <td>MateModel</td>
+                    <td>Object</td>
+                    <td>MateModel实例</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>codeNum</td>
+                    <td>number</td>
+                    <td>8</td>
+                    <td>数量</td>
+                </tr>
+            </table>
         </div>
 
         <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
+            <p>相应码及信息</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>响应码</td>
+                    <td>信息</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>200</td>
+                    <td>转让成功</td>
+                    <td>
+                        <pre>
+{
+    "branchAgent": {
+        "agent": {
+            "bankTime": 0,
+            "cellphone": "18511694468",
+            "createTime": 1489199322000,
+            "haveCodes": 0,
+            "id": 100007,
+            "leftCodes": 0,
+            "level": 3,
+            "name": null,
+            "named": null,
+            "pId": 100006,
+            "pIdTime": 1489202727000,
+            "password": "******",
+            "reach": 1,
+            "reachTime": 1489203129000,
+            "spendCodes": 0,
+            "status": 1,
+            "trueName": null,
+            "updateTime": 1489203128000,
+            "wechat": "wwww",
+            "weight": "0",
+            "zhifubao": null
+        },
+        "level": {
+            "createTime": 1488804972000,
+            "description": null,
+            "id": "4e767f20-aeec-4936-9a2d-d9a458618d05",
+            "level": 3,
+            "minNum": 20,
+            "name": "一级代理",
+            "price": 0,
+            "updateTime": 1488804972000,
+            "weight": 0
+        }
+    },
+    "code": 200,
+    "codeDeal": 0,
+    "codeNum": 20,
+    "message": "转让成功",
+    "price": 0,
+    "request": null
+}
+                        </pre>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>400</td>
+                    <td>参数错误，请重试</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>400</td>
+                    <td>转让数量小于最小转让数量</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <td>4</td>
+                <td>400</td>
+                <td>转让数量不能小于0</td>
+                <td></td>
+                <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>400</td>
+                    <td>找不到下级，请重试</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>400</td>
+                    <td>找不到下级级别，请重试</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>404</td>
+                    <td>没找到，请重试</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>409</td>
+                    <td>密码错误</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>500</td>
+                    <td>发生错误，请重试</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
@@ -102,44 +342,271 @@
 
 <div class="panel panel-default" style="margin: 10px">
     <!-- Default panel contents -->
-    <div class="panel-heading">代理忘记密码</div>
-    <div class="panel-body">
-        <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/common.html#domain">domain</a>/agent/signup</p>
-        </div>
-
-        <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
-
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
-        </div>
+    <div class="panel-heading">上级代理给下级代理升级 URL:<a href="../../common/response_code.html#domain">domain</a>/trade/upgrade
     </div>
-</div>
-
-<div class="panel panel-default" style="margin: 10px">
-    <!-- Default panel contents -->
-    <div class="panel-heading">代理修改密码</div>
     <div class="panel-body">
         <div class="alert alert-success" role="alert">
-            <p>URL:<a href="../common/common.html#domain">domain</a>/agent/signup</p>
+            <p>请求参数</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>参数名</td>
+                    <td>类型</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>t</td>
+                    <td>String</td>
+                    <td>HJFASDJFADSFADSFAJSDFJASDFJA...</td>
+                    <td>token</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>id</td>
+                    <td>number</td>
+                    <td>100000</td>
+                    <td>ID</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>cellphone</td>
+                    <td>String</td>
+                    <td>18511694468</td>
+                    <td>手机号码</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>apt</td>
+                    <td>number</td>
+                    <td>2</td>
+                    <td>固定值</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>sign</td>
+                    <td>String</td>
+                    <td>DFADKFKADFAKDSFASDFASD...</td>
+                    <td>签名</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>branch</td>
+                    <td>MateModel</td>
+                    <td>Object</td>
+                    <td>AgentModel实例</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>upgradeToLevel</td>
+                    <td>LevelEntity</td>
+                    <td>Object</td>
+                    <td>要提升到级别</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>codeNum</td>
+                    <td>number</td>
+                    <td>8</td>
+                    <td>转码量</td>
+                </tr>
+            </table>
         </div>
-
         <div class="alert alert-info" role="alert">
-            <p>request params</p>
-        </div>
+            <p>相应码及信息</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>响应码</td>
+                    <td>信息</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>200</td>
+                    <td>升级成功</td>
+                    <td>
+                        <pre>
+{
+    "branch": {
+        "agent": {
+            "bankTime": 0,
+            "cellphone": "18511694468",
+            "createTime": 1489199322000,
+            "haveCodes": 20,
+            "id": 100007,
+            "leftCodes": 20,
+            "level": 2,
+            "name": null,
+            "named": null,
+            "pId": 100006,
+            "pIdTime": 1489202727000,
+            "password": "******",
+            "reach": 1,
+            "reachTime": 1489203129000,
+            "spendCodes": 0,
+            "status": 1,
+            "trueName": null,
+            "updateTime": 1489207452000,
+            "wechat": "wwww",
+            "weight": "0",
+            "zhifubao": null
+        },
+        "level": {
+            "createTime": 1488804972000,
+            "description": null,
+            "id": "4e767f20-aeec-4936-9a2d-d9a458618d05",
+            "level": 3,
+            "minNum": 20,
+            "name": "一级代理",
+            "price": 0,
+            "updateTime": 1488804972000,
+            "weight": 0
+        }
+    },
+    "code": 200,
+    "codeNum": 30,
+    "message": "升级成功",
+    "request": {
+        "authenticatePassword": "******",
+        "branch": {
+            "agent": {
+                "bankTime": 0,
+                "cellphone": "18511694468",
+                "createTime": 1489199322000,
+                "haveCodes": 20,
+                "id": 100007,
+                "leftCodes": 20,
+                "level": 0,
+                "name": null,
+                "named": null,
+                "pId": 100006,
+                "pIdTime": 1489202727000,
+                "password": "******",
+                "reach": 1,
+                "reachTime": 1489203129000,
+                "spendCodes": 0,
+                "status": 1,
+                "trueName": null,
+                "updateTime": 1489207452000,
+                "wechat": null,
+                "weight": null,
+                "zhifubao": null
+            },
+            "level": {
+                "createTime": 1488804972000,
+                "description": null,
+                "id": "4e767f20-aeec-4936-9a2d-d9a458618d05",
+                "level": 3,
+                "minNum": 20,
+                "name": "一级代理",
+                "price": 0,
+                "updateTime": 1488804972000,
+                "weight": 0
+            }
+        },
+        "cellphone": "18511694469",
+        "codeNum": 30,
+        "id": 100006,
+        "sign": "******",
+        "t": "d1569befeb17938262a818e67c212b18",
+        "upgradeRequestParamsOk": true,
+        "upgradeToLevel": {
+            "createTime": 1488804968000,
+            "description": null,
+            "id": "5bb24403-a8c0-4102-b01a-e96a5a15408a",
+            "level": 2,
+            "minNum": 50,
+            "name": "总代",
+            "price": 0,
+            "updateTime": 1488804968000,
+            "weight": 0
+        }
+    }
+}
+                        </pre>
+                    </td>
+                    <td>
 
-        <div class="alert alert-warning" role="alert">
-            <p>response code & message</p>
-        </div>
-
-        <div class="alert alert-danger" role="alert">
-            <p>response params</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>400</td>
+                    <td>参数错误，请重试</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>400</td>
+                    <td>您的授权数量不足</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>400</td>
+                    <td>不能给代理降级</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>400</td>
+                    <td>当前转让数量不足以升级</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>400</td>
+                    <td>当前转让数量不能小于0</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>404</td>
+                    <td>找不到下级账号</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>404</td>
+                    <td>找不到下级账号级别</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>404</td>
+                    <td>找不到升级的级别</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>409</td>
+                    <td>密码错误</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>500</td>
+                    <td>升级失败，请重试</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>

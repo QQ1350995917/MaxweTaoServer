@@ -178,7 +178,7 @@ public class TradeController extends Controller implements ITradeController {
             this.logger.info("trade : 找不到级别的ID " + requestModel.toString());
             TradeResponseModel responseModel = new TradeResponseModel(requestModel);
             responseModel.setCode(ResponseModel.RC_NOT_FOUND);
-            responseModel.setMessage("找不到下级，请重试");
+            responseModel.setMessage("找不到下级级别，请重试");
             renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
 
@@ -228,7 +228,7 @@ public class TradeController extends Controller implements ITradeController {
         tradeResponseModel.setCodeNum(requestModel.getCodeNum());
         tradeResponseModel.setPrice(branchLevel.getPrice());
         tradeResponseModel.setCodeDeal(requestModel.getCodeNum() * branchLevel.getPrice());
-        tradeResponseModel.setCodeNum(ResponseModel.RC_SUCCESS);
+        tradeResponseModel.setCode(ResponseModel.RC_SUCCESS);
         tradeResponseModel.setMessage("转让成功");
         renderJson(JSON.toJSONString(tradeResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
     }
@@ -293,7 +293,7 @@ public class TradeController extends Controller implements ITradeController {
             this.logger.info("update : 找不到分支账户对应级别的ID " + requestModel.toString());
             UpgradeResponseModel responseModel = new UpgradeResponseModel(requestModel);
             responseModel.setCode(ResponseModel.RC_NOT_FOUND);
-            responseModel.setMessage("找不到下级账号");
+            responseModel.setMessage("找不到下级账号级别");
             renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }

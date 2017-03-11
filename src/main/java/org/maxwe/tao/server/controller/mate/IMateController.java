@@ -20,6 +20,7 @@ public interface IMateController {
 
     /**
      * 拒绝下级的请求
+     * 暂时没有启用
      */
     void reject();
 
