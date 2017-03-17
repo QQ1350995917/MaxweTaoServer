@@ -1,6 +1,11 @@
 package org.maxwe.tao.server.service.tao.alimama.common;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
+import java.nio.charset.Charset;
+import java.util.Base64;
 import java.util.HashMap;
 
 /**
@@ -20,9 +25,9 @@ public class AliResponsePageEntity implements Serializable {
     private String shopTitle; // "隆缘裳服饰旗舰店",
     private String pictUrl; // "http; ////image.taobao.com/bao/uploaded/i4/TB1kA3XPXXXXXcJXXXXYXGcGpXX_M2.SS2",
     private String title; // "隆缘裳短裙2017春装新款<span class=H>女装</span>简约时尚立领长袖修身印花连衣裙1892",
-    private long auctionId; // 544504885384,
-    private long tkRate; // 14,
-    private float tkCommFee; // 55.72,
+    private long auctionId; // 544504885384,商品ID
+    private long tkRate; // 14,佣金率
+    private float tkCommFee; // 55.72, 佣金
     private long totalNum; // 0,
     private long totalFee; // 0,
     private String couponActivityId; // null,
@@ -56,6 +61,11 @@ public class AliResponsePageEntity implements Serializable {
     private String rootCategoryName; // null,
     private String couponOriLink; // null,
     private String userTypeName; // null
+
+    @JSONField(serialize = false)
+    private String jsonString;// 这个字段是简化web操作而设置的
+    @JSONField(serialize = false)
+    private String jsonBase64String;// 这个字段是简化web操作而设置的
 
     public AliResponsePageEntity() {
         super();
@@ -435,6 +445,14 @@ public class AliResponsePageEntity implements Serializable {
 
     public void setUserTypeName(String userTypeName) {
         this.userTypeName = userTypeName;
+    }
+
+    public String getJsonString() {
+        return JSON.toJSONString(this);
+    }
+
+    public String getJsonBase64String() {
+        return Base64.getEncoder().encodeToString(this.getJsonString().getBytes(Charset.forName("UTF-8")));
     }
 
     @Override

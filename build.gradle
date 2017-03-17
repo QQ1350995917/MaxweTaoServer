@@ -9,12 +9,12 @@ war.archiveName = "tao.war"
 
 sourceCompatibility = 1.8
 
-tomcat {
-    httpPort = 8080
-    httpsPort = 8443
-    enableSSL = true
-    contextPath = "/"
-}
+//tomcat {
+//    httpPort = 8080
+//    httpsPort = 8443
+//    enableSSL = true
+//    contextPath = "/"
+//}
 
 buildscript {
     repositories {
@@ -43,6 +43,7 @@ dependencies {
     compile 'mysql:mysql-connector-java:6.0.3'
     compile 'org.freemarker:freemarker:2.3.25-incubating'
     compile 'org.ehcache:ehcache:3.2.0'
+    compile 'net.sf.ehcache:ehcache-core:2.6.11'
     compile 'commons-logging:commons-logging:1.2'
     compile 'org.apache.logging.log4j:log4j:2.7'
     compile 'org.slf4j:slf4j-site:1.7.22'
@@ -58,10 +59,10 @@ dependencies {
 
     providedCompile 'javax.servlet:javax.servlet-api:4.0.0-b02'
 
-    def tomcatVersion = '7.0.59'
-    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
-            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
-            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+//    def tomcatVersion = '7.0.59'
+//    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+//            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
+//            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
 
 
 }

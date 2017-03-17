@@ -23,20 +23,6 @@ public class PageController extends Controller implements IPageController {
 
     @Override
     public void index() {
-//        if ("initdata".equals(this.getAttr("key"))) {
-//            int times = Integer.parseInt(this.getAttr("times").toString());
-//            LinkedList<Record> records = new LinkedList<>();
-//            for (int i = 0; i < times; i++) {
-//                Record agentRecord = new Record()
-//                        .set("agentId", UUID.randomUUID().toString())
-//                        .set("cellphone", "185" + String.format("%08d", i))
-//                        .set("password1", "111111")
-//                        .set("code", "185" + String.format("%08d", i));
-//                records.add(agentRecord);
-//            }
-//            Db.batchSave("mate", records, 100);
-//        }
-//        this.renderJson("OK");
         this.render("/webapp/widgets/index.html");
     }
 
@@ -48,15 +34,15 @@ public class PageController extends Controller implements IPageController {
     public void addm() {
         this.setAttr("managerMenus", ManagerController.managerMenus);
         this.setAttr("workMenus", ManagerController.workMenus);
-        this.setAttr("publicKey",this.getSessionAttr("publicKey"));
+        this.setAttr("publicKey", this.getSessionAttr("publicKey"));
         this.render("/webapp/widgets/managerCreate.view.html");
     }
 
     @Override
     public void password() {
         ManagerEntity manager = this.getSessionAttr("manager");
-        this.setAttr("manager",manager);
-        this.setAttr("publicKey",this.getSessionAttr("publicKey"));
+        this.setAttr("manager", manager);
+        this.setAttr("publicKey", this.getSessionAttr("publicKey"));
         this.render("/webapp/widgets/managerPassword.view.html");
     }
 
@@ -69,33 +55,34 @@ public class PageController extends Controller implements IPageController {
     @Override
     public void grant() {
         String loginName = this.getPara("loginName");
-        if (StringUtils.isEmpty(loginName)){
+        if (StringUtils.isEmpty(loginName)) {
             renderError(400);
             return;
         }
         ManagerEntity managerEntity = new ManagerServices().retrieveByLoginName(loginName);
-        if (managerEntity == null){
+        if (managerEntity == null) {
             renderError(500);
             return;
         }
 
         String access = managerEntity.getAccess();
         List<String> strings = new LinkedList<>();
-        if (access!= null){
+        if (access != null) {
             strings = JSON.parseObject(access, List.class);
         }
-        for (MenuEntity menuEntity : ManagerController.managerMenus){
-            if (strings.contains(menuEntity.getId())){
+
+        for (MenuEntity menuEntity : ManagerController.managerMenus) {
+            if (strings.contains(menuEntity.getId())) {
                 menuEntity.setGranted(true);
-            }else{
+            } else {
                 menuEntity.setGranted(false);
             }
         }
 
-        for (MenuEntity menuEntity : ManagerController.workMenus){
-            if (strings.contains(menuEntity.getId())){
+        for (MenuEntity menuEntity : ManagerController.workMenus) {
+            if (strings.contains(menuEntity.getId())) {
                 menuEntity.setGranted(true);
-            }else{
+            } else {
                 menuEntity.setGranted(false);
             }
         }
@@ -113,11 +100,6 @@ public class PageController extends Controller implements IPageController {
 
     @Override
     public void users() {
-//        this.setAttr("title", "食坊-协议");
-//        LinkedList<String> javaScripts = new LinkedList<>();
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/toast.js\"></script>");
-//        javaScripts.add("<script type=\"text/javascript\" src=\"" + this.getRequest().getContextPath() + "/webapp/asserts/index.js\"></script>");
-//        this.setAttr("javaScripts", javaScripts);
         this.render("/webapp/widgets/systemUserList.html");
     }
 
@@ -129,14 +111,16 @@ public class PageController extends Controller implements IPageController {
     @Override
     @Before({TokenInterceptor.class, ManagerInterceptor.class})
     public void frame() {
-//        String params = getAttr("p");
-//        Map<String, Object> paramsMap = JSON.parseObject(params, Map.class);
-//        HttpSession session = SessionContext.getSession(paramsMap.get("cs").toString());
 //        // TODO 把JS文件进行拆分 根据管理员的权限进行动态分配JS文件
         this.render("/webapp/widgets/frame.html");
     }
 
     public void api() {
         this.render("/webapp/widgets/tao.html");
+    }
+
+    @Override
+    public void addGoodsView() {
+        this.render("/webapp/widgets/businessAddData.view.html");
     }
 }

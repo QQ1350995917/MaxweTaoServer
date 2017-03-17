@@ -25,11 +25,9 @@ function onMenuClick(id, object) {
     } else if (id == "204") {
         createManagerLevelView(0, 12);
     } else if (id == "300") {
-        emptyMainContainer();
-        $("#mainContainer").append("没数据");
+        createGoodsListView(0,12);
     } else if (id == "301") {
-        emptyMainContainer();
-        $("#mainContainer").append("没数据");
+        createGoodsAddView();
     } else if (id == "302") {
         createThirdDataView();
     }
@@ -384,4 +382,3 @@ function createThirdDataView() {
         alert("登录超时");
     });
 }
-

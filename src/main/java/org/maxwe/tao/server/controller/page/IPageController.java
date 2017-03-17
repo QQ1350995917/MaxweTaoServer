@@ -44,7 +44,6 @@ public interface IPageController {
 
     /**
      * short of Page Protocol
-     *
      */
     void users();
 
@@ -59,5 +58,9 @@ public interface IPageController {
      */
     void frame();
 
+    /**
+     * 管理员请求添加站内商品的页面
+     */
+    void addGoodsView();
 
 }

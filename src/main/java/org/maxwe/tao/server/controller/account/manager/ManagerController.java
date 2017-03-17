@@ -19,10 +19,7 @@ import org.maxwe.tao.server.service.manager.ManagerEntity;
 import org.maxwe.tao.server.service.manager.ManagerServices;
 import org.maxwe.tao.server.service.menu.MenuEntity;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Pengwei Ding on 2017-02-09 21:09.
@@ -36,6 +33,7 @@ public class ManagerController extends Controller implements IManagerController 
     public static final List<MenuEntity> superMenus = new LinkedList<>();
     public static final List<MenuEntity> managerMenus = new LinkedList<>();
     public static final List<MenuEntity> workMenus = new LinkedList<>();
+    public static final HashMap<String,String> workMenusLabel = new LinkedHashMap<>();
 
     static {
         superMenus.add(new MenuEntity("100", "系统总览", "system", 0, 2, 2, ""));
@@ -55,7 +53,18 @@ public class ManagerController extends Controller implements IManagerController 
         workMenus.add(new MenuEntity("300", "商品管理", "tao", 0, 3, 2, "manager/tao"));
         workMenus.add(new MenuEntity("301", "站内发布", "publish", 1, 3, 2, "manager/publish"));
         workMenus.add(new MenuEntity("302", "三方数据", "tao", 2, 3, 2, "manager/tao"));
+
+        workMenusLabel.put("200", "账号管理");
+        workMenusLabel.put("201", "添加账号");
+        workMenusLabel.put("204", "代理级别");
+        workMenusLabel.put("202", "代理总览");
+        workMenusLabel.put("203", "用户总览");
+        workMenusLabel.put("300", "商品管理");
+        workMenusLabel.put("301", "站内发布");
+        workMenusLabel.put("302", "三方数据");
     }
+
+
 
     @Override
     public void login() {
@@ -316,6 +325,7 @@ public class ManagerController extends Controller implements IManagerController 
     }
 
     @Override
+    @Before(SessionInterceptor.class)
     public void users() {
         int pageIndex = this.getParaToInt("pageIndex");
         int pageSize = this.getParaToInt("pageSize") == 0 ? 12 : this.getParaToInt("pageSize");
@@ -330,7 +340,7 @@ public class ManagerController extends Controller implements IManagerController 
     @Override
     @Before(SessionInterceptor.class)
     public void goods() {
-
+        render("/webapp/widgets/businessListData.view.html");
     }
 
     @Override

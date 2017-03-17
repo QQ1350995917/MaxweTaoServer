@@ -12,6 +12,16 @@ import org.maxwe.tao.server.controller.account.model.TokenModel;
  * 构建淘妈咪系统内的商品请求统一模型
  */
 public class GoodsRequestModel extends TokenModel {
+    @JSONField(serialize=false)
+    public static final int GOODS_TAO_BAO = 0;
+    @JSONField(serialize=false)
+    public static final int GOODS_GAO_YONG = 1;
+    @JSONField(serialize=false)
+    public static final int GOODS_TAO_MA_MI = 2;
+    @JSONField(serialize=false)
+    public static final int GOODS_OTHER = 3;
+
+
     private long toPage = 1;// 页面
     private long perPageSize = 20;// 页面数据量
     private String q; // 查询关键字

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h2 id="backups" class="page-header">
+    站内商品数据添加
+</h2>
+<nav class="navbar navbar-default">
+    <form id="generateGoodsForm" class="navbar-form navbar-left form" role="form" style="width: 100%" method="post">
+        <div>
+            <div class="form-group" style="width:90%;float: left">
+                <#if url?exists>
+                    <input name="url" type="url" class="form-control col-lg-0" style="width:100%"
+                           placeholder="请输入商品的URL" autofocus
+                           required value="${url}">
+                    <#else>
+                        <input name="url" type="url" class="form-control col-lg-0" style="width:100%"
+                               placeholder="请输入商品的URL"
+                               required>
+                </#if>
+            </div>
+            <div style="width:10%;float: left">
+                <button type="submit" class="btn btn-default" style="width:100%" onclick="">查看</button>
+            </div>
+        </div>
+    </form>
+</nav>
+<#if goods?exists>
+    <#list goods as good>
+        <div class="jumbotron" style="width: 100%;height: 300px;padding: 3px">
+            <div style="width: 30%;float: left;">
+                <img src="${good.pictUrl}" style="width: 100%;height: 100%;">
+            </div>
+            <div style="width: 50%;float: left;">
+                <div class="list-group">
+                    <div class="list-group-item"
+                         style="width: 100%;word-break: break-all;text-overflow :ellipsis;word-wrap:break-word;white-space:nowrap;">
+                        店铺：${good.shopTitle}
+                    </div>
+                    <div class="list-group-item"
+                         style="width: 100%;word-break: break-all;text-overflow :ellipsis;word-wrap:break-word;white-space:nowrap;">
+                        商品：${good.title}
+                    </div>
+                    <div class="list-group-item">
+                        <span>价格：${good.zkPrice}</span>&nbsp
+                        <span>比率：${good.tkRate}%</span>&nbsp
+                        <span>佣金：${good.tkCommFee}</span>
+                    </div>
+                    <div class="list-group-item">满减：${good.couponInfo}</div>
+                    <div class="list-group-item">
+                        <span>券额：${good.couponAmount}</span>&nbsp
+                        <span>剩余券量：${good.couponLeftCount}</span>
+                    </div>
+                    <div class="list-group-item">结束时间：${good.couponEffectiveEndTime}</div>
+                </div>
+            </div>
+            <div style="width: 20%;height: 100%;float: left;">
+                <button id="${good.auctionId}" class="btn btn-default btn-lg" style="width:100%;height: 100%" onclick="publishGoods('${good.auctionId}','${good.jsonBase64String}')">保存</button>
+            </div>
+        </div>
+    </#list>
+</#if>
+</body>
+<script type="text/javascript" src="../webapp/asserts/js/business.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        console.log($("#token").val());
+    })
+</script>
+</html>

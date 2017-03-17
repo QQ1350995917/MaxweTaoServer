@@ -3,13 +3,9 @@ package org.maxwe.tao.server.controller.tao;
 /**
  * Created by Pengwei Ding on 2017-02-11 12:29.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description:
+ * Description: 商品控制器
  */
 public interface ITaoController {
-//    /**
-//     * 商品查询
-//     */
-//    void query();
 //    /**
 //     * 后去淘口令
 //     */
@@ -39,4 +35,27 @@ public interface ITaoController {
     void brands();
 
     void createBrands();
+
+    /**
+     * 站内商品添加
+     * 之前生成的查找结果
+     */
+    void generate();
+
+    /**
+     * 站内商品添加
+     */
+    void publish();
+
+    /**
+     * 站内商品查询
+     * 供web端后台管理查询使用
+     */
+    void query();
+
+    /**
+     * 删除站内商品
+     */
+    void delete();
+
 }

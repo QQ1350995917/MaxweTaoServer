@@ -115,6 +115,9 @@ public class PasswordUtils {
             index1 = 1;
         }
         int index2 = Integer.parseInt(cellphone.substring(index1 - 1, index1));
+        if (index2 == 0){
+            index2 = 2;
+        }
         String p1 = cellphone.substring(index1 - 1, index1);
         String p2 = cellphone.substring(index2 - 1, index2);
         return p1 + p2;

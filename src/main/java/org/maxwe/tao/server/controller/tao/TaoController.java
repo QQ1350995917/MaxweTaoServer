@@ -1,15 +1,18 @@
 package org.maxwe.tao.server.controller.tao;
 
+import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
+import org.maxwe.tao.server.common.cache.tao.TaoGoodsCache;
 import org.maxwe.tao.server.common.response.ResponseModel;
 import org.maxwe.tao.server.controller.account.model.TokenModel;
 import org.maxwe.tao.server.controller.tao.model.alimama.*;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
+import org.maxwe.tao.server.interceptor.SessionInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.tao.alimama.brand.BrandServices;
 import org.maxwe.tao.server.service.tao.alimama.brand.GuideEntity;
@@ -20,6 +23,8 @@ import org.maxwe.tao.server.service.tao.alimama.convert.AliConvertServices;
 import org.maxwe.tao.server.service.tao.alimama.goods.AliGoodsRequestModel;
 import org.maxwe.tao.server.service.tao.alimama.goods.GoodsServices;
 
+import java.nio.charset.Charset;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -55,23 +60,29 @@ public class TaoController extends Controller implements ITaoController {
 
         try {
             logger.info("search : 查询条件 " + requestModel.toString());
-            List<AliResponsePageEntity> aliResponsePageEntities = GoodsServices.searchForGoods(aliGoodsRequestModel);
+            List<AliResponsePageEntity> aliResponsePageEntities = null;
+            if (requestModel.getUrlType() == GoodsRequestModel.GOODS_TAO_BAO || requestModel.getUrlType() == GoodsRequestModel.GOODS_GAO_YONG) {
+                aliResponsePageEntities = GoodsServices.searchForGoods(aliGoodsRequestModel);
+            } else if (requestModel.getUrlType() == GoodsRequestModel.GOODS_TAO_MA_MI) {
+                aliResponsePageEntities = TaoGoodsCache.getInstance().list(requestModel.getToPage() - 1, requestModel.getPerPageSize());
+            }
+
             if (aliResponsePageEntities == null) {
                 logger.info("search : 查询结果 null ");
                 GoodsResponseModel responseModel = new GoodsResponseModel(requestModel);
                 responseModel.setCode(ResponseModel.RC_NOT_FOUND);
-                responseModel.setMessage("没有数据，请更换查询参数");
+                responseModel.setMessage("没有数据了");
                 renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{GoodsRequestModel.propertyFilter, TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
                 return;
             }
             if (aliResponsePageEntities.size() < 1) {
                 GoodsResponseModel responseModel = new GoodsResponseModel(requestModel);
                 responseModel.setCode(ResponseModel.RC_EMPTY);
-                responseModel.setMessage("没有数据，请更换查询参数");
+                responseModel.setMessage("没有数据了");
                 renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{GoodsRequestModel.propertyFilter, TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             } else {
                 logger.info("search : 查询结果总量 " + aliResponsePageEntities.size());
-                logger.debug("search : 查询结果信息 " + aliResponsePageEntities.toString());
+                logger.debug("search : 查询第一个结果信息 " + aliResponsePageEntities.get(0).toString());
                 GoodsResponseModel responseModel = new GoodsResponseModel(requestModel);
                 responseModel.setCode(ResponseModel.RC_SUCCESS);
                 responseModel.setMessage("查询成功");
@@ -212,5 +223,86 @@ public class TaoController extends Controller implements ITaoController {
             responseModel.setMessage("发生错误，请重试");
             renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{GoodsRequestModel.propertyFilter, TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         }
+    }
+
+
+    @Override
+    @Before(SessionInterceptor.class)
+    public void generate() {
+        String url = this.getPara("url");// 商品的URL
+        if (StringUtils.isEmpty(url)) {
+            this.render("/webapp/widgets/businessAddData.view.html");
+        } else {
+            AliGoodsRequestModel aliGoodsRequestModel = new AliGoodsRequestModel();
+            aliGoodsRequestModel.setToPage(0);
+            aliGoodsRequestModel.setPerPageSize(12);
+            aliGoodsRequestModel.setQ(url);
+
+            try {
+                List<AliResponsePageEntity> aliResponsePageEntities = GoodsServices.searchForGoods(aliGoodsRequestModel);
+                if (aliResponsePageEntities == null || aliResponsePageEntities.size() < 1) {
+                    logger.info("generate : 查询结果 null ");
+                    this.setAttr("url", url);// 商品的URL原路返回
+                    this.setAttr("message", "该商品或已下架");
+                    this.render("/webapp/widgets/businessAddData.view.html");
+                } else {
+                    logger.info("generate : 查询结果总量 " + aliResponsePageEntities.size());
+                    logger.debug("generate : 查询结果信息 " + aliResponsePageEntities.toString());
+                    this.setAttr("url", url);// 商品的URL原路返回
+                    this.setAttr("goods", aliResponsePageEntities);
+                    this.render("/webapp/widgets/businessAddData.view.html");
+                }
+            } catch (Exception e) {
+                logger.info("generate : 查询结果异常");
+                e.printStackTrace();
+                this.setAttr("url", url);// 商品的URL原路返回
+                this.setAttr("message", "该商品或已下架");
+                this.render("/webapp/widgets/businessAddData.view.html");
+            }
+        }
+    }
+
+    @Override
+    public void publish() {
+        String goods = this.getPara("goods");// 商品的信息
+        if (StringUtils.isEmpty(goods)) {
+            renderError(400);
+        } else {
+            goods = new String(Base64.getDecoder().decode(goods), Charset.forName("UTF-8"));
+            logger.info("publish : 发布信息 " + goods);
+            AliResponsePageEntity aliResponsePageEntity = JSON.parseObject(goods, AliResponsePageEntity.class);
+            TaoGoodsCache.getInstance().add(aliResponsePageEntity);
+            renderJson("{\"result\":\"ok\"}");
+        }
+    }
+
+    @Override
+    public void query() {
+        int pageIndex = this.getParaToInt("pageIndex") == null ? 0 : this.getParaToInt("pageIndex");
+        int pageSize = this.getParaToInt("pageSize") == null ? 12 : this.getParaToInt("pageSize");
+        List<AliResponsePageEntity> aliResponsePageEntities = TaoGoodsCache.getInstance().list(pageIndex, pageSize);
+        if (aliResponsePageEntities != null && aliResponsePageEntities.size() > 0) {
+            this.setAttr("goods", aliResponsePageEntities);
+        }
+        this.setAttr("pageIndex", pageIndex);
+        this.setAttr("pageSize", pageSize);
+        this.render("/webapp/widgets/businessListData.view.html");
+    }
+
+    @Override
+    public void delete() {
+        int pageIndex = this.getParaToInt("pageIndex") == null ? 0 : this.getParaToInt("pageIndex");
+        int pageSize = this.getParaToInt("pageSize") == null ? 12 : this.getParaToInt("pageSize");
+        Long[] deletes = this.getParaValuesToLong("delete");
+        if (deletes != null && deletes.length > 0) {
+            TaoGoodsCache.getInstance().remove(deletes);
+        }
+        List<AliResponsePageEntity> aliResponsePageEntities = TaoGoodsCache.getInstance().list(pageIndex, pageSize);
+        if (aliResponsePageEntities != null && aliResponsePageEntities.size() > 0) {
+            this.setAttr("goods", aliResponsePageEntities);
+        }
+        this.setAttr("pageIndex", pageIndex);
+        this.setAttr("pageSize", pageSize);
+        this.render("/webapp/widgets/businessListData.view.html");
     }
 }

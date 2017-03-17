@@ -16,6 +16,7 @@ import org.maxwe.tao.server.service.tao.jidi.JiDiServices;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.UUID;
 
@@ -140,13 +141,17 @@ public class SystemController extends Controller implements ISystemController {
                 FileInputStream fileInputStream = new FileInputStream(file);
                 byte[] bytes = new byte[fileInputStream.available()];
                 fileInputStream.read(bytes, 0, bytes.length);
-                renderText(new String(bytes), "text/plain");
+                this.setAttr("logger", new String(bytes, Charset.forName("UTF-8")));
+                fileInputStream.close();
+                render("/webapp/widgets/logger.html");
             } else {
                 File file = new File(ApplicationConfigure.LOGGER_REAL_TIME + "/tao." + date + ".log");
                 FileInputStream fileInputStream = new FileInputStream(file);
                 byte[] bytes = new byte[fileInputStream.available()];
                 fileInputStream.read(bytes, 0, bytes.length);
-                renderText(new String(bytes), "text/plain");
+                this.setAttr("logger", new String(bytes, Charset.forName("UTF-8")));
+                fileInputStream.close();
+                render("/webapp/widgets/logger.html");
             }
         } catch (Exception e) {
             render(e.getMessage());

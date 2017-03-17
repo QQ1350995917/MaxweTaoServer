@@ -1,7 +1,10 @@
 package org.maxwe.tao.server.service.manager;
 
+import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.maxwe.tao.server.common.utils.DateTimeUtils;
+import org.maxwe.tao.server.controller.account.manager.ManagerController;
 
 import java.io.Serializable;
 
@@ -20,6 +23,8 @@ public class ManagerEntity implements Serializable{
     private int level;
     private int status; // 数据状态，可以查询数据库元数据表，这里取值有3个，-1标示删除，1标示禁用，2标示正常
     private String access; // 权限
+    @JSONField(serialize=false)
+    private String[] accessLabels; // 权限标签
     private long createTime;
     private long updateTime;
 
@@ -94,6 +99,23 @@ public class ManagerEntity implements Serializable{
 
     public void setAccess(String access) {
         this.access = access;
+        if (!StringUtils.isEmpty(this.getAccess())){
+            String[] accesses = JSON.parseObject(this.getAccess(), String[].class);
+            String[] accessLabels = new String[accesses.length];
+            for (int i=0;i<accesses.length;i++){
+                String label = ManagerController.workMenusLabel.get(accesses[i]);
+                accessLabels[i] = label;
+            }
+            this.setAccessLabels(accessLabels);
+        }
+    }
+
+    public String[] getAccessLabels() {
+        return accessLabels;
+    }
+
+    public void setAccessLabels(String[] accessLabels) {
+        this.accessLabels = accessLabels;
     }
 
     public long getCreateTime() {

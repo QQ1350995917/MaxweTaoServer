@@ -13,7 +13,11 @@
                 <div class="col-lg-6" style="width: 130px">
                     <div class="input-group" style="width: 120px">
                                 <span class="input-group-addon">
-                                    <input name="access" value="${managerMenu.id}" type="checkbox" checked="${managerMenu.granted?string('true','false')}" aria-label="...">
+                                    <#if managerMenu.granted?string('true','false')=='false'>
+                                        <input name="access" value="${managerMenu.id}" type="checkbox" aria-label="...">
+                                        <#else>
+                                        <input name="access" value="${managerMenu.id}" type="checkbox" checked="true" aria-label="...">
+                                    </#if>
                                 </span>
                         <span type="text" class="form-control" aria-label="...">${managerMenu.label}</span>
                     </div>
@@ -25,7 +29,12 @@
                 <div class="col-lg-6" style="width: 130px">
                     <div class="input-group" style="width: 120px">
                                 <span class="input-group-addon">
-                                    <input name="access" value="${workMenu.id}" type="checkbox" checked="${workMenu.granted?string('true','false')}" aria-label="...">
+                                    <#if workMenu.granted?string('true','false')=='false'>
+                                        <input name="access" value="${workMenu.id}" type="checkbox" aria-label="...">
+                                        <#else>
+                                        <input name="access" value="${workMenu.id}" type="checkbox" checked="true" aria-label="...">
+                                    </#if>
+
                                 </span>
                         <span type="text" class="form-control" aria-label="...">${workMenu.label}</span>
                     </div>

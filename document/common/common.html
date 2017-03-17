@@ -33,14 +33,32 @@
             <li>
                 提交模型添加签名：
                 <p>签名加密方式："AES"，对齐方式："AES/ECB/PKCS5Padding"</p>
+
                 <p>签名加密内容：用户ID + 中划线 + 当前时间戳 + 中划线 + 电话号码</p>
+
+                <p>编码加密内容：对要加密的内容进行BASE64编码</p>
+
                 <p>签名加密密码：用户手机号码 + 反转的用户手机号码 进行从第二位开始截取16位</p>
             </li>
-            <li><p>模型转化为JSON参数</p></li>
+            <li>
+                <p>模型转化为JSON参数,如
+                    <small>
+                        {
+                        "username": "username",
+                        "password": "password",
+                        "loginname": "loginname"
+                        }
+                    </small>
+                </p>
+            </li>
             <li><p>JSON参数进行base64编码</p></li>
             <li><p>编码后的参数进行AES加密</p></li>
             <li><p>加密后的参数转化为字符串</p></li>
-            <li><p>URL参数按照"p=string"的方式提交</p></li>
+            <li>
+                <p>使用post提交，提交时候，参数名是p，值是加密后的字符串，使用get做示范为
+                    <small>domain/router/method?p=ASDFGHJKLQWERTYUIOPZXCVBNM</small>
+                </p>
+            </li>
         </ol>
     </div>
 </div>
@@ -66,75 +84,83 @@
             <td>执行成功</td>
         </tr>
         <tr>
+            <td>201</td>
+            <td>RC_CREATED</td>
+            <td>执行成功</td>
+            <td>授权已经过期</td>
+        </tr>
+        <tr>
+            <td>202</td>
+            <td>RC_ACCEPTED</td>
+            <td>请求成功</td>
+            <td>参数解密失败</td>
+        </tr>
+        <tr>
+            <td>203</td>
+            <td>RC_NON_PARAMS</td>
+            <td>请求成功</td>
+            <td>请求成功 缺少参数</td>
+        </tr>
+        <tr>
             <td>204</td>
             <td>RC_SUCCESS_EMPTY</td>
             <td>执行成功</td>
             <td>执行成功，但是处理的结果是空</td>
         </tr>
-
         <tr>
             <td>400</td>
             <td>RC_BAD_PARAMS</td>
             <td>参数错误</td>
             <td>请求提交的参数不符合请求规则</td>
         </tr>
-
         <tr>
             <td>401</td>
             <td>RC_UNAUTHORIZED</td>
             <td>未启用</td>
             <td>未启用</td>
         </tr>
-
         <tr>
             <td>403</td>
             <td>RC_FORBIDDEN</td>
             <td>权限拒绝</td>
             <td>请求中的参数没有权限处理提交的内容</td>
         </tr>
-
         <tr>
             <td>404</td>
             <td>RC_NOT_FOUND</td>
             <td>找不到内容</td>
             <td>请求中的参数在服务器上没有对应的内容</td>
         </tr>
-
         <tr>
             <td>406</td>
             <td>RC_NOT_ACCEPTABLE</td>
             <td>内容一致导致的冲突</td>
             <td>请求中的参数在服务器上完全一致，比如：注册</td>
         </tr>
-
         <tr>
             <td>408</td>
             <td>RC_TIMEOUT</td>
             <td>登录超时</td>
             <td>登录超时，需要重新登录</td>
         </tr>
-
         <tr>
             <td>409</td>
             <td>RC_CONFLICT</td>
             <td>内容不一致导致的冲突</td>
             <td>提交的内容和现有的内容不一致冲突，比如：密码验证</td>
         </tr>
-
         <tr>
-            <td>410</td>
-            <td>RC_GONE</td>
+            <td>421</td>
+            <td>RC_TO_MANY</td>
             <td>拒绝服务</td>
-            <td>访问频率过于频繁造成的拒绝服务</td>
+            <td>链接频率过高</td>
         </tr>
-
         <tr>
             <td>500</td>
             <td>RC_SERVER_ERROR</td>
             <td>服务器错误</td>
             <td>服务器内部发生了错误</td>
         </tr>
-
         </tbody>
     </table>
 </div>

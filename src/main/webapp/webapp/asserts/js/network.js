@@ -11,8 +11,8 @@ const RC_TO_MANY = 429;//访问频率造成的拒绝服务
 const RC_SEVER_ERROR = 500;//服务器内部异常导致的失败
 
 
-//const basePath = "http://taomami.net";
-const basePath = "http://101.200.56.221:8080";
+const basePath = "http://taomami.net";
+//const basePath = "http://101.200.56.221:8080";
 //const basePath = "http://localhost:8080";
 
 function asyncRequestByGet(url, data,onDataCallback, onErrorCallback, onTimeoutCallback) {
@@ -36,7 +36,7 @@ function asyncRequestByGet(url, data,onDataCallback, onErrorCallback, onTimeoutC
     });
 }
 
-function asyncRequestByPost(url, onDataCallback, onErrorCallback, onTimeoutCallback, params) {
+function asyncRequestByPost(url, params,onDataCallback, onErrorCallback, onTimeoutCallback) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function () {
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
@@ -47,7 +47,7 @@ function asyncRequestByPost(url, onDataCallback, onErrorCallback, onTimeoutCallb
     }
     xmlHttp.timeout = 5000;
     xmlHttp.ontimeout = onTimeoutCallback;
-    xmlHttp.open("POST", url, true);
+    xmlHttp.open("POST", url, false);
     xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xmlHttp.send(encodeURI(params));
 }
