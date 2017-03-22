@@ -22,6 +22,8 @@ public class AliGoodsRequestModel {
     private String channel = "qqhd";
     private int sortType = 0;// 0:默认 1:佣金 2:优惠券 3:价格降低 4:价格升高 9:销量降序
     private int urlType = 0;//标记链接类型
+    private int dpyhq = 0;// 店铺优惠券 0 无关，1有关
+    private int userType = -1;// 0 淘宝，1天猫
 
     public AliGoodsRequestModel() {
         super();
@@ -108,6 +110,22 @@ public class AliGoodsRequestModel {
         this.urlType = urlType;
     }
 
+    public int getDpyhq() {
+        return dpyhq;
+    }
+
+    public void setDpyhq(int dpyhq) {
+        this.dpyhq = dpyhq;
+    }
+
+    public int getUserType() {
+        return userType;
+    }
+
+    public void setUserType(int userType) {
+        this.userType = userType;
+    }
+
     public String getUrl() {
         if (urlType == 0) {
             URL = URL0;
@@ -117,11 +135,15 @@ public class AliGoodsRequestModel {
         if (StringUtils.isEmpty(this.getQ())) {
             return URL + "toPage=" + getToPage() +
                     "&perPageSize=" + getPerPageSize() +
-                    "&sortType=" + getSortType();
+                    "&sortType=" + getSortType() +
+                    "&userType=" + getUserType() +
+                    "&dpyhq=" + getDpyhq();
         } else {
             return URL + "toPage=" + getToPage() +
                     "&perPageSize=" + getPerPageSize() +
                     "&sortType=" + getSortType() +
+                    "&dpyhq=" + getDpyhq() +
+                    "&userType=" + getUserType() +
                     "&q=" + getQ();
         }
     }

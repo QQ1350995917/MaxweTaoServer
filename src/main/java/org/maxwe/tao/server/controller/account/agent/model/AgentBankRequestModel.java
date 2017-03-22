@@ -49,4 +49,19 @@ public class AgentBankRequestModel extends AuthenticateModel {
 
         return true;
     }
+
+    public static void main(String[] args) {
+        AgentBankRequestModel agentBankRequestModel = new AgentBankRequestModel();
+        agentBankRequestModel.setApt(2);
+        agentBankRequestModel.setAuthenticatePassword("111111");
+        agentBankRequestModel.setCellphone("18516883957");
+        agentBankRequestModel.setId(100007);
+        agentBankRequestModel.setSign("0C7ABB2B3253C1ABD13D7391B7CFF0B8F02A320670D88933659179102FD1C79F419146861E6540203845E1C20B496552");
+        agentBankRequestModel.setT("573b8cf284eb797303416867776d2683");
+        agentBankRequestModel.setTrueName("123123");
+        agentBankRequestModel.setZhifubao("123123");
+
+        System.out.println(agentBankRequestModel.isAgentBankRequestParamsOk());
+
+    }
 }

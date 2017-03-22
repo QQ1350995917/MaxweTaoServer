@@ -288,6 +288,7 @@ function createManagerLevelView(pageIndex, pageSize) {
         var object = {
             url: basePath + "/level/create",//form提交数据的地址
             type: "post",　　　  //form提交的方式(method:post/get)
+            contentType:"application/x-www-form-urlencoded; charset=utf-8",
             target: "#mainContainer",　　//服务器返回的响应数据显示的元素(Id)号
             beforeSerialize: function () {
             }, //序列化提交数据之前的回调函数

@@ -135,8 +135,8 @@ public class SystemController extends Controller implements ISystemController {
     public void logger() {
         try {
             String date = this.getPara("date");
-            this.logger.info("logger : 文件名称 " + date);
             if (StringUtils.isEmpty(date)) {
+                this.logger.info("logger : 文件名称 tao");
                 File file = new File(ApplicationConfigure.LOGGER_REAL_TIME + "/tao");
                 FileInputStream fileInputStream = new FileInputStream(file);
                 byte[] bytes = new byte[fileInputStream.available()];
@@ -145,6 +145,7 @@ public class SystemController extends Controller implements ISystemController {
                 fileInputStream.close();
                 render("/webapp/widgets/logger.html");
             } else {
+                this.logger.info("logger : 文件名称 tao");
                 File file = new File(ApplicationConfigure.LOGGER_REAL_TIME + "/tao." + date + ".log");
                 FileInputStream fileInputStream = new FileInputStream(file);
                 byte[] bytes = new byte[fileInputStream.available()];

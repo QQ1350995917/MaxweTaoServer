@@ -135,6 +135,15 @@ public class MateController extends Controller implements IMateController {
             return;
         }
 
+        if (branchAgentEntity.getReach() == 1) {
+            this.logger.info("grant : 不要重复授权 " + requestModel.toString());
+            GrantBranchResponseModel grantBranchResponseModel = new GrantBranchResponseModel(requestModel);
+            grantBranchResponseModel.setCode(ResponseModel.RC_NOT_ACCEPTABLE);
+            grantBranchResponseModel.setMessage("不要重复授权哦");
+            renderJson(JSON.toJSONString(grantBranchResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            return;
+        }
+
         branchAgentEntity.setReach(1);
         boolean updateReach = iAgentServices.updateReach(branchAgentEntity);
         if (!updateReach) {
@@ -234,7 +243,7 @@ public class MateController extends Controller implements IMateController {
             TrunkInfoResponseModel trunkInfoResponseModel = new TrunkInfoResponseModel(requestModel);
             trunkInfoResponseModel.setCode(ResponseModel.RC_NOT_FOUND);
             trunkInfoResponseModel.setMessage("找不到上级");
-            renderJson(JSON.toJSONString(trunkInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            renderJson(JSON.toJSONString(trunkInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue, SerializerFeature.DisableCircularReferenceDetect));
             return;
         }
 
@@ -245,7 +254,7 @@ public class MateController extends Controller implements IMateController {
         trunkInfoResponseModel.setCode(ResponseModel.RC_SUCCESS);
         trunkInfoResponseModel.setTrunk(trunkMateModel);
         trunkInfoResponseModel.setMessage("查找成功");
-        renderJson(JSON.toJSONString(trunkInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+        renderJson(JSON.toJSONString(trunkInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue, SerializerFeature.DisableCircularReferenceDetect));
     }
 
     @Override
@@ -292,7 +301,7 @@ public class MateController extends Controller implements IMateController {
             BranchInfoResponseModel branchInfoResponseModel = new BranchInfoResponseModel(requestModel);
             branchInfoResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
             branchInfoResponseModel.setMessage("参数错误，请重试");
-            renderJson(JSON.toJSONString(branchInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            renderJson(JSON.toJSONString(branchInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue, SerializerFeature.DisableCircularReferenceDetect));
             return;
         }
 
@@ -302,7 +311,7 @@ public class MateController extends Controller implements IMateController {
             BranchInfoResponseModel branchInfoResponseModel = new BranchInfoResponseModel(requestModel);
             branchInfoResponseModel.setCode(ResponseModel.RC_NOT_FOUND);
             branchInfoResponseModel.setMessage("找不到该ID，请重试");
-            renderJson(JSON.toJSONString(branchInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            renderJson(JSON.toJSONString(branchInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue, SerializerFeature.DisableCircularReferenceDetect));
             return;
         }
         LevelEntity branchLevel = iLevelServices.retrieveByLevel(branchAgent.getLevel());
@@ -310,6 +319,6 @@ public class MateController extends Controller implements IMateController {
         BranchInfoResponseModel branchInfoResponseModel = new BranchInfoResponseModel(requestModel, new MateModel(branchAgent, branchLevel), levelEntities);
         branchInfoResponseModel.setCode(ResponseModel.RC_SUCCESS);
         branchInfoResponseModel.setMessage("查找成功");
-        renderJson(JSON.toJSONString(branchInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+        renderJson(JSON.toJSONString(branchInfoResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue, SerializerFeature.DisableCircularReferenceDetect));
     }
 }

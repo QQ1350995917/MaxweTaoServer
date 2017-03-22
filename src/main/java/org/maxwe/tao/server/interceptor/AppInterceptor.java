@@ -8,6 +8,8 @@ import org.maxwe.tao.server.common.response.ResponseModel;
 import org.maxwe.tao.server.common.utils.CryptionUtils;
 import org.maxwe.tao.server.controller.account.model.TokenModel;
 
+import java.nio.charset.Charset;
+
 /**
  * Created by Pengwei Ding on 2016-09-20 16:48.
  * Email: www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
@@ -24,7 +26,7 @@ public class AppInterceptor implements Interceptor {
             try {
                 byte[] decrypt = CryptionUtils.decryptDefault(CryptionUtils.parseHexStr2Byte(params));
 //                String content = new String(new BASE64Decoder().decodeBuffer(new String(decrypt)));
-                String content = new String(Base64.decodeBase64(decrypt));
+                String content = new String(Base64.decodeBase64(decrypt), Charset.forName("UTF-8"));
                 inv.getController().setAttr("p", content);
                 inv.invoke();
             } catch (Exception e) {

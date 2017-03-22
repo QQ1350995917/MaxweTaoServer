@@ -21,7 +21,7 @@ public class AliResponsePageEntity implements Serializable {
     private String debugInfo; // null,
     private long rootCatScore; // 0,
     private long sellerId; // 728628560,
-    private long userType; // 1,
+    private long userType; // 0 淘宝 1天猫
     private String shopTitle; // "隆缘裳服饰旗舰店",
     private String pictUrl; // "http; ////image.taobao.com/bao/uploaded/i4/TB1kA3XPXXXXXcJXXXXYXGcGpXX_M2.SS2",
     private String title; // "隆缘裳短裙2017春装新款<span class=H>女装</span>简约时尚立领长袖修身印花连衣裙1892",
