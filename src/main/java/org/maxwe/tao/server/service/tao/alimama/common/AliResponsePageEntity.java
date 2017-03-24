@@ -11,7 +11,7 @@ import java.util.HashMap;
 /**
  * Created by Pengwei Ding on 2017-02-24 20; //56.
  * Email; // www.dingpengwei@foxmail.com www.dingpegnwei@gmail.com
- * Description; // @TODO
+ * Description; 阿里妈妈后台的商品的全部信息
  */
 public class AliResponsePageEntity implements Serializable {
     private HashMap<Integer,String> tkSpecialCampaignIdRateMap;//{2616191: "15.01",4415440: "15.01",6011079: "15.38",35695643: "15.38",36555464: "15.38"}
@@ -20,7 +20,7 @@ public class AliResponsePageEntity implements Serializable {
     private long leafCatId; // 50010850,
     private String debugInfo; // null,
     private long rootCatScore; // 0,
-    private long sellerId; // 728628560,
+    private long sellerId; // 728628560,//卖家的ID
     private long userType; // 0 淘宝 1天猫
     private String shopTitle; // "隆缘裳服饰旗舰店",
     private String pictUrl; // "http; ////image.taobao.com/bao/uploaded/i4/TB1kA3XPXXXXXcJXXXXYXGcGpXX_M2.SS2",
@@ -31,18 +31,18 @@ public class AliResponsePageEntity implements Serializable {
     private long totalNum; // 0,
     private long totalFee; // 0,
     private String couponActivityId; // null,
-    private float reservePrice; // 663,
+    private float reservePrice; // 663,原来价格
     private String auctionUrl; // "http; ////item.taobao.com/item.htm?id=544504885384",
     private String couponLink; // "",
     private String couponLinkTaoToken; // "",
-    private long dayLeft; // -17221,
-    private float tk3rdRate; // null,
-    private long biz30day; // 47,
+    private long dayLeft; // -17221,活动剩余天数
+    private float tk3rdRate; // null,活动发起者淘客的佣金比例
+    private long biz30day; // 47,//月销量
     private float rlRate; // 39.96,
-    private String nick; // "隆缘裳服饰旗舰店",
+    private String nick; // "隆缘裳服饰旗舰店",卖家昵称
     private long hasRecommended; // 0,
     private long hasSame; // 0,
-    private float zkPrice; // 398,
+    private float zkPrice; // 398,//淘客价格
     private String sameItemPid; // "-616685232",
     private long couponTotalCount; // 100000,
     private long couponLeftCount; // 95200,
@@ -50,10 +50,10 @@ public class AliResponsePageEntity implements Serializable {
     private String auctionTag; // "587 907 1154 1163 1478 1483 2049 2059 3851 3915 3974 4166 4491 4550 4555 6603 7105 7878 11083 11266 11339 11531 12491 13707 13771 16321 20609 21697 25282 28353 28802 30337 30401 30593 30657 30849 30977 34305 35713 36161 37569 37633 39233 39490 40897 46849 51585 51841 51969 52033 53377 57857 60418 62082 72386 82306 101762 107842 116546 119426 166402 167682 167810 100017049 205017049",
     private String couponShortLink; // null,
     private String couponInfo; // "满21元减20元",
-    private float couponStartFee; // 21,
-    private long couponAmount; // 20,
-    private String couponEffectiveStartTime; // "2016-11-29",
-    private String couponEffectiveEndTime; // "2017-03-30",
+    private float couponStartFee; // 21,使用优惠券的起始点
+    private long couponAmount; // 20,优惠券的额度
+    private String couponEffectiveStartTime; // "2016-11-29",优惠券可用起始时间
+    private String couponEffectiveEndTime; // "2017-03-30",优惠券可用结束时间
     private float eventRate; // null,
     private String hasUmpBonus; // null,
     private String isBizActivity; // null,

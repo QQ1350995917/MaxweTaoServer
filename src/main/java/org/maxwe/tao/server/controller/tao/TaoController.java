@@ -57,6 +57,7 @@ public class TaoController extends Controller implements ITaoController {
         aliGoodsRequestModel.setCookie(requestModel.getCookie());
         aliGoodsRequestModel.setSortType(requestModel.getSortType());
         aliGoodsRequestModel.setUrlType(requestModel.getUrlType());
+        aliGoodsRequestModel.setDpyhq(requestModel.getDpyhq());
 
         try {
             logger.info("search : 查询条件 " + requestModel.toString());

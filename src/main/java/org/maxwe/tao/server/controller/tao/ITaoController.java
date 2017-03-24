@@ -27,7 +27,8 @@ public interface ITaoController {
     void search();
 
     /**
-     * 陶精灵使用的转链接口
+     * 申请最高佣金的接口
+     * 精灵使用的转链接口
      * 阿里妈妈接口
      */
     void auction();

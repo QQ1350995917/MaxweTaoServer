@@ -4,7 +4,6 @@ import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.Charset;
 
 /**
  * Created by Pengwei Ding on 2017-01-10 13:26.
@@ -124,26 +123,6 @@ public class CryptionUtils {
 //        }
 //        long end = System.currentTimeMillis();
 //        System.out.println((end - start) / 1000);
-
-
-        String content = "{\"password\":\"694468\",\"cellphone\":\"18511694468\",\"apt\":1,\"smsCode\":\"694468\"}";
-
-        byte[] bytes2 = content.getBytes();
-
-        byte[] bytes = encryptDefault(content);
-        for (byte b:bytes){
-            System.out.print(b + " ");
-        }
-        System.out.println();
-        String parseByte2HexStr1 = parseByte2HexStr(bytes);
-        System.out.println(parseByte2HexStr1);
-
-        String parseByte2HexStr = "BA5A23E8FE59C6493AB66CBED7C1AC5ADB398B0381D1CA711254CDEAB43775037731E7E6E656598E2F2B97AE4FB8607786CC2BCF4A928AB810809BA35B94BCD57FEE45EF299BFF0F3E7812ABD3CFAAD6ADCD003473C63557C2758AA57F1D9FDB5B1811249B943451C48943A9D6C870E7EBFAE99938118A478A3538411A38F5B5952CC5F2A87A89200EB6B6AFBE093D08";
-        System.out.println("iOS = " + parseByte2HexStr);
-
-        byte[] bytes1 = decryptDefault(parseHexStr2Byte(parseByte2HexStr));
-        String content1 = new String(Base64.decodeBase64(bytes1), Charset.forName("UTF-8"));
-        System.out.println(content1);
     }
 
 }
