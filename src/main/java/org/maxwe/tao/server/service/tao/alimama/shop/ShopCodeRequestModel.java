@@ -88,11 +88,11 @@ public class ShopCodeRequestModel {
     }
 
     public String getUrl() {
-        return url + "&orimemberid=" + this.getOrimemberid() +
+        return url + "orimemberid=" + this.getOrimemberid() +
                 "&adzoneid=" + this.getAdzoneid() +
                 "&siteid=" + this.getSiteid() +
                 "&_input_charset=" + this.get_input_charset() +
                 "&t=" + System.currentTimeMillis() +
-                "&_tb_token_=" + this.get_tb_token_();
+                "&_tb_token_=" + this.get_tb_token_().trim();
     }
 }

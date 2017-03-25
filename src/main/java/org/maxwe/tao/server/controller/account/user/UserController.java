@@ -13,10 +13,7 @@ import org.maxwe.tao.server.common.sms.SMSManager;
 import org.maxwe.tao.server.common.utils.PasswordUtils;
 import org.maxwe.tao.server.common.utils.TokenUtils;
 import org.maxwe.tao.server.controller.account.model.*;
-import org.maxwe.tao.server.controller.account.user.model.UserActiveRequestModel;
-import org.maxwe.tao.server.controller.account.user.model.UserActiveResponseModel;
-import org.maxwe.tao.server.controller.account.user.model.UserMineRequestModel;
-import org.maxwe.tao.server.controller.account.user.model.UserMineResponseModel;
+import org.maxwe.tao.server.controller.account.user.model.*;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
 import org.maxwe.tao.server.service.account.CSEntity;
@@ -357,6 +354,90 @@ public class UserController extends Controller implements IUserController {
             userActiveResponseModel.setMessage("激活成功");
             userActiveResponseModel.setActTime(System.currentTimeMillis());
             renderJson(JSON.toJSONString(userActiveResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+        }
+    }
+
+    @Override
+    @Before({AppInterceptor.class, TokenInterceptor.class})
+    public void updateReason() {
+        String params = this.getAttr("p");
+        UpdateReasonRequestModel requestModel = JSON.parseObject(params, UpdateReasonRequestModel.class);
+        if (requestModel == null || !requestModel.isReasonParamsOk()) {
+            this.logger.info("updateReason : 请求参数错误 " + requestModel.toString());
+            UpdateReasonResponseModel responseModel = new UpdateReasonResponseModel(requestModel);
+            responseModel.setCode(ResponseModel.RC_BAD_PARAMS);
+            responseModel.setMessage("请您输入正确的参数");
+            renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            return;
+        }
+        UserEntity existUserEntity = iUserServices.retrieveById(requestModel.getId());
+        if (existUserEntity == null) {
+            this.logger.info("updateReason : 修改加入申请理由没有查询到该记录-服务器内部错误 " + requestModel.toString());
+            UpdateReasonResponseModel responseModel = new UpdateReasonResponseModel(requestModel);
+            responseModel.setCode(ResponseModel.RC_NOT_FOUND);
+            responseModel.setMessage("修改错误，请重试");
+            renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            return;
+        }
+        existUserEntity.setReason(requestModel.getReason());
+        boolean updateReason = iUserServices.updateReason(existUserEntity);
+        if (updateReason) {
+            this.logger.info("updateReason : 修改加入申请理由成功 " + requestModel.toString());
+            UpdateReasonResponseModel responseModel = new UpdateReasonResponseModel(requestModel);
+            responseModel.setCode(ResponseModel.RC_SUCCESS);
+            responseModel.setMessage("修改成功");
+            responseModel.setReason(requestModel.getReason());
+            renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            return;
+        } else {
+            this.logger.info("updateReason : 修改加入申请理由失败 " + requestModel.toString());
+            UpdateReasonResponseModel responseModel = new UpdateReasonResponseModel(requestModel);
+            responseModel.setCode(ResponseModel.RC_SERVER_ERROR);
+            responseModel.setMessage("修改失败");
+            renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            return;
+        }
+    }
+
+    @Override
+    @Before({AppInterceptor.class, TokenInterceptor.class})
+    public void updateRhetoric() {
+        String params = this.getAttr("p");
+        UpdateRhetoricRequestModel requestModel = JSON.parseObject(params, UpdateRhetoricRequestModel.class);
+        if (requestModel == null || !requestModel.isRhetoricParamsOk()) {
+            this.logger.info("updateRhetoric : 请求参数错误 " + requestModel.toString());
+            UpdateRhetoricResponseModel responseModel = new UpdateRhetoricResponseModel(requestModel);
+            responseModel.setCode(ResponseModel.RC_BAD_PARAMS);
+            responseModel.setMessage("请您输入正确的参数");
+            renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            return;
+        }
+        UserEntity existUserEntity = iUserServices.retrieveById(requestModel.getId());
+        if (existUserEntity == null) {
+            this.logger.info("updateRhetoric : 修改分享推广说辞没有查询到该记录-服务器内部错误 " + requestModel.toString());
+            UpdateRhetoricResponseModel responseModel = new UpdateRhetoricResponseModel(requestModel);
+            responseModel.setCode(ResponseModel.RC_NOT_FOUND);
+            responseModel.setMessage("修改错误，请重试");
+            renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            return;
+        }
+        existUserEntity.setRhetoric(requestModel.getRhetoric());
+        boolean updateReason = iUserServices.updateRhetoric(existUserEntity);
+        if (updateReason) {
+            this.logger.info("updateRhetoric : 修改分享推广说辞成功 " + requestModel.toString());
+            UpdateRhetoricResponseModel responseModel = new UpdateRhetoricResponseModel(requestModel);
+            responseModel.setCode(ResponseModel.RC_SUCCESS);
+            responseModel.setMessage("修改成功");
+            responseModel.setRhetoric(requestModel.getRhetoric());
+            renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            return;
+        } else {
+            this.logger.info("updateRhetoric : 修改分享推广说辞失败 " + requestModel.toString());
+            UpdateRhetoricResponseModel responseModel = new UpdateRhetoricResponseModel(requestModel);
+            responseModel.setCode(ResponseModel.RC_SERVER_ERROR);
+            responseModel.setMessage("修改失败");
+            renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            return;
         }
     }
 }

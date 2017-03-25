@@ -16,4 +16,14 @@ public interface IUserController extends IAccountController {
      */
     void active();
 
+    /**
+     * 用户更新申请加入推广计划的理由
+     */
+    void updateReason();
+
+    /**
+     * 用户更新推广分享说辞
+     */
+    void updateRhetoric();
+
 }

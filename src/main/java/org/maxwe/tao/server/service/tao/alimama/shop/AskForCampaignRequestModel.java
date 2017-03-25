@@ -21,6 +21,13 @@ public class AskForCampaignRequestModel {
         super();
     }
 
+    public AskForCampaignRequestModel(long campId, long keeperid, String applyreason, String cookie) {
+        this.campId = campId;
+        this.keeperid = keeperid;
+        this.applyreason = applyreason;
+        this.setCookie(cookie);
+    }
+
     public long getCampId() {
         return campId;
     }
@@ -69,10 +76,10 @@ public class AskForCampaignRequestModel {
     }
 
     public String getUrl() {
-        return url + "&campId=" + this.getCampId() +
+        return url + "campId=" + this.getCampId() +
                 "&keeperid=" + this.getKeeperid() +
                 "&applyreason=" + this.getApplyreason() +
                 "&t=" + System.currentTimeMillis() +
-                "&_tb_token_=" + this.get_tb_token_();
+                "&_tb_token_=" + this.get_tb_token_().trim();
     }
 }

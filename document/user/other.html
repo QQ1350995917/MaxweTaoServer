@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>用户其他设置</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <style type="text/css">
+    </style>
+</head>
+<body>
+<div class="panel panel-default" style="margin: 10px">
+    <!-- Default panel contents -->
+    <div class="panel-heading">用户更新申请语 URL:<a href="../common/common.html#domain">domain</a>/user/updateReason
+    </div>
+    <div class="panel-body">
+        <div class="alert alert-success" role="alert">
+            <p>请求参数</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>参数名</td>
+                    <td>类型</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>t</td>
+                    <td>String</td>
+                    <td>HJFASDJFADSFADSFAJSDFJASDFJA...</td>
+                    <td>token</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>id</td>
+                    <td>number</td>
+                    <td>100000</td>
+                    <td>ID</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>cellphone</td>
+                    <td>String</td>
+                    <td>18511694468</td>
+                    <td>手机号码</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>apt</td>
+                    <td>number</td>
+                    <td>2</td>
+                    <td>固定值</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>sign</td>
+                    <td>String</td>
+                    <td>DFADKFKADFAKDSFASDFASD...</td>
+                    <td>签名</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>reason</td>
+                    <td>String</td>
+                    <td>我的推广联盟</td>
+                    <td>4个到200个字符</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="alert alert-info" role="alert">
+            <p>相应码及信息</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>响应码</td>
+                    <td>信息</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>200</td>
+                    <td>修改成功</td>
+                    <td>
+                        <pre>
+{
+    "code": 200,
+    "message": "修改成功",
+    "reason": "我爱联盟推广和你们",
+    "request": {
+        "cellphone": "18511694468",
+        "id": 53,
+        "reason": "我爱联盟推广和你们",
+        "reasonParamsOk": true,
+        "sign": "******",
+        "t": "dfc57e48c242c9414c26b41d69b7373f"
+    }
+}
+                        </pre>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>400</td>
+                    <td>请您输入正确的参数</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>404</td>
+                    <td>修改失败，请重试</td>
+                    <td></td>
+                    <td>没有找到当前账号，请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>500</td>
+                    <td>系统错误，请重试</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="panel panel-default" style="margin: 10px">
+    <!-- Default panel contents -->
+    <div class="panel-heading">用户更新推广语 URL:<a href="../common/common.html#domain">domain</a>/user/updateRhetoric
+    </div>
+    <div class="panel-body">
+        <div class="alert alert-success" role="alert">
+            <p>请求参数</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>参数名</td>
+                    <td>类型</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>t</td>
+                    <td>String</td>
+                    <td>HJFASDJFADSFADSFAJSDFJASDFJA...</td>
+                    <td>token</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>id</td>
+                    <td>number</td>
+                    <td>100000</td>
+                    <td>ID</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>cellphone</td>
+                    <td>String</td>
+                    <td>18511694468</td>
+                    <td>手机号码</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>apt</td>
+                    <td>number</td>
+                    <td>2</td>
+                    <td>固定值</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>sign</td>
+                    <td>String</td>
+                    <td>DFADKFKADFAKDSFASDFASD...</td>
+                    <td>签名</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>rhetoric</td>
+                    <td>String</td>
+                    <td>这是我为您精心推荐的</td>
+                    <td>0个到60个字符</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="alert alert-info" role="alert">
+            <p>相应码及信息</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <td>序号</td>
+                    <td>响应码</td>
+                    <td>信息</td>
+                    <td>示例</td>
+                    <td>备注</td>
+                </tr>
+                </thead>
+                <tr>
+                    <td>1</td>
+                    <td>200</td>
+                    <td>修改成功</td>
+                    <td>
+                        <pre>
+{
+    "code": 200,
+    "message": "修改成功",
+    "request": {
+        "cellphone": "18511694468",
+        "id": 53,
+        "rhetoric": "以上是我为您精心推荐",
+        "rhetoricParamsOk": true,
+        "sign": "******",
+        "t": "dfc57e48c242c9414c26b41d69b7373f"
+    },
+    "rhetoric": "以上是我为您精心推荐"
+}
+                        </pre>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>400</td>
+                    <td>请您输入正确的参数</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>404</td>
+                    <td>修改失败，请重试</td>
+                    <td></td>
+                    <td>没有找到当前账号，请求参数原样返回</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>500</td>
+                    <td>系统错误，请重试</td>
+                    <td></td>
+                    <td>请求参数原样返回</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

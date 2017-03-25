@@ -21,6 +21,12 @@ public class CampaignDetailRequestModel {
         super();
     }
 
+    public CampaignDetailRequestModel(long campaignId, long shopkeeperId, String cookie) {
+        this.campaignId = campaignId;
+        this.shopkeeperId = shopkeeperId;
+        this.setCookie(cookie);
+    }
+
     public long getCampaignId() {
         return campaignId;
     }
@@ -69,10 +75,10 @@ public class CampaignDetailRequestModel {
     }
 
     public String getUrl() {
-        return url + "&campaignId=" + this.getCampaignId() +
+        return url + "campaignId=" + this.getCampaignId() +
                 "&shopkeeperId=" + this.getShopkeeperId() +
                 "&t=" + System.currentTimeMillis() +
                 "&_input_charset=" + get_input_charset() +
-                "&_tb_token_=" + this.get_tb_token_();
+                "&_tb_token_=" + this.get_tb_token_().trim();
     }
 }

@@ -19,6 +19,11 @@ public class GoodsCampaignQueryRequestModel {
         super();
     }
 
+    public GoodsCampaignQueryRequestModel(long itemId, String cookie) {
+        this.itemId = itemId;
+        this.setCookie(cookie);
+    }
+
     public long getItemId() {
         return itemId;
     }
@@ -51,8 +56,8 @@ public class GoodsCampaignQueryRequestModel {
     }
 
     public String getUrl() {
-        return url + "&itemId=" + this.getItemId() +
+        return url + "itemId=" + this.getItemId() +
                 "&t=" + System.currentTimeMillis() +
-                "&_tb_token_=" + this.get_tb_token_();
+                "&_tb_token_=" + this.get_tb_token_().trim();
     }
 }

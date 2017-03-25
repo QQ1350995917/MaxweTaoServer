@@ -1,7 +1,5 @@
 package org.maxwe.tao.server.common.utils;
 
-import org.apache.commons.codec.binary.Base64;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -29,7 +27,7 @@ public class CryptionUtils {
 //        return result; // 加密
 
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            byte[] byteContent = content.getBytes("utf-8");
+        byte[] byteContent = content.getBytes("utf-8");
         cipher.init(Cipher.ENCRYPT_MODE, key);// 初始化
         byte[] result = cipher.doFinal(byteContent);
         return result; // 加密
@@ -58,7 +56,7 @@ public class CryptionUtils {
     }
 
 
-    public static byte[] encryptCustomer(String content,String password) throws Exception {
+    public static byte[] encryptCustomer(String content, String password) throws Exception {
         SecretKeySpec key = new SecretKeySpec(password.getBytes(), "AES");
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         byte[] byteContent = content.getBytes("utf-8");
@@ -68,7 +66,7 @@ public class CryptionUtils {
     }
 
 
-    public static byte[] decryptCustomer(byte[] content,String password) throws Exception {
+    public static byte[] decryptCustomer(byte[] content, String password) throws Exception {
         SecretKeySpec key = new SecretKeySpec(password.getBytes(), "AES");
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, key);// 初始化

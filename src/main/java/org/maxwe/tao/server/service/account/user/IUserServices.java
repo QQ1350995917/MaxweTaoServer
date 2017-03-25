@@ -34,6 +34,20 @@ public interface IUserServices {
     boolean updateActiveStatus(UserEntity userEntity,HistoryEntity historyEntity);
 
     /**
+     * 用户更新申请加入推广计划的理由
+     * @param userEntity 至少包含ID和reason字段
+     * @return
+     */
+    boolean updateReason(UserEntity userEntity);
+
+    /**
+     * 用户更新分享推广的理由
+     * @param userEntity 至少包含ID和rhetoric字段
+     * @return
+     */
+    boolean updateRhetoric(UserEntity userEntity);
+
+    /**
      * 通过业务ID查找
      *
      * @param id 业务ID

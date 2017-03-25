@@ -14,6 +14,9 @@ import org.maxwe.tao.server.controller.tao.model.alimama.*;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
 import org.maxwe.tao.server.interceptor.SessionInterceptor;
 import org.maxwe.tao.server.interceptor.TokenInterceptor;
+import org.maxwe.tao.server.service.account.user.IUserServices;
+import org.maxwe.tao.server.service.account.user.UserEntity;
+import org.maxwe.tao.server.service.account.user.UserServices;
 import org.maxwe.tao.server.service.tao.alimama.brand.BrandServices;
 import org.maxwe.tao.server.service.tao.alimama.brand.GuideEntity;
 import org.maxwe.tao.server.service.tao.alimama.common.AliResponsePageEntity;
@@ -22,6 +25,7 @@ import org.maxwe.tao.server.service.tao.alimama.convert.AliConvertRequestModel;
 import org.maxwe.tao.server.service.tao.alimama.convert.AliConvertServices;
 import org.maxwe.tao.server.service.tao.alimama.goods.AliGoodsRequestModel;
 import org.maxwe.tao.server.service.tao.alimama.goods.GoodsServices;
+import org.maxwe.tao.server.service.tao.alimama.shop.ShopServices;
 
 import java.nio.charset.Charset;
 import java.util.Base64;
@@ -34,6 +38,7 @@ import java.util.List;
  */
 public class TaoController extends Controller implements ITaoController {
     private final Logger logger = Logger.getLogger(TaoController.class.getName());
+    private final IUserServices iUserServices = new UserServices();
 
     @Override
     @Before({AppInterceptor.class, TokenInterceptor.class})
@@ -113,6 +118,19 @@ public class TaoController extends Controller implements ITaoController {
             renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{GoodsRequestModel.propertyFilter, TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
         }
+
+        try {
+            UserEntity userEntity = iUserServices.retrieveById(requestModel.getId());
+            boolean result = ShopServices.applyCampaignByOneKey(requestModel, userEntity.getReason());
+            if (result) {
+                logger.info("申请加入成功");
+            } else {
+                logger.error("申请加入失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         AliConvertRequestModel aliConvertRequestModel = new AliConvertRequestModel();
         aliConvertRequestModel.setSiteid(requestModel.getSiteid());

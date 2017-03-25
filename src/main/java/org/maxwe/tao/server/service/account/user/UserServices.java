@@ -56,6 +56,27 @@ public class UserServices implements IUserServices {
         return succeed;
     }
 
+
+    @Override
+    public boolean updateReason(UserEntity userEntity) {
+        int update = Db.update("UPDATE user SET reason = ? WHERE id = ? ",
+                userEntity.getReason(), userEntity.getId());
+        if (update == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateRhetoric(UserEntity userEntity) {
+        int update = Db.update("UPDATE user SET rhetoric = ? WHERE id = ? ",
+                userEntity.getRhetoric(), userEntity.getId());
+        if (update == 1) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public UserEntity retrieveById(int id) {
         List<Record> userRecords = Db.find("SELECT * FROM user WHERE id = ? ", id);
