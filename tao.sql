@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2017-03-06 08:46:14
+-- Generation Time: 2017-03-26 07:06:24
 -- 服务器版本： 5.6.22
--- PHP Version: 5.5.20
+-- PHP Version: 5.6.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -48,9 +48,17 @@ CREATE TABLE IF NOT EXISTS `agent` (
   `zhifubao` varchar(36) DEFAULT NULL COMMENT '支付宝账户',
   `pIdTime` timestamp NULL DEFAULT NULL COMMENT '申请加入代理体系的时间',
   `reachTime` timestamp NULL DEFAULT NULL COMMENT '达成上下级代理的时间',
+  `bankTime` timestamp NULL DEFAULT NULL,
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=100003 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=100009 DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `agent`
+--
+
+INSERT INTO `agent` (`id`, `pId`, `reach`, `cellphone`, `password`, `name`, `named`, `level`, `weight`, `status`, `haveCodes`, `spendCodes`, `leftCodes`, `weChat`, `trueName`, `zhifubao`, `pIdTime`, `reachTime`, `bankTime`, `createTime`, `updateTime`) VALUES
+(100008, 100006, 1, '18511694468', '0CE018668103ACE0F1066A490FA9A1C4', NULL, NULL, 3, 0, 1, 23, 4, 19, 'eeee', NULL, NULL, '2017-03-11 06:17:40', '2017-03-11 06:17:53', NULL, '2017-03-11 06:17:26', '2017-03-11 07:18:45');
 
 -- --------------------------------------------------------
 
@@ -150,10 +158,19 @@ CREATE TABLE IF NOT EXISTS `user` (
   `name` varchar(36) DEFAULT NULL COMMENT '备注姓名',
   `actCode` varchar(36) DEFAULT NULL COMMENT '激活码',
   `actTime` timestamp NULL DEFAULT NULL COMMENT '激活时间',
+  `reason` varchar(800) DEFAULT '联盟推广' COMMENT '申请加入佣金推广计划的理由',
+  `rhetoric` varchar(800) DEFAULT '以上是我为您精心推荐' COMMENT '推广用的说辞',
   `status` int(11) NOT NULL DEFAULT '1' COMMENT '0禁用，1正常',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8 COMMENT='用户表';
+
+--
+-- 转存表中的数据 `user`
+--
+
+INSERT INTO `user` (`id`, `cellphone`, `password`, `name`, `actCode`, `actTime`, `reason`, `rhetoric`, `status`, `createTime`, `updateTime`) VALUES
+(53, '18511694468', '3F070D4E90A4C6BD02E8979978DEF210', NULL, 'QK54S1PK', '2017-03-11 07:24:46', '联盟推广', '以上是我为您精心推荐', 1, '2017-03-11 02:27:49', '2017-03-26 07:03:34');
 
 -- --------------------------------------------------------
 
@@ -231,12 +248,12 @@ ALTER TABLE `version`
 -- AUTO_INCREMENT for table `agent`
 --
 ALTER TABLE `agent`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '代理的ID，从100000起始',AUTO_INCREMENT=100003;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '代理的ID，从100000起始',AUTO_INCREMENT=100009;
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=51;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=54;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

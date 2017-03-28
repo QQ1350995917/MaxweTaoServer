@@ -9,7 +9,7 @@
 <#if topLevels?exists>
     <#list topLevels as topLevel>
         <form id="form_system_topLevel${topLevel_index}" class="form" role="form" method="post">
-            <div class="panel panel-default" style="float: left; width: 25%;">
+            <div class="panel panel-default" style="float: left; width: 20%;">
                 <div class="panel-heading">
                     <h3 class="panel-title">${topLevel.name}</h3>
                     <input name="name" type="hidden" value="${topLevel.name}">
@@ -19,13 +19,15 @@
                     <li class="list-group-item">
                         <div class="input-group input-group-sm">
                             <span class="input-group-addon">最小码量</span>
-                            <#if topLevel.level == 5>
-                                <input name="minNum" type="number" class="form-control" placeholder="${topLevel.minNum}" aria-describedby="sizing-addon3"
-                                       value="${topLevel.minNum}" readonly>
-                            <#else>
-                                <input name="minNum" type="number" class="form-control" placeholder="${topLevel.minNum}" aria-describedby="sizing-addon3"
-                                       value="${topLevel.minNum}">
-                            </#if>
+                            <input name="minNum" type="number" class="form-control" placeholder="${topLevel.minNum}" aria-describedby="sizing-addon3"
+                                   value="${topLevel.minNum}">
+                            <!--<#if topLevel.level == 5>-->
+                                <!--<input name="minNum" type="number" class="form-control" placeholder="${topLevel.minNum}" aria-describedby="sizing-addon3"-->
+                                       <!--value="${topLevel.minNum}" readonly>-->
+                            <!--<#else>-->
+                                <!--<input name="minNum" type="number" class="form-control" placeholder="${topLevel.minNum}" aria-describedby="sizing-addon3"-->
+                                       <!--value="${topLevel.minNum}">-->
+                            <!--</#if>-->
                         </div>
                     </li>
                     <li class="list-group-item">

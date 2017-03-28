@@ -14,7 +14,7 @@ import java.util.HashMap;
  * Description; 阿里妈妈后台的商品的全部信息
  */
 public class AliResponsePageEntity implements Serializable {
-    private HashMap<Integer,String> tkSpecialCampaignIdRateMap;//{2616191: "15.01",4415440: "15.01",6011079: "15.38",35695643: "15.38",36555464: "15.38"}
+    private HashMap<String,String> tkSpecialCampaignIdRateMap;//{2616191: "15.01",4415440: "15.01",6011079: "15.38",35695643: "15.38",36555464: "15.38"}
     private long eventCreatorId; // 0,
     private long rootCatId; // 0,
     private long leafCatId; // 50010850,
@@ -71,11 +71,11 @@ public class AliResponsePageEntity implements Serializable {
         super();
     }
 
-    public HashMap<Integer, String> getTkSpecialCampaignIdRateMap() {
+    public HashMap<String, String> getTkSpecialCampaignIdRateMap() {
         return tkSpecialCampaignIdRateMap;
     }
 
-    public void setTkSpecialCampaignIdRateMap(HashMap<Integer, String> tkSpecialCampaignIdRateMap) {
+    public void setTkSpecialCampaignIdRateMap(HashMap<String, String> tkSpecialCampaignIdRateMap) {
         this.tkSpecialCampaignIdRateMap = tkSpecialCampaignIdRateMap;
     }
 

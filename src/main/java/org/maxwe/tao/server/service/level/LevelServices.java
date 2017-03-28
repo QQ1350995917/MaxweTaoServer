@@ -116,51 +116,16 @@ public class LevelServices implements ILevelServices {
     }
 
     private static void initTopLevel() {
-        List<Record> level1s = Db.find("SELECT * FROM level WHERE level = ? ORDER BY weight ASC LIMIT 0,1", 1);
-        if (level1s != null && level1s.size() > 0) {
-            Map<String, Object> levelMap = level1s.get(0).getColumns();
-            LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
-            topLevelsMap.put(1, levelEntity);
-        } else {
-            topLevelsMap.put(1, new LevelEntity("联合创始人", 0, 0f, 1, 0));
+        String[] levels = new String[]{"联合创始人", "总代", "特级代理", "一级代理", "分销商"};
+        for (int i = 0; i < levels.length; i++) {
+            List<Record> level1s = Db.find("SELECT * FROM level WHERE level = ? ORDER BY weight ASC LIMIT 0,1", i + 1);
+            if (level1s != null && level1s.size() > 0) {
+                Map<String, Object> levelMap = level1s.get(0).getColumns();
+                LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
+                topLevelsMap.put(i + 1, levelEntity);
+            } else {
+                topLevelsMap.put(i + 1, new LevelEntity(levels[i], 0, 0f, i + 1, 0));
+            }
         }
-
-
-        List<Record> level2s = Db.find("SELECT * FROM level WHERE level = ? ORDER BY weight ASC LIMIT 0,1", 2);
-        if (level2s != null && level2s.size() > 0) {
-            Map<String, Object> levelMap = level2s.get(0).getColumns();
-            LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
-            topLevelsMap.put(2, levelEntity);
-        } else {
-            topLevelsMap.put(2, new LevelEntity("总代", 0, 0f, 2, 0));
-        }
-
-
-        List<Record> level3s = Db.find("SELECT * FROM level WHERE level = ? ORDER BY weight ASC LIMIT 0,1", 3);
-        if (level3s != null && level3s.size() > 0) {
-            Map<String, Object> levelMap = level3s.get(0).getColumns();
-            LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
-            topLevelsMap.put(3, levelEntity);
-        } else {
-            topLevelsMap.put(3, new LevelEntity("一级代理", 0, 0f, 3, 0));
-        }
-
-
-        List<Record> level4s = Db.find("SELECT * FROM level WHERE level = ? ORDER BY weight ASC LIMIT 0,1", 4);
-        if (level4s != null && level4s.size() > 0) {
-            Map<String, Object> levelMap = level4s.get(0).getColumns();
-            LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
-            topLevelsMap.put(4, levelEntity);
-        } else {
-            topLevelsMap.put(4, new LevelEntity("分销商", 0, 0f, 4, 0));
-        }
-//        List<Record> level5s = Db.find("SELECT * FROM level WHERE level = ? ORDER BY weight ASC LIMIT 0,1", 5);
-//        if (level5s != null && level5s.size() > 0) {
-//            Map<String, Object> levelMap = level5s.get(0).getColumns();
-//            LevelEntity levelEntity = JSON.parseObject(JSON.toJSONString(levelMap), LevelEntity.class);
-//            topLevelsMap.put(5, levelEntity);
-//        } else {
-//            topLevelsMap.put(5, new LevelEntity("单码", 1, 0f, 5, 0));
-//        }
     }
 }
