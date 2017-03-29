@@ -1,7 +1,12 @@
 package org.maxwe.tao.server.common.utils;
 
+import com.alibaba.fastjson.JSON;
+import org.apache.commons.codec.binary.Base64;
+import org.maxwe.tao.server.controller.tao.model.alimama.BrandListRequestModel;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.Charset;
 
 /**
  * Created by Pengwei Ding on 2017-01-10 13:26.
@@ -121,6 +126,7 @@ public class CryptionUtils {
 //        }
 //        long end = System.currentTimeMillis();
 //        System.out.println((end - start) / 1000);
+
     }
 
 }

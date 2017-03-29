@@ -58,7 +58,7 @@ dependencies {
     compile 'log4j:log4j:1.2.17'
 
     providedCompile 'javax.servlet:javax.servlet-api:4.0.0-b02'
-
+//
 //    def tomcatVersion = '7.0.59'
 //    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
 //            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
