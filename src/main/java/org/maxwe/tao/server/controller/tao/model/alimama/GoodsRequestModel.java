@@ -2,6 +2,7 @@ package org.maxwe.tao.server.controller.tao.model.alimama;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.annotation.JSONField;
+import org.maxwe.tao.server.common.utils.SearchUrlUtils;
 import org.maxwe.tao.server.controller.account.model.TokenModel;
 
 /**
@@ -52,6 +53,9 @@ public class GoodsRequestModel extends TokenModel {
     }
 
     public String getQ() {
+        if (!StringUtils.isEmpty(this.q) && this.q.startsWith("http")){
+            return SearchUrlUtils.cleanUrl(this.q);
+        }
         return q;
     }
 
@@ -125,5 +129,4 @@ public class GoodsRequestModel extends TokenModel {
         }
         return true;
     }
-
 }

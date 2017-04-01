@@ -9,6 +9,7 @@ import com.jfinal.core.Controller;
 import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.cache.tao.TaoGoodsCache;
 import org.maxwe.tao.server.common.response.ResponseModel;
+import org.maxwe.tao.server.common.utils.SearchUrlUtils;
 import org.maxwe.tao.server.controller.account.model.TokenModel;
 import org.maxwe.tao.server.controller.tao.model.alimama.*;
 import org.maxwe.tao.server.interceptor.AppInterceptor;
@@ -255,7 +256,7 @@ public class TaoController extends Controller implements ITaoController {
             AliGoodsRequestModel aliGoodsRequestModel = new AliGoodsRequestModel();
             aliGoodsRequestModel.setToPage(0);
             aliGoodsRequestModel.setPerPageSize(12);
-            aliGoodsRequestModel.setQ(url);
+            aliGoodsRequestModel.setQ(SearchUrlUtils.cleanUrl(url));
 
             try {
                 List<AliResponsePageEntity> aliResponsePageEntities = GoodsServices.searchForGoods(aliGoodsRequestModel);
