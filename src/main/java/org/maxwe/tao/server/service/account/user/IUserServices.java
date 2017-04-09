@@ -28,13 +28,15 @@ public interface IUserServices {
 
     /**
      * 使用激活码激活时候更新授权码出售方的历史
+     *
      * @param userEntity
      * @return
      */
-    boolean updateActiveStatus(UserEntity userEntity,HistoryEntity historyEntity);
+    boolean updateActiveStatus(UserEntity userEntity, HistoryEntity historyEntity);
 
     /**
      * 用户更新申请加入推广计划的理由
+     *
      * @param userEntity 至少包含ID和reason字段
      * @return
      */
@@ -42,6 +44,7 @@ public interface IUserServices {
 
     /**
      * 用户更新分享推广的理由
+     *
      * @param userEntity 至少包含ID和rhetoric字段
      * @return
      */
@@ -73,10 +76,20 @@ public interface IUserServices {
 
     /**
      * 供管理端查询所有
+     *
      * @param pageIndex
      * @param pageSize
      * @return
      */
-    LinkedList<UserEntity> retrieveAll(int pageIndex,int pageSize);
+    LinkedList<UserEntity> retrieveAll(int pageIndex, int pageSize);
+
     int retrieveAllSum();
+
+    /**
+     * 根据ID,起始和结束时间点查询推广的数量
+     *
+     * @param id
+     * @return
+     */
+    int retrieveReferenceNumByMonth(int id, long start, long end);
 }

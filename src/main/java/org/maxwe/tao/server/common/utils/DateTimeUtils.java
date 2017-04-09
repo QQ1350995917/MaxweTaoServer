@@ -68,7 +68,7 @@ public class DateTimeUtils {
      *
      * @return
      */
-    public static int[] getCurrentYear() {
+    public static int[] getCurrentYearMonthDate() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;

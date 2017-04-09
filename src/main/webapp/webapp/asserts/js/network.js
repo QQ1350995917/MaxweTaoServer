@@ -14,7 +14,7 @@ const RC_SEVER_ERROR = 500;//服务器内部异常导致的失败
 const basePath = "http://taomami.net";
 //const basePath = "http://101.200.56.221:8080";
 //const basePath = "http://localhost:8080";
-//const basePath = "http://192.168.1.44:8080";
+//const basePath = "http://192.168.0.103:8080";
 
 function asyncRequestByGet(url, data,onDataCallback, onErrorCallback, onTimeoutCallback) {
     $.ajax({

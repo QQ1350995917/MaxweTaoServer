@@ -26,4 +26,20 @@ public interface IUserController extends IAccountController {
      */
     void updateRhetoric();
 
+    /**
+     * 用户推荐信息接口
+     */
+    void referenceInfo();
+
+    /**
+     * 用户推荐注册接口界面
+     */
+    void reference();
+
+    /**
+     * 用户推荐注册接口
+     */
+    void referenceSignUp();
+
+
 }

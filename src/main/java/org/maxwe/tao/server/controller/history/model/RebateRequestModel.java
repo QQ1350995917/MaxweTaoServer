@@ -42,7 +42,7 @@ public class RebateRequestModel extends TokenModel {
     }
 
     public boolean isRebateParamsOk(){
-        if (year < 2017 || year > DateTimeUtils.getCurrentYear()[0]){
+        if (year < 2017 || year > DateTimeUtils.getCurrentYearMonthDate()[0]){
             return false;
         }
         if (month < 0 || month > 13){

@@ -123,4 +123,5 @@ public class PageController extends Controller implements IPageController {
     public void addGoodsView() {
         this.render("/webapp/widgets/businessAddData.view.html");
     }
+
 }

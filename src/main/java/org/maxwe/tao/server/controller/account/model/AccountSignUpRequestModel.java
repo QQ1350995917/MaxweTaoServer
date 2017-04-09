@@ -11,11 +11,20 @@ import org.maxwe.tao.server.common.utils.PasswordUtils;
  * Description: 注册请求模型
  */
 public class AccountSignUpRequestModel extends TokenModel {
+    private int refId;
     private String smsCode;
     private String password;
 
     public AccountSignUpRequestModel() {
         super();
+    }
+
+    public int getRefId() {
+        return refId;
+    }
+
+    public void setRefId(int refId) {
+        this.refId = refId;
     }
 
     public String getSmsCode() {

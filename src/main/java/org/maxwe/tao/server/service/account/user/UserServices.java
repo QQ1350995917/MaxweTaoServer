@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Record;
+import org.maxwe.tao.server.ApplicationConfigure;
+import org.maxwe.tao.server.common.utils.DateTimeUtils;
 import org.maxwe.tao.server.service.history.HistoryEntity;
 
 import java.sql.SQLException;
@@ -22,10 +24,15 @@ public class UserServices implements IUserServices {
     @Override
     public UserEntity create(UserEntity userEntity) {
         Record agentRecord = new Record()
+                .set("refId", userEntity.getRefId())
                 .set("cellphone", userEntity.getCellphone())
                 .set("password", userEntity.getPassword());
         boolean isSave = Db.save("user", agentRecord);
         if (isSave) {
+            if (userEntity.getRefId() > 0) {
+                Db.update("UPDATE user SET refNum = refNum + 1,refBalance = refBalance + ? WHERE id = ?",
+                        ApplicationConfigure.REFERENCE_BALANCE, userEntity.getRefId());
+            }
             return retrieveByCellphone(userEntity.getCellphone());
         } else {
             return null;
@@ -130,5 +137,21 @@ public class UserServices implements IUserServices {
     @Override
     public int retrieveAllSum() {
         return Db.find("SELECT * FROM user ").size();
+    }
+
+
+    @Override
+    public int retrieveReferenceNumByMonth(int id, long start, long end) {
+        Record record =
+                Db.findFirst("SELECT COUNT(id) AS counter FROM user WHERE refId = ? " +
+                                "AND createTime BETWEEN ? AND ?",
+                        id,
+                        DateTimeUtils.parseLongToFullTime(start),
+                        DateTimeUtils.parseLongToFullTime(end));
+        if (record == null) {
+            return 0;
+        } else {
+            return new Long(record.getLong("counter")).intValue();
+        }
     }
 }

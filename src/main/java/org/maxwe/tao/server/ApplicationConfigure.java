@@ -43,6 +43,7 @@ public class ApplicationConfigure extends JFinalConfig {
     public static String DATABASE_MYSQL_COMMAND = "";
     public static String LOGGER_REAL_TIME = "";
     public static String SYSTEM_CACHE_FILE_DIR = "";
+    public static int REFERENCE_BALANCE = 200;//每推荐一个注册用户获取到的积分量
 
     private static String url;
     public static String username;
@@ -69,6 +70,7 @@ public class ApplicationConfigure extends JFinalConfig {
             DATABASE_MYSQL_COMMAND = smsProperties.getProperty("SYSTEM_DATABASE_MYSQL_COMMAND");
             LOGGER_REAL_TIME = smsProperties.getProperty("LOGGER_REAL_TIME");
             SYSTEM_CACHE_FILE_DIR = smsProperties.getProperty("SYSTEM_CACHE_FILE_DIR");
+            REFERENCE_BALANCE = Integer.parseInt(smsProperties.getProperty("REFERENCE_BALANCE","200"));
 
             Properties dbProperties = new Properties();
             dbProperties.load(ApplicationConfigure.class.getClassLoader().getResourceAsStream("db.properties"));

@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.cache.TokenContext;
 import org.maxwe.tao.server.common.response.ResponseModel;
 import org.maxwe.tao.server.common.sms.SMSManager;
+import org.maxwe.tao.server.common.utils.DateTimeUtils;
 import org.maxwe.tao.server.common.utils.PasswordUtils;
 import org.maxwe.tao.server.common.utils.TokenUtils;
 import org.maxwe.tao.server.controller.account.model.*;
@@ -72,56 +73,7 @@ public class UserController extends Controller implements IUserController {
     public void signup() {
         String params = this.getAttr("p");
         AccountSignUpRequestModel requestModel = JSON.parseObject(params, AccountSignUpRequestModel.class);
-        //参数检测
-        if (requestModel == null || !requestModel.isAccountSignUpParamsOk()) {
-            this.logger.info("register : 请求参数错误 " + requestModel.toString());
-            AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel);
-            agentExistResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
-            agentExistResponseModel.setMessage("请您输入正确的参数");
-            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
-            return;
-        }
-        // 验证码检测
-        if (!StringUtils.equals(requestModel.getSmsCode(), SMSManager.getSMSCode(requestModel.getCellphone()))) {
-            this.logger.info("register : 请求参数中验证码错误 " + requestModel.toString());
-            AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel);
-            agentExistResponseModel.setCode(ResponseModel.RC_CONFLICT);
-            agentExistResponseModel.setMessage("您输入的验证码错误");
-            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
-            return;
-        }
-        //重复检测 同一种类型下的同一个电话号码算是重复
-        UserEntity existUserEntity = iUserServices.retrieveByCellphone(requestModel.getCellphone());
-        if (existUserEntity != null) {
-            this.logger.info("register : 重复注册 " + requestModel.toString());
-            AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel);
-            agentExistResponseModel.setCode(ResponseModel.RC_NOT_ACCEPTABLE);
-            agentExistResponseModel.setMessage("您输入手机号码已被注册，请直接登录");
-            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
-            return;
-        }
-
-        UserEntity userEntity = new UserEntity();
-        userEntity.setCellphone(requestModel.getCellphone());
-        userEntity.setPassword(PasswordUtils.enPassword(requestModel.getCellphone(), requestModel.getPassword()));
-        UserEntity saveUserEntity = iUserServices.create(userEntity);
-        if (saveUserEntity == null) {
-            this.logger.info("create : 注册失败-服务器内部错误 " + requestModel.toString());
-            AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel);
-            agentExistResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
-            agentExistResponseModel.setMessage("系统错误，请重试");
-            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
-        } else {
-            CSEntity csEntity = new CSEntity(saveUserEntity.getCellphone(), TokenUtils.getToken(saveUserEntity.getCellphone(), requestModel.getPassword()), requestModel.getApt());
-            TokenContext.addCSEntity(csEntity);
-            this.logger.info("create : 注册成功 " + requestModel.toString());
-            //创建
-            TokenModel sessionModel = new TokenModel(csEntity.getToken(), saveUserEntity.getId(), saveUserEntity.getCellphone());
-            AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel, sessionModel);
-            agentExistResponseModel.setCode(ResponseModel.RC_SUCCESS);
-            agentExistResponseModel.setMessage("注册成功");
-            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
-        }
+        signUp(requestModel);
     }
 
     @Override
@@ -438,6 +390,116 @@ public class UserController extends Controller implements IUserController {
             responseModel.setMessage("修改失败");
             renderJson(JSON.toJSONString(responseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
             return;
+        }
+    }
+
+    @Override
+    public void referenceInfo() {
+        int id = this.getParaToInt("id") == null ? -1 : this.getParaToInt("id");
+        this.setAttr("id", 0);
+        this.setAttr("refNum", 0);
+        this.setAttr("refNumByMonth", 0);
+        this.setAttr("refBalance", 0);
+
+        if (id > 0) {
+            UserEntity userEntity = iUserServices.retrieveById(id);
+            int[] currentYearMonthDate = DateTimeUtils.getCurrentYearMonthDate();
+            try {
+                long[] monthTimestampLine = DateTimeUtils.getMonthTimestampLine(currentYearMonthDate[0], currentYearMonthDate[1]);
+                int refNumByMonth = iUserServices.retrieveReferenceNumByMonth(id, monthTimestampLine[0], monthTimestampLine[1]);
+                this.setAttr("refNumByMonth", refNumByMonth);
+            } catch (Exception e) {
+                this.logger.info("referenceInfo :时间转化错误 " + e.getMessage());
+            }
+
+            this.setAttr("id", userEntity.getId());
+            this.setAttr("refNum", userEntity.getRefNum());
+
+            this.setAttr("refBalance", userEntity.getRefBalance());
+        }
+        this.render("/webapp/widgets/phone_reference_info.html");
+    }
+
+    @Override
+    public void reference() {
+        String refID = this.getPara("refId");
+        if (!StringUtils.isEmpty(refID)) {
+            this.setAttr("refId", refID);
+        }
+        this.render("/webapp/widgets/phone_reference_signup.html");
+    }
+
+    @Override
+    public void referenceSignUp() {
+        int refID = this.getParaToInt("refId") == null ? -1 : this.getParaToInt("refId");
+        String cellphone = this.getPara("cellphone");
+        String smsCode = this.getPara("smsCode");
+        String password = this.getPara("password");
+        AccountSignUpRequestModel requestModel = new AccountSignUpRequestModel();
+        requestModel.setRefId(refID);
+        requestModel.setCellphone(cellphone);
+        requestModel.setSmsCode(smsCode);
+        requestModel.setPassword(password);
+        requestModel.setApt(1);
+        signUp(requestModel);
+    }
+
+    /**
+     * 注册逻辑
+     *
+     * @param requestModel
+     */
+    private void signUp(AccountSignUpRequestModel requestModel) {
+        //参数检测
+        if (requestModel == null || !requestModel.isAccountSignUpParamsOk()) {
+            this.logger.info("register : 请求参数错误 " + requestModel.toString());
+            AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel);
+            agentExistResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
+            agentExistResponseModel.setMessage("请您输入正确的参数");
+            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            return;
+        }
+        // 验证码检测
+        if (!StringUtils.equals(requestModel.getSmsCode(), SMSManager.getSMSCode(requestModel.getCellphone()))) {
+            this.logger.info("register : 请求参数中验证码错误 " + requestModel.toString());
+            AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel);
+            agentExistResponseModel.setCode(ResponseModel.RC_CONFLICT);
+            agentExistResponseModel.setMessage("您输入的验证码错误");
+            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            return;
+        }
+        //重复检测 同一种类型下的同一个电话号码算是重复
+        UserEntity existUserEntity = iUserServices.retrieveByCellphone(requestModel.getCellphone());
+        if (existUserEntity != null) {
+            this.logger.info("register : 重复注册 " + requestModel.toString());
+            AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel);
+            agentExistResponseModel.setCode(ResponseModel.RC_NOT_ACCEPTABLE);
+            agentExistResponseModel.setMessage("您输入手机号码已被注册，请直接登录");
+            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+            return;
+        }
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setRefId(requestModel.getRefId());
+        userEntity.setCellphone(requestModel.getCellphone());
+        userEntity.setPassword(PasswordUtils.enPassword(requestModel.getCellphone(), requestModel.getPassword()));
+        UserEntity saveUserEntity = iUserServices.create(userEntity);
+        if (saveUserEntity == null) {
+            this.logger.info("create : 注册失败-服务器内部错误 " + requestModel.toString());
+            AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel);
+            agentExistResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
+            agentExistResponseModel.setMessage("系统错误，请重试");
+            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
+        } else {
+            CSEntity csEntity = new CSEntity(saveUserEntity.getCellphone(), TokenUtils.getToken(saveUserEntity.getCellphone(), requestModel.getPassword()), requestModel.getApt());
+            TokenContext.addCSEntity(csEntity);
+            this.logger.info("create : 注册成功 " + requestModel.toString());
+            //创建
+            TokenModel sessionModel = new TokenModel(csEntity.getToken(), saveUserEntity.getId(), saveUserEntity.getCellphone());
+            AccountSignUpResponseModel agentExistResponseModel = new AccountSignUpResponseModel(requestModel, sessionModel);
+            agentExistResponseModel.setCode(ResponseModel.RC_SUCCESS);
+            agentExistResponseModel.setMessage("注册成功");
+            renderJson(JSON.toJSONString(agentExistResponseModel, new SerializeFilter[]{TokenModel.propertyFilter, TokenModel.valueFilter}, SerializerFeature.WriteMapNullValue));
         }
     }
 }

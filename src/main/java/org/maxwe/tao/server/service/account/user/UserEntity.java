@@ -12,6 +12,9 @@ public class UserEntity extends AccountEntity {
     private long actTime; // 激活时间，激活时候才有数据，数据库可为空
     private String reason;// 声请加入推广计划的理由
     private String rhetoric;// 分享推广的说辞
+    private int refId;//推广人的ID
+    private int refNum;//推广别人的历史总量
+    private int refBalance;//推广积分余额
 
     public UserEntity() {
         super();
@@ -47,6 +50,30 @@ public class UserEntity extends AccountEntity {
 
     public void setRhetoric(String rhetoric) {
         this.rhetoric = rhetoric;
+    }
+
+    public int getRefId() {
+        return refId;
+    }
+
+    public void setRefId(int refId) {
+        this.refId = refId;
+    }
+
+    public int getRefNum() {
+        return refNum;
+    }
+
+    public void setRefNum(int refNum) {
+        this.refNum = refNum;
+    }
+
+    public int getRefBalance() {
+        return refBalance;
+    }
+
+    public void setRefBalance(int refBalance) {
+        this.refBalance = refBalance;
     }
 
     @Override

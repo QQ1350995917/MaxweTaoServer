@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>推荐注册赚积分</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="../webapp/dependency/jquery-3.1.1.min.js"></script>
+    <script src="../webapp/dependency/jquery.qrcode.min.js"></script>
+    <style type="text/css">
+        .shareBar {
+            width: 100%;
+            height: 100px;
+            position: fixed;
+            bottom: 0px;
+            background-color: white;
+            display: none;
+        }
+
+        .img {
+            float: left;
+            width: 25%;
+            text-align: center;
+        }
+
+        img {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body style="padding: 10px">
+<div class="input-group" style="background-color: white;margin-top: 10px;width: 100%">
+    <span class="input-group-addon" style="background-color: white;width: 20%">您的专属ID</span>
+    <input type="text" class="form-control" style="background-color: white"
+           value="${id}"
+           aria-describedby="basic-addon1" disabled>
+</div>
+<div class="input-group" style="background-color: white;margin-top: 10px;width: 100%">
+    <span class="input-group-addon" style="background-color: white;width: 20%">您的积分余额</span>
+    <input type="text" class="form-control" style="background-color: white"
+           value="${refBalance}"
+           aria-describedby="basic-addon1" disabled>
+</div>
+<div class="input-group" style="background-color: white;margin-top: 10px;width: 100%">
+    <span class="input-group-addon" style="background-color: white;width: 20%">您的专属链接</span>
+    <input id="refLink" type="text" class="form-control" style="background-color: white"
+           value="http://taomami.net/user/reference?refId=${id}"
+           aria-describedby="basic-addon1" disabled>
+</div>
+<div class="input-group" style="background-color: white;margin-top: 10px;width: 100%">
+    <span class="input-group-addon" style="background-color: white;width: 20%">您的专属二维码</span>
+
+    <div id="qrcode"></div>
+</div>
+<div class="btn-group" role="group" aria-label="..." style="width: 100%;">
+    <button type="button" class="btn btn-default"
+            style="margin-top: 10px;color: white;background-color: #FFA437;width: 100%"
+            onclick="onReference()">向您的朋友推荐
+    </button>
+</div>
+<div class="panel panel-default" style="margin-top: 10px">
+    <table class="table">
+        <thead>
+        <tr>
+            <td style="text-align: center">推广详情</td>
+            <td style="text-align: center">本月推广</td>
+            <td style="text-align: center">累计推广</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td style="text-align: center">我的推广</td>
+            <td style="text-align: center">${refNumByMonth}</td>
+            <td style="text-align: center">${refNum}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<h4>推广赚积分，即日起邀请用户成功注册，即可获得200积分</h4>
+<h5>您推广的用户在平台消费，您可从中获得一定比例的佣金</h5>
+<h5>积分用途：</h5>
+<h6>1:可用于兑换指定商品，1000积分可兑换10元的商品</h6>
+<h6>2:可参加平台抽奖活动（暂未上线）</h6>
+<h6>3:可抵扣app功能增值费用（暂未上线）</h6>
+<h5 style="color: red">注：积分不可兑换现金，不可体现</h5>
+
+<div id="shareBar" class="shareBar">
+    <div style="height: 30px;font-size:18px;text-align: center;margin-top:10px;cursor: hand"
+         onclick="onDismissReference()">取消推荐
+    </div>
+    <div class="img">
+        <img src="../webapp/asserts/images/ic_wechat.png" style="cursor: hand" onclick="onShareToWeChat()">
+    </div>
+    <div class="img">
+        <img src="../webapp/asserts/images/ic_wechat_zone.png" style="cursor: hand" onclick="onShareToWeChatZone()">
+    </div>
+    <div class="img">
+        <img src="../webapp/asserts/images/ic_qq.png" style="cursor: hand" onclick="onShareToQQ()">
+    </div>
+    <div class="img">
+        <img src="../webapp/asserts/images/ic_qq_zone.png" style="cursor: hand" onclick="onShareToQQZone()">
+    </div>
+</div>
+<script type="text/javascript">
+    jQuery('#qrcode').qrcode({width: 100, height: 100, text: $('#refLink').val()});
+    function onReference() {
+        $('#shareBar').show();
+    }
+
+    function onDismissReference() {
+        $('#shareBar').hide();
+    }
+
+    function onShareToWeChat() {
+        window.AndroidWebView.onShareToWeChat($("#refLink").val());
+    }
+    function onShareToWeChatZone() {
+        window.AndroidWebView.onShareToWeChatZone($("#refLink").val());
+    }
+    function onShareToQQ() {
+        window.AndroidWebView.onShareToQQ($("#refLink").val());
+    }
+    function onShareToQQZone() {
+        window.AndroidWebView.onShareToQQZone($("#refLink").val());
+    }
+</script>
+</body>
+</html>

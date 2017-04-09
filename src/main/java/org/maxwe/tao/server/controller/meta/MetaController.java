@@ -3,7 +3,6 @@ package org.maxwe.tao.server.controller.meta;
 import com.alibaba.fastjson.JSON;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
-import com.taobao.api.ApiException;
 import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.response.ResponseModel;
 import org.maxwe.tao.server.common.sms.SMSManager;
@@ -24,16 +23,31 @@ public class MetaController extends Controller implements IMetaController {
     public void smsCode() {
         String params = this.getAttr("p");
         SMSCodeRequestModel requestModel = JSON.parseObject(params, SMSCodeRequestModel.class);
+        sendSmsCode(requestModel);
+    }
+
+    /**
+     * 供网页调用的短信发送接口
+     */
+    public void smscode(){
+        String cellphone = this.getPara("cellphone");
+        SMSCodeRequestModel requestModel = new SMSCodeRequestModel();
+        requestModel.setCellphone(cellphone);
+        sendSmsCode(requestModel);
+    }
+
+    private void sendSmsCode(SMSCodeRequestModel requestModel){
         if (requestModel == null || !requestModel.isSMSCodeRequestParamsOk()) {
-            this.logger.info("smsCode : 请求参数错误 " + params);
+            this.logger.info("smsCode : 请求参数错误 " + requestModel.toString());
             SMSCodeResponseModel smsCodeResponseModel = new SMSCodeResponseModel(requestModel);
             smsCodeResponseModel.setCode(ResponseModel.RC_BAD_PARAMS);
             smsCodeResponseModel.setMessage("请输入正确的手机号码");
             renderJson(JSON.toJSONString(smsCodeResponseModel, TokenModel.valueFilter));
+            return;
         }
 
         if (SMSManager.isCacheAddress(IPUtils.getIpAddress(this.getRequest()))) {
-            this.logger.info("smsCode : 请求频繁 " + params);
+            this.logger.info("smsCode : 请求频繁 " + requestModel.toString());
             SMSCodeResponseModel smsCodeResponseModel = new SMSCodeResponseModel(requestModel);
             smsCodeResponseModel.setCode(ResponseModel.RC_TO_MANY);
             smsCodeResponseModel.setMessage("网络忙，请稍后");
@@ -43,13 +57,13 @@ public class MetaController extends Controller implements IMetaController {
 
         try {
             SMSManager.sendSMS(requestModel.getCellphone());
-            this.logger.info("smsCode : 验证码" + SMSManager.getSMSCode(requestModel.getCellphone()) + "已经发送 " + params);
+            this.logger.info("smsCode : 验证码" + SMSManager.getSMSCode(requestModel.getCellphone()) + "已经发送 " + requestModel.toString());
             SMSCodeResponseModel smsCodeResponseModel = new SMSCodeResponseModel(requestModel);
             smsCodeResponseModel.setCode(ResponseModel.RC_SUCCESS);
             smsCodeResponseModel.setMessage("发送成功");
             renderJson(JSON.toJSONString(smsCodeResponseModel, TokenModel.valueFilter));
-        } catch (ApiException e) {
-            this.logger.error("smsCode : 验证码发送错误 " + params + "\r\n" + e.getMessage());
+        } catch (Exception e) {
+            this.logger.error("smsCode : 验证码发送错误 " + requestModel.toString() + "\r\n" + e.getMessage());
             e.printStackTrace();
             SMSCodeResponseModel smsCodeResponseModel = new SMSCodeResponseModel(requestModel);
             smsCodeResponseModel.setCode(ResponseModel.RC_SERVER_ERROR);
