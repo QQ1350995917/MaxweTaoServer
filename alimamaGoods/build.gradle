@@ -1,0 +1,18 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+//    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':alimama')
+    compile group: 'io.netty', name: 'netty-all', version: '4.1.9.Final'
+//    compile group: 'org.msgpack', name: 'msgpack-core', version: '0.8.12'
+    compile group: 'org.msgpack', name: 'msgpack', version: '0.6.12'
+    compile group: 'com.alibaba', name: 'fastjson', version: '1.2.14'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}

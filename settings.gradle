@@ -1,1 +1,5 @@
 rootProject.name = 'MaxweTaoServer'
+include 'alimamaGoods'
+
+include 'alimama'
+

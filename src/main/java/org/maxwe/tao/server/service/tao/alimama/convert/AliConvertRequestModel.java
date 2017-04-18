@@ -46,14 +46,6 @@ public class AliConvertRequestModel {
         this.auctionid = auctionid;
     }
 
-//    public long getT() {
-//        return t;
-//    }
-//
-//    public void setT(long t) {
-//        this.t = t;
-//    }
-
     public String get_tb_token_() {
         return _tb_token_;
     }
@@ -99,9 +91,6 @@ public class AliConvertRequestModel {
                     this.set_tb_token_(looper.replace("_tb_token_=", ""));
                     break;
                 }
-            }
-            if (StringUtils.isEmpty(this.get_tb_token_())) {
-                return false;
             }
             return true;
         }
