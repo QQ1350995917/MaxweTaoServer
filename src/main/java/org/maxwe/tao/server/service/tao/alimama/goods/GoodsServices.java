@@ -27,6 +27,8 @@ public class GoodsServices {
     static {
         specialLinkedList.add("http://c.b1wt.com");
         specialLinkedList.add("https://c.b1wt.com");
+        specialLinkedList.add("http://c.b6wq.com");
+        specialLinkedList.add("https://c.b6wq.com");
     }
 
     public static List<AliResponsePageEntity> searchForGoods(AliGoodsRequestModel aliGoodsRequestModel) throws Exception {
@@ -49,6 +51,15 @@ public class GoodsServices {
                 aliGoodsRequestModel.setQ(cleanUrl);
             }
         }
+
+//        String finalUrl = specialDomainHandl(aliGoodsRequestModel.getQ());
+//        if (StringUtils.isEmpty(finalUrl)) {
+//            return null;
+//        } else {
+//            String cleanUrl = SearchUrlUtils.cleanUrl(finalUrl);
+//            aliGoodsRequestModel.setQ(cleanUrl);
+//        }
+
         HttpGet httpGet = new HttpGet(aliGoodsRequestModel.getUrl());
         httpGet.setHeader("Cookie", aliGoodsRequestModel.getCookie());
         httpGet.setHeader("Content-type", "application/json");
@@ -93,14 +104,26 @@ public class GoodsServices {
         String http = null;
         if (closeableHttpResponse.getStatusLine().getStatusCode() == 200) {
             String resultJson = EntityUtils.toString(closeableHttpResponse.getEntity());
+            System.out.println(resultJson);
             String[] split = resultJson.split("\\r\\n");
             for (String text : split) {
                 if (text.contains("var url = ")) {
                     http = text.substring(text.indexOf("http"), text.length() - 2);
                     break;
                 }
+//                if (text.contains("htm?itemId=")){
+//                    String trueUrl = "http://item.taobao.com/item.htm?id=";
+//                    int indexOf = text.indexOf("htm?itemId=");
+//                    String substring = text.substring(indexOf, indexOf + 12);
+//                    return trueUrl + substring;
+//                }
             }
         }
         return http;
+    }
+
+    public static void main(String[] args) throws Exception {
+        String s = specialDomainHandl("https://detail.tmall.com/item.htm?id=38077266102&ut_sk=1.VH3TzEap4sYDAOQIz5Pp4y3L_21380790_1492498520418.Copy.1&sourceType=item&price=79.97&origin_price=98&suid=7E5E4456-4FCC-4734-9A42-01D9A04BE2F0&un=f734e8809ee8d36fcca3f2c0d66365a2&share_crt_v=1&cpp=1&shareurl=true&spm=a313p.22.24h.33931060898&short_name=h.UjfP1h&cv=kXhMqL2ZIc&sm=8ff4f2&app=chrome");
+        System.out.println(s);
     }
 }

@@ -4,6 +4,7 @@ import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
+import org.apache.log4j.Logger;
 import org.maxwe.tao.server.common.utils.CellPhoneUtils;
 import org.maxwe.tao.server.common.utils.PasswordUtils;
 import org.maxwe.tao.server.common.utils.RSAUtils;
@@ -27,6 +28,7 @@ import java.util.*;
  * Description:
  */
 public class ManagerController extends Controller implements IManagerController {
+    private final Logger logger = Logger.getLogger(ManagerController.class.getName());
     private IManagerServices iManagerServices = new ManagerServices();
     private IAgentServices iAgentServices = new AgentServices();
     private IUserServices iUserServices = new UserServices();
@@ -318,6 +320,7 @@ public class ManagerController extends Controller implements IManagerController 
         int pageSize = this.getParaToInt("pageSize") == 0 ? 12 : this.getParaToInt("pageSize");
         LinkedList<AgentEntity> agentEntities = iAgentServices.retrieveAll(pageIndex, pageSize);
         int agentsSum = iAgentServices.retrieveAllSum();
+        logger.info("agents all size :" + agentsSum + " agents current page size :" + agentEntities.size());
         this.setAttr("agents", agentEntities);
         this.setAttr("pages", agentsSum / pageSize + (agentsSum % pageSize == 0 ? 0 : 1));
         this.setAttr("pageIndex", pageIndex);

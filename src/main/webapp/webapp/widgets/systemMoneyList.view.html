@@ -11,7 +11,7 @@
 </#if>
 <#if topAgents?exists>
     <#list topAgents as agent>
-        <#if agent_index == 0>
+        <#if agent_index % 3 == 0>
             <div class="panel panel-default" style="float: left; width: 30%;">
                 <#else>
                     <div class="panel panel-default" style="float: left; width: 30%;margin-left: 5%">

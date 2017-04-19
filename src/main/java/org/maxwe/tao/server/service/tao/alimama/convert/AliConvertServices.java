@@ -6,6 +6,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 
 /**
  * Created by Pengwei Ding on 2017-02-24 21:32.
@@ -13,7 +14,9 @@ import org.apache.http.util.EntityUtils;
  * Description: @TODO
  */
 public class AliConvertServices {
+    private final static Logger logger = Logger.getLogger(AliConvertServices.class.getName());
     public static AliConvertEntity convertAlimamaByGoodsId(AliConvertRequestModel aliConvertRequestModel) throws Exception {
+        logger.info("convertAlimamaByGoodsId = " + aliConvertRequestModel.getUrl());
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(aliConvertRequestModel.getUrl());
         httpGet.setHeader("Cookie", aliConvertRequestModel.getCookie());

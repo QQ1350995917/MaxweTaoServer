@@ -45,7 +45,7 @@
         <ul class="pagination">
             <#if pageIndex gt 0>
                 <li>
-                    <a href="#" onclick="createManagerListView('${pageIndex - 1}',12);" aria-label="Previous">
+                    <a href="#" onclick="createAgentsListView('${pageIndex - 1}',12);" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
@@ -55,13 +55,13 @@
                     <#if pageIndex == page>
                         <li class="active"><a>${page + 1}</a></li>
                         <#else>
-                            <li><a href="#" onclick="createManagerListView('${page}',12);">${page + 1}</a></li>
+                            <li><a href="#" onclick="createAgentsListView('${page}',12);">${page + 1}</a></li>
                     </#if>
                 </#list>
             </#if>
             <#if pageIndex lt pages - 1>
                 <li>
-                    <a href="#" onclick="createManagerListView('${pageIndex + 1}',12);"  aria-label="Next">
+                    <a href="#" onclick="createAgentsListView('${pageIndex + 1}',12);"  aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
