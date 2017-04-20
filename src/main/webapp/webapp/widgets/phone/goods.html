@@ -10,8 +10,35 @@
     <link href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
     <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <style type="text/css">
+        img{
+            width: 100px;
+            height: 100px;
+        }
+    </style>
 </head>
 <body>
-
+<div class="input-group">
+    <input type="text" class="form-control" placeholder="请输入关键字" aria-describedby="basic-addon2">
+    <span class="input-group-addon" id="basic-addon2">搜索</span>
+</div>
+<div class="btn-toolbar" role="toolbar" aria-label="...">
+    <div class="btn-group" role="group" aria-label="">
+        <div class="btn-group" role="group" aria-label="...">
+            <button type="button" class="btn btn-default">默认</button>
+            <button type="button" class="btn btn-default">佣金</button>
+            <button type="button" class="btn btn-default">价格</button>
+            <button type="button" class="btn btn-default">销量</button>
+            <button type="button" class="btn btn-default">优惠券</button>
+        </div>
+    </div>
+</div>
+<div class="list-group">
+    <a href="#" class="list-group-item">
+        <div id="imgContainer">
+            <img src="http://img02.taobaocdn.com/bao/uploaded/i2/2240758404/TB2lRBdhMFkpuFjSspnXXb4qFXa_!!2240758404.jpg">
+        </div>
+    </a>
+</div>
 </body>
 </html>
