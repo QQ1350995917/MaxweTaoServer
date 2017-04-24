@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h2 class="page-header">特殊链接管理</h2>
+<form id="form_new_special_link" class="form" role="form" method="post">
+    <div class="row">
+        <div class="input-group">
+            <input type="url" id="url" name="url" required class="form-control"
+                   placeholder="请输入一个域名,如:http：//c.b0cy.com">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="submit">添加</button>
+            </span>
+        </div>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>域名</th>
+            <th>创建时间</th>
+            <!--<th>操作</th>-->
+        </tr>
+        </thead>
+        <tbody>
+        <#if links?exists>
+            <#list links as link>
+                <tr id="linkList${link_index}">
+                    <td>${link_index+1}</td>
+                    <td>${link.url}</td>
+                    <td>${link.createTimeLabel}</td>
+                    <!--<td>-->
+                        <!--<div class="btn-group" role="group" aria-label="...">-->
+                            <!--<button type="button" class="btn btn-default">删除-->
+                            <!--</button>-->
+                        <!--</div>-->
+                    <!--</td>-->
+                </tr>
+            </#list>
+        </#if>
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <#if pageIndex gt 0>
+                <li>
+                    <a href="#" onclick="createManagerListView('${pageIndex - 1}',12);"
+                       aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            </#if>
+            <#if pages?exists>
+                <#list 0..pages - 1 as page>
+                    <#if pageIndex == page>
+                        <li class="active"><a>${page + 1}</a></li>
+                        <#else>
+                            <li><a href="#" onclick="createManagerListView('${page}',12);">${page +
+                                1}</a></li>
+                    </#if>
+                </#list>
+            </#if>
+            <#if pageIndex lt pages - 1>
+                <li>
+                    <a href="#" onclick="createManagerListView('${pageIndex + 1}',12);"
+                       aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </#if>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>

@@ -10,4 +10,10 @@ public interface IMetaController {
      * 获取手机验证码
      */
     void smsCode();
+
+    void createLink();
+
+    void deleteLink();
+
+    void listLinks();
 }

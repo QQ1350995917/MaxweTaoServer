@@ -11,4 +11,9 @@ public interface IMetaServices {
 
     LinkedList<UnitEntity> retrieves();
 
+    LinkedList<SpecialLinkEntity> retrieveSpecialLinks(int pageIndex,int pageSize);
+
+    int specialLinksCount();
+
+    SpecialLinkEntity createSpecialLink(SpecialLinkEntity specialLInkEntity);
 }

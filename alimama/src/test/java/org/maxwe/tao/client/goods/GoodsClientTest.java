@@ -32,16 +32,17 @@ public class GoodsClientTest {
     @Test
     public void goodsSearch() throws Exception {
         String[] urls = {
-                "https://item.taobao.com/item.htm?id=538007232739",
-                "https://item.taobao.com/item.htm?ut_sk=1.VH3TzEap4s" +
-                        "YDAOQIz5Pp4y3L_21380790_1491563391466.Copy.1&" +
-                        "id=538007232739&sourceType=item&price=18.5&" +
-                        "origin_price=21&suid=D893449F-7C81-4250-ACDF-5" +
-                        "1B80EA6A55F&un=f734e8809ee8d36fcca3f2c0d66365a2&" +
-                        "share_crt_v=1&cpp=1&shareurl=true&spm=a313p.22.1r1." +
-                        "31927715317&short_name=h.4rUoo3&cv=fiqPLIy2WP&" +
-                        "sm=51afd4&app=chrome",
-                "http://c.b1wt.com/h.4rUoo3?cv=fiqPLIy2WP&sm=51afd4"
+//                "https://item.taobao.com/item.htm?id=538007232739",
+//                "https://item.taobao.com/item.htm?ut_sk=1.VH3TzEap4s" +
+//                        "YDAOQIz5Pp4y3L_21380790_1491563391466.Copy.1&" +
+//                        "id=538007232739&sourceType=item&price=18.5&" +
+//                        "origin_price=21&suid=D893449F-7C81-4250-ACDF-5" +
+//                        "1B80EA6A55F&un=f734e8809ee8d36fcca3f2c0d66365a2&" +
+//                        "share_crt_v=1&cpp=1&shareurl=true&spm=a313p.22.1r1." +
+//                        "31927715317&short_name=h.4rUoo3&cv=fiqPLIy2WP&" +
+//                        "sm=51afd4&app=chrome",
+//                "http://c.b1wt.com/h.4rUoo3?cv=fiqPLIy2WP&sm=51afd4",
+            "http://c.b0yp.com/h.5ifYaj?cv=Ki6VJINDCy&sm=22e192"
         };
 
         for (String url:urls){
@@ -60,9 +61,9 @@ public class GoodsClientTest {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        GoodsRequestModel goodsClient = new GoodsRequestModel();
-        String goods = GoodsClient.goodsList(goodsClient);
-        System.out.println(goods);
-    }
+//    public static void main(String[] args) throws Exception {
+//        GoodsRequestModel goodsClient = new GoodsRequestModel();
+//        String goods = GoodsClient.goodsList(goodsClient);
+//        System.out.println(goods);
+//    }
 }

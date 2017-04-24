@@ -44,13 +44,12 @@ public class ManagerController extends Controller implements IManagerController 
         superMenus.add(new MenuEntity("103", "备份管理", "export", 3, 2, 2, ""));
         superMenus.add(new MenuEntity("104", "版本管理", "version", 4, 2, 2, ""));
 
-
         managerMenus.add(new MenuEntity("200", "账号管理", "accountManager", 0, 2, 2, "manager/block,manager/unBlock,manager/delete,manager/grant,,manager/reset"));
         managerMenus.add(new MenuEntity("201", "添加账号", "accountCreate", 1, 2, 2, "manager/create"));
         managerMenus.add(new MenuEntity("204", "代理级别", "levels", 4, 2, 2, ""));
+        managerMenus.add(new MenuEntity("205", "特殊链接", "links", 5, 2, 2, "manager/agents"));
         managerMenus.add(new MenuEntity("202", "代理总览", "agents", 2, 2, 2, "manager/agents"));
         managerMenus.add(new MenuEntity("203", "用户总览", "users", 3, 2, 2, "manager/agents"));
-
 
         workMenus.add(new MenuEntity("300", "商品管理", "tao", 0, 3, 2, "manager/tao"));
         workMenus.add(new MenuEntity("301", "站内发布", "publish", 1, 3, 2, "manager/publish"));
@@ -59,6 +58,7 @@ public class ManagerController extends Controller implements IManagerController 
         workMenusLabel.put("200", "账号管理");
         workMenusLabel.put("201", "添加账号");
         workMenusLabel.put("204", "代理级别");
+        workMenusLabel.put("205", "特殊链接");
         workMenusLabel.put("202", "代理总览");
         workMenusLabel.put("203", "用户总览");
         workMenusLabel.put("300", "商品管理");

@@ -22,6 +22,8 @@ public class GoodsClient {
     static {
         specialLinkedList.add("http://c.b1wt.com");
         specialLinkedList.add("https://c.b1wt.com");
+        specialLinkedList.add("http://c.b0yp.com");
+        specialLinkedList.add("https://c.b0yp.com");
     }
 
     public static String goodsList(GoodsRequestModel goodsRequestModel) throws Exception {
