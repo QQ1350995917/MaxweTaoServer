@@ -24,27 +24,38 @@ import java.util.List;
 public class GoodsServices {
     private static final Logger logger = Logger.getLogger(GoodsServices.class.getName());
 
-    public static List<AliResponsePageEntity> searchForGoods(AliGoodsRequestModel aliGoodsRequestModel) throws Exception {
+    public static List<AliResponsePageEntity> searchForGoods(
+        AliGoodsRequestModel aliGoodsRequestModel) throws Exception {
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
         boolean isSpecialDomain = MetaController.isSpecialLink(aliGoodsRequestModel.getQ());
+//        boolean isSpecialDomain = true;
         if (isSpecialDomain) {
             String finalUrl = specialDomainHandl(aliGoodsRequestModel.getQ());
             if (StringUtils.isEmpty(finalUrl)) {
+                logger.info("特殊链接判断：是特殊链接" + aliGoodsRequestModel.getQ() + ""
+                    + ", 执行链接是：null");
                 return null;
             } else {
                 String cleanUrl = SearchUrlUtils.cleanUrl(finalUrl);
+                logger.info("特殊链接判断：是特殊链接" + aliGoodsRequestModel.getQ() + ""
+                    + ", 执行链接是：" + finalUrl + ""
+                    + ", 最终链接是：" + cleanUrl);
                 aliGoodsRequestModel.setQ(cleanUrl);
             }
+        } else {
+            logger.info("特殊链接判断：不是特殊链接" + aliGoodsRequestModel.getQ());
         }
 
         HttpGet httpGet = new HttpGet(aliGoodsRequestModel.getUrl());
         httpGet.setHeader("Cookie", aliGoodsRequestModel.getCookie());
         httpGet.setHeader("Content-type", "application/json");
-        httpGet.setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.151 Safari/535.19");
+        httpGet.setHeader("User-Agent",
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.151 Safari/535.19");
         CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet);
         if (closeableHttpResponse.getStatusLine().getStatusCode() == 200) {
             String resultJson = EntityUtils.toString(closeableHttpResponse.getEntity());
-            AliGoodsResponseModel aliGoodsResponseModel = JSON.parseObject(resultJson, AliGoodsResponseModel.class);
+            AliGoodsResponseModel aliGoodsResponseModel =
+                JSON.parseObject(resultJson, AliGoodsResponseModel.class);
             if (aliGoodsRequestModel != null) {
                 AliResponseDataEntity data = aliGoodsResponseModel.getData();
                 if (data != null) {
@@ -76,7 +87,8 @@ public class GoodsServices {
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(url);
         httpGet.setHeader("Content-type", "application/json");
-        httpGet.setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.151 Safari/535.19");
+        httpGet.setHeader("User-Agent",
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.151 Safari/535.19");
         CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpGet);
         String http = null;
         if (closeableHttpResponse.getStatusLine().getStatusCode() == 200) {
@@ -88,12 +100,12 @@ public class GoodsServices {
                     http = text.substring(text.indexOf("http"), text.length() - 2);
                     break;
                 }
-//                if (text.contains("htm?itemId=")){
-//                    String trueUrl = "http://item.taobao.com/item.htm?id=";
-//                    int indexOf = text.indexOf("htm?itemId=");
-//                    String substring = text.substring(indexOf, indexOf + 12);
-//                    return trueUrl + substring;
-//                }
+                //                if (text.contains("htm?itemId=")){
+                //                    String trueUrl = "http://item.taobao.com/item.htm?id=";
+                //                    int indexOf = text.indexOf("htm?itemId=");
+                //                    String substring = text.substring(indexOf, indexOf + 12);
+                //                    return trueUrl + substring;
+                //                }
             }
         }
         return http;

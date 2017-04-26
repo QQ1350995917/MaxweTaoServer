@@ -41,8 +41,8 @@ public class GoodsClientTest {
 //                        "share_crt_v=1&cpp=1&shareurl=true&spm=a313p.22.1r1." +
 //                        "31927715317&short_name=h.4rUoo3&cv=fiqPLIy2WP&" +
 //                        "sm=51afd4&app=chrome",
-//                "http://c.b1wt.com/h.4rUoo3?cv=fiqPLIy2WP&sm=51afd4",
-            "http://c.b0yp.com/h.5ifYaj?cv=Ki6VJINDCy&sm=22e192"
+                "http://c.b1wt.com/h.4rUoo3?cv=fiqPLIy2WP&sm=51afd4"
+//            "https://uland.taobao.com/coupon/edetail?e=kG33US6KbnIbwa0ArmopK4gqbW%2BcbvidmmG8APN6%2FqO0XdNMpJUPKpndXyGQ3kxINgn5Z1tdZtWSq14Z6kG8J673htRU%2BHSH%2BMUwzxYlSKGhsAgV4swGin7I2%2FEspWQW0Nhis9XPAmWMlQJ16vCpa6J7%2BkHL3AEW&dx=1&src=tblm_lmapp&scm=20140618.1.01010001.s101c4&spm=a311n.8241267.2355084.1.&cpp=1&shareurl=true&short_name=h.5nVaVu&cv=ex5aZtr5e0S&app=chrome"
         };
 
         for (String url:urls){

@@ -37,22 +37,20 @@ public class GoodsClient {
 
     public static String goodsSearch(GoodsRequestModel goodsRequestModel) throws Exception {
         boolean isSpecialDomain = false;
-        for (String domain : specialLinkedList) {
-            if (!TextUtils.isEmpty(goodsRequestModel.getQ()) &&
-                    goodsRequestModel.getQ().startsWith(domain)) {
-                isSpecialDomain = true;
-                break;
-            }
-        }
+//        for (String domain : specialLinkedList) {
+//            if (!TextUtils.isEmpty(goodsRequestModel.getQ()) &&
+//                    goodsRequestModel.getQ().startsWith(domain)) {
+//                isSpecialDomain = true;
+//                break;
+//            }
+//        }
 
-        if (isSpecialDomain) {
-            String finalUrl = goodsTrueUrl(goodsRequestModel.getQ());
-            if (TextUtils.isEmpty(finalUrl)) {
-                return null;
-            } else {
-                String cleanUrl = GoodsRequestModel.clearQueryUrl(finalUrl);
-                goodsRequestModel.setQ(cleanUrl);
-            }
+        String finalUrl = goodsTrueUrl(goodsRequestModel.getQ());
+        if (TextUtils.isEmpty(finalUrl)) {
+            return null;
+        } else {
+            String cleanUrl = GoodsRequestModel.clearQueryUrl(finalUrl);
+            goodsRequestModel.setQ(cleanUrl);
         }
 
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
