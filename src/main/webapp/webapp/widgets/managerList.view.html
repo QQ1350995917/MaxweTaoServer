@@ -30,9 +30,13 @@
                     <td>${account.nickName}</td>
                     <td>${account.cellphone}</td>
                     <td style="max-width: 310px;min-width: 310px;">
-                        <#list account.accessLabels as accessLabel>
-                            ${accessLabel!!"空权限"}
-                        </#list>
+                        <#if account.accessLabels?exists>
+                            <#list account.accessLabels as accessLabel>
+                                ${accessLabel}
+                            </#list>
+                        <#else>
+                            空权限
+                        </#if>
                     </td>
                     <td>${account.status}</td>
                     <td>${account.createTimeLabel}</td>
