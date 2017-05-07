@@ -27,8 +27,10 @@ public class GoodsServices {
     public static List<AliResponsePageEntity> searchForGoods(
         AliGoodsRequestModel aliGoodsRequestModel) throws Exception {
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
-        boolean isSpecialDomain = MetaController.isSpecialLink(aliGoodsRequestModel.getQ());
-//        boolean isSpecialDomain = true;
+        boolean isSpecialDomain = false;
+        if (!StringUtils.isEmpty(aliGoodsRequestModel.getQ())){
+            isSpecialDomain = MetaController.isSpecialLink(aliGoodsRequestModel.getQ());
+        }
         if (isSpecialDomain) {
             String finalUrl = specialDomainHandl(aliGoodsRequestModel.getQ());
             if (StringUtils.isEmpty(finalUrl)) {

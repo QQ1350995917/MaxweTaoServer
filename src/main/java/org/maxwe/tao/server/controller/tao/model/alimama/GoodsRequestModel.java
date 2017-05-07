@@ -28,7 +28,7 @@ public class GoodsRequestModel extends TokenModel {
     private String q; // 查询关键字
     private String cookie; // 登录淘宝后产生的cookie
     private int sortType = 0;// 0:默认 1:佣金 2:优惠券 3:价格降低 4:价格升高 9:销量降序
-    private int urlType = 0;//标记链接类型
+    private int urlType = GOODS_TAO_BAO;//标记链接类型
     private int dpyhq = 0;// 1店铺优惠券 其他无
     private int userType = -1;// 0 淘宝，1天猫
 
